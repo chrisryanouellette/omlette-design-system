@@ -1,0 +1,11 @@
+:where(.omlette-icon) {
+    @apply w-11 h-11;
+}
+
+:where(.omlette-icon.sm) {
+    @apply w-10 h-10;
+}
+
+:where(.omlette-icon.lg) {
+    @apply w-12 h-12;
+}

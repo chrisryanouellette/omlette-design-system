@@ -1,0 +1,73 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+
+export type GetStore<Store> = () => Store;
+export type SetStore<Action> = (update: Action) => void;
+export type SubscribeToStore<Store> = (
+  cb: (store: Store) => void
+) => () => void;
+
+export type UseCreateStore<Store, Action = Partial<Store>> = {
+  get: GetStore<Store>;
+  set: SetStore<Action>;
+  subscribe: SubscribeToStore<Store>;
+};
+
+export type ReadOnlyUseCreateStore<Store> = Omit<UseCreateStore<Store>, "set">;
+
+/*
+ * Used to create a new store without using useState.
+ * This is most beneficial when passing state down through context.
+ * This will avoid updating the entire component tree when the value changes.
+ */
+export const useCreateStore = <Store, Action = Partial<Store>>(
+  initial: Store,
+  reducer?: (current: Store, action: Action) => Store
+): UseCreateStore<Store, Action> => {
+  const store = useRef<Store>(initial);
+  const subscriptions = useRef<Set<(store: Store) => void>>(new Set());
+
+  const get = useCallback<GetStore<Store>>(() => store.current, []);
+
+  const set = useCallback<SetStore<Action>>(
+    (update) => {
+      store.current = reducer
+        ? reducer(store.current, update)
+        : { ...store.current, ...update };
+      /** Notify all subscription when store is set */
+      subscriptions.current.forEach((sub) => sub(store.current));
+    },
+    [reducer]
+  );
+
+  const subscribe = useCallback<SubscribeToStore<Store>>((cb) => {
+    subscriptions.current.add(cb);
+    return () => subscriptions.current.delete(cb);
+  }, []);
+
+  return { get, set, subscribe };
+};
+
+export type SelectorFn<Store, Selected = Store> = (
+  store: Store,
+  prev: Selected | null
+) => Selected;
+
+/* A hook for consuming a store, usually after it is passed down through context */
+export const useStore = <Store, Selected = Store, Action = Partial<Store>>(
+  store: UseCreateStore<Store, Action> | ReadOnlyUseCreateStore<Store>,
+  selector?: SelectorFn<Store, Selected>
+): Selected => {
+  const [state, setStore] = useState<ReturnType<GetStore<Store | Selected>>>(
+    () => (selector ? selector(store.get(), null) : store.get())
+  );
+
+  useEffect(() => {
+    return store.subscribe((newStore) => {
+      setStore((prev) =>
+        selector ? selector(newStore, prev as Selected) : newStore
+      );
+    });
+  }, [selector, store]);
+
+  return state as Selected;
+};

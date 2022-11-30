@@ -1,0 +1,15 @@
+{
+  "editor.bracketPairColorization.enabled": true,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll": false
+  },
+  "jest.autoRun": "off",
+  "css.lint.unknownAtRules": "ignore",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.words": [
+    "omlette"
+  ]
+}

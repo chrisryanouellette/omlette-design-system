@@ -1,0 +1,43 @@
+.omlette-button {
+    @apply outline-offset-4 transition-colors;
+}
+
+.omlette-button:where(.primary) {
+    @apply bg-primary-200 text-black outline-secondary-300;
+}
+
+.omlette-button:where(.secondary) {
+    @apply bg-secondary-200 text-neutral-100 outline-secondary-300;
+}
+
+.omlette-button:where(.primary:hover) {
+    @apply bg-primary-300;
+}
+
+.omlette-button:where(.secondary:hover) {
+    @apply bg-secondary-300;
+}
+
+.omlette-button:where(.primary:active) {
+    @apply bg-primary-100
+}
+
+.omlette-button:where(.secondary:active) {
+    @apply bg-secondary-100
+}
+
+.omlette-button:where(.sm) {
+    @apply px-4 py-2.5 text-sm;
+}
+
+.omlette-button:where(.md) {
+    @apply px-5 py-2.5;
+}
+
+.omlette-button:where(.lg) {
+    @apply px-6 py-2.5 text-lg;
+}
+
+.omlette-button {
+    @apply rounded;
+}

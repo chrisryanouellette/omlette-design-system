@@ -1,0 +1,18 @@
+{
+    "utilities": {
+        "input": "/utilities/index.ts",
+        "entry": "/build/utilities.js"
+    },
+    "tailwind-config": {
+        "input": "/development/tailwind/index.js",
+        "entry": "/build/tailwind.js"
+    },
+    "icon": {
+        "input": "/components/icon/index.tsx",
+        "entry": "/build/icon.js"
+    },
+    "button": {
+        "input": "/components/button/index.tsx",
+        "entry": "/build/button.js"
+    }
+}
