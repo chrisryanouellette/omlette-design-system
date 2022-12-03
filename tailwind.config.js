@@ -1,4 +1,7 @@
-const { omletteTailwindTheme } = require("./development/tailwind/index");
+const {
+  omletteTailwindTheme,
+  omletteDesignSystemPlugin,
+} = require("./development/tailwind");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -6,5 +9,5 @@ module.exports = {
   theme: {
     extend: { ...omletteTailwindTheme },
   },
-  plugins: [],
+  plugins: [omletteDesignSystemPlugin],
 };

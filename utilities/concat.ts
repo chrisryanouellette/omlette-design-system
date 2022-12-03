@@ -1,5 +1,5 @@
-function concat(...strings: (string | false | undefined)[]): string {
-  return strings.filter(Boolean).join(" ");
+function concat(...strings: (string | string[] | false | undefined)[]): string {
+  return strings.flat().filter(Boolean).join(" ");
 }
 
 export { concat };

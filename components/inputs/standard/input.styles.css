@@ -1,0 +1,58 @@
+:root {
+    --omlette-standard-input-border: var(--omlette-input-border);
+    --omlette-standard-input-padding-x: var(--omlette-input-padding-x);
+    --omlette-standard-input-padding-y: var(--omlette-input-padding-y);
+    --omlette-standard-input-border-color: var(--omlette-input-border-color);
+    --omlette-standard-input-border-color--error: var(--omlette-input-border-color--error);
+    --omlette-standard-input-shadow-color: var(--omlette-input-shadow-color);
+    --omlette-standard-input-border-radius: var(--omlette-input-border-radius);
+    --omlette-standard-input-ring-offset--focus: var(--omlette-input-ring-offset--focus);
+    --omlette-standard-input-ring-offset--hover: var(--omlette-input-ring-offset--hover);
+    --omlette-standard-input-ring-color: var(--omlette-input-ring-color);
+    --omlette-standard-input-ring-color--hover: var(--omlette-input-ring-color--hover);
+    --omlette-standard-input-ring-color--error: var(--omlette-input-ring-color--error);
+    --omlette-standard-input-outline-color: var(--omlette-input-outline-color);
+    --omlette-standard-input-outline-color--error: var(--omlette-input-outline-color--error);
+    --omlette-standard-input-border-color--active: var(--omlette-input-border-color--active);
+    --omlette-standard-input-width: var(--omlette-input-width);
+}
+
+input:where(.omlette-standard-input) {
+    @apply shadow-inner;
+    border-radius: var(--omlette-standard-input-border-radius);
+    border-width: var(--omlette-standard-input-border);
+    border-color: var(--omlette-standard-input-border-color);
+    outline-color: var(--omlette-standard-input-outline-color);
+    padding: var(--omlette-standard-input-padding-y) var(--omlette-standard-input-padding-x);
+    width: var(--omlette-standard-input-width);
+
+    --tw-shadow-color: var(--omlette-standard-input-shadow-color);
+    --tw-shadow: var(--tw-shadow-colored);
+}
+
+input:where(.omlette-standard-input.error) {
+    @apply ring-2;
+    outline-color: var(--omlette-standard-input-outline-color--error);
+    --tw-ring-color: var(--omlette-standard-input-ring-color--error);
+}
+
+input:where(.omlette-standard-input:hover:not(:focus)) {
+    @apply ring-4;
+    border-color: var(--omlette-standard-input-border-color--active);
+    --tw-ring-color: var(--omlette-standard-input-ring-color--hover); 
+}
+
+input:where(.omlette-standard-input:focus) {
+    @apply ring-2;
+    border-color: var(--omlette-standard-input-border-color--active);
+    --tw-ring-offset-width: var(--omlette-standard-input-ring-offset--focus);
+    --tw-ring-color: var(--omlette-standard-input-ring-color);
+}
+
+input:where(.omlette-standard-input:active:not(:focus)) {
+    border-color: var(--omlette-standard-input-border-color--active);
+}
+
+input:where(.omlette-standard-input.error) {
+    border-color: var(--omlette-standard-input-border-color--error);
+}

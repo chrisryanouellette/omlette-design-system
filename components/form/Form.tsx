@@ -1,29 +1,47 @@
-import { FC, ReactNode } from "react";
+import { HTMLAttributes, ReactNode, useEffect } from "react";
 import { FormProvider } from "./context";
-import { FormItem } from "./FormItem";
-import { FormFields, GenericFields, UseForm, useForm } from "./useForm";
+import { FormItem } from "./form.item";
+import {
+  FinishEvent,
+  FinishFailedEvent,
+  FormEvents,
+  GenericFields,
+  UseForm,
+  useForm,
+} from "./useForm";
 
-export type FormProps<Fields extends GenericFields> = {
-  form?: UseForm<Fields>;
-  onFinish?: (fields: FormFields<Fields>, e: SubmitEvent) => void;
-  onFinishFailed?: (
-    invalid: (keyof Fields)[],
-    fields: FormFields<Fields>,
-    e: SubmitEvent
-  ) => void;
-  children?: ReactNode;
-};
+export type FormProps<Fields extends GenericFields> =
+  HTMLAttributes<HTMLFormElement> & {
+    form?: UseForm<Fields>;
+    onFinish?: FinishEvent<Fields>;
+    onFinishFailed?: FinishFailedEvent<Fields>;
+    children?: ReactNode;
+  };
 
-type ComposedFormProps = FC<FormProps<GenericFields>> & {
-  Item: typeof FormItem;
-};
-
-const Form: ComposedFormProps = <Fields extends GenericFields>({
+const Form = <Fields extends GenericFields>({
   form: controlledForm,
+  onFinish,
+  onFinishFailed,
   children,
+  ...rest
 }: FormProps<Fields>): JSX.Element => {
   const internalForm = useForm<Fields>();
   const form = controlledForm ?? internalForm;
+
+  useEffect(() => {
+    const unsubscribes: (() => void)[] = [];
+    if (onFinish) {
+      unsubscribes.push(form.subscribe(FormEvents.finish, onFinish));
+    }
+    if (onFinishFailed) {
+      unsubscribes.push(
+        form.subscribe(FormEvents.finishFailed, onFinishFailed)
+      );
+    }
+    return function FormComponentSubscriptionsCleanUp() {
+      unsubscribes.forEach((fn) => fn());
+    };
+  }, [form, onFinish, onFinishFailed]);
 
   return (
     <FormProvider
@@ -32,7 +50,9 @@ const Form: ComposedFormProps = <Fields extends GenericFields>({
       validation={form.validation}
       store={form.fields}
     >
-      <form onSubmit={form.submit}>{children}</form>
+      <form {...rest} onSubmit={form.submit}>
+        {children}
+      </form>
     </FormProvider>
   );
 };

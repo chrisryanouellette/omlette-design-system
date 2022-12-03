@@ -2,26 +2,38 @@ import {
   ChangeEvent,
   Children,
   cloneElement,
+  HTMLAttributes,
   isValidElement,
   ReactNode,
   useCallback,
   useEffect,
+  useId,
 } from "react";
 import { useFormContext } from "./context";
 import { FormFields, GenericFields, Validation } from "./useForm";
 import { isElement } from "@Utilities/react";
 import { SelectorFn, useStore } from "@Utilities/store";
 import { isInstanceOf } from "@Utilities/element";
+import { concat } from "@Utilities/concat";
+import "./form.item.styles.css";
 
 type FormItemProps<T> = {
   name: string;
   children?: ReactNode;
+  id?: string;
+  errorsId?: string;
+  required?: boolean;
+  inline?: boolean;
+  wrapperProps?: HTMLAttributes<HTMLDivElement>;
   validation?: Validation<T>;
   onChange?: (e: ChangeEvent<HTMLElement>) => void;
 };
 
+const ComposedInputs = ["TextInput", "NumberInput", "Checkbox"];
 const InternalFormInputs = ["Input"];
 const FormElements = ["input"];
+const LabelElements = ["Label", "label"];
+const ErrorElements = ["Errors"];
 const HtmlInstances = [
   HTMLInputElement,
   HTMLSelectElement,
@@ -30,10 +42,20 @@ const HtmlInstances = [
 
 const FormItem = <T,>({
   children,
+  id: controlledId,
+  errorsId: controlledErrorsId,
   name,
+  wrapperProps,
+  required,
+  inline,
   validation: validationFn,
   onChange,
 }: FormItemProps<T>): JSX.Element => {
+  const internalId = useId();
+  const internalErrorsId = useId();
+  const id = controlledId ?? internalId;
+  const errorsId = controlledErrorsId ?? internalErrorsId;
+
   const formContext = useFormContext();
   const valueSelector = useCallback<
     SelectorFn<FormFields<GenericFields>, unknown>
@@ -47,7 +69,7 @@ const FormItem = <T,>({
     [name]
   );
   const errorsSelector = useCallback<
-    SelectorFn<FormFields<GenericFields>, Set<string> | null>
+    SelectorFn<FormFields<GenericFields>, Set<string>>
   >(
     (store, prev) => {
       if (name in store) {
@@ -64,7 +86,7 @@ const FormItem = <T,>({
           return current;
         }
       }
-      return prev;
+      return prev ?? new Set();
     },
     [name]
   );
@@ -99,23 +121,64 @@ const FormItem = <T,>({
   }, [formContext, name, validationFn]);
 
   return (
-    <>
+    <div
+      {...wrapperProps}
+      className={concat(
+        "omlette-form-item-wrapper",
+        inline && "omlette-form-item-inline",
+        wrapperProps?.className
+      )}
+    >
       {Children.map(children, (child) => {
         /* If the child is a known form item, forward the props along */
-        if (
-          isValidElement(child) &&
-          isElement(child, [...InternalFormInputs, ...FormElements])
-        ) {
-          return cloneElement(child, {
-            ...child.props,
+        if (isValidElement(child)) {
+          const inputProps = {
+            id,
             value: value || "",
             checked: value || false,
+            state: errors.size ? "error" : "",
+            "aria-invalid": !!errors.size,
+            "aria-describedby": errorsId,
             onChange: handleChange,
-          });
+          };
+          const labelProps = {
+            required,
+            htmlFor: id,
+          };
+          const errorProps = {
+            id: errorsId,
+            errors: Array.from(errors),
+          };
+          if (isElement(child, ComposedInputs)) {
+            return cloneElement(child, {
+              ...child.props,
+              inputProps: {
+                ...child.props.inputProps,
+                ...inputProps,
+              },
+              labelProps: {
+                ...child.props.labelProps,
+                ...labelProps,
+              },
+              errorProps: {
+                ...child.props.errorProps,
+                ...errorProps,
+              },
+            });
+          }
+          if (isElement(child, [...InternalFormInputs, ...FormElements])) {
+            return cloneElement(child, { ...child.props, ...inputProps });
+          }
+          if (isElement(child, LabelElements)) {
+            return cloneElement(child, { ...child.props, ...labelProps });
+          }
+          if (isElement(child, ErrorElements)) {
+            return cloneElement(child, { ...child.props, ...errorProps });
+          }
         }
         return child;
       })}
-    </>
+    </div>
   );
 };
 

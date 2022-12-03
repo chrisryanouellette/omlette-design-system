@@ -49,6 +49,7 @@ module.exports = {
       rules: {
         "no-undef": 0,
         "@typescript-eslint/no-var-requires": 0,
+        "@typescript-eslint/explicit-function-return-type": 0,
       },
     },
   ],

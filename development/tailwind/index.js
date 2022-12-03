@@ -1,12 +1,16 @@
-// import plugin from "tailwindcss/plugin";
-const { colors } = require("./colors");
+const plugin = require("tailwindcss/plugin");
+const { colors, colorVariables } = require("./colors");
+const listComponentUtilities = require("./plugins/list");
 
-// const omletteDesignSystemPlugin = plugin(({addUtilities}) => {
-
-// })
+const omletteDesignSystemPlugin = plugin(({ addComponents }) => {
+  addComponents({
+    ...listComponentUtilities,
+    ...colorVariables,
+  });
+});
 
 const omletteTailwindTheme = {
   colors,
 };
 
-module.exports = { omletteTailwindTheme };
+module.exports = { omletteDesignSystemPlugin, omletteTailwindTheme };

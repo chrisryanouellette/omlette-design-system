@@ -1,0 +1,18 @@
+:root {
+    --omlette-number-input-padding-x: var(--omlette-input-padding-x);
+    --omlette-number-input-padding-y: var(--omlette-input-padding-y);
+}
+
+input:where(.omlette-number-input) {
+    --omlette-number-input-padding-top: var(--omlette-number-input-padding-y);
+    --omlette-number-input-padding-button: var(--omlette-number-input-padding-y);
+    --omlette-number-input-padding-left: var(--omlette-number-input-padding-x);
+    --omlette-number-input-padding-right: var(--omlette-number-input-padding-x);
+
+    padding: 
+        var(--omlette-number-input-padding-top)
+        var(--omlette-number-input-padding-right)
+        var(--omlette-number-input-padding-button)
+        var(--omlette-number-input-padding-left);
+
+}

@@ -4,6 +4,27 @@ import { ReadOnlyUseCreateStore, useCreateStore } from "@Utilities/store";
 
 export type GenericFields = { [field: string]: unknown };
 
+export enum FormEvents {
+  finish = "finish",
+  finishFailed = "finishFailed",
+}
+
+export type FinishEvent<Fields extends GenericFields> = (
+  form: FormFields<Fields>,
+  e: FormEvent<HTMLFormElement>
+) => void;
+
+export type FinishFailedEvent<Fields extends GenericFields> = (
+  invalid: Extract<keyof Fields, string>[],
+  form: FormFields<Fields>,
+  e: FormEvent<HTMLFormElement>
+) => void;
+
+type Subscriptions<Fields extends GenericFields> = {
+  [FormEvents.finish]: FinishEvent<Fields>;
+  [FormEvents.finishFailed]: FinishFailedEvent<Fields>;
+};
+
 export type FormField<Value> = {
   value: Value;
   defaultValue: Value;
@@ -53,6 +74,10 @@ export type UseForm<Fields extends GenericFields> = {
    */
   validate: <K extends keyof Fields>(name: Extract<K, string>) => Promise<void>;
   submit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+  subscribe: <E extends FormEvents>(
+    event: E,
+    fn: Subscriptions<Fields>[E]
+  ) => () => void;
 };
 
 const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
@@ -65,6 +90,12 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
       [K in keyof Fields]: Set<Parameters<UseForm<Fields>["validation"]>[1]>;
     }>
   >({});
+  const subscriptions = useRef<{
+    [K in FormEvents]: Set<Subscriptions<Fields>[K]>;
+  }>({
+    finish: new Set(),
+    finishFailed: new Set(),
+  });
 
   const register = useCallback<UseForm<Fields>["register"]>(
     (name, defaultValue) => {
@@ -108,20 +139,25 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
       const set = validations.current[name];
       const field = fields.get()[name];
       const errors: Set<string> = new Set();
-      const add = (error: string): void => {
-        errors.add(error);
-      };
 
       if (set?.size) {
         const promises: Promise<void>[] = [];
-        set.forEach((fn) => promises.push(Promise.resolve(fn(field, add))));
+        set.forEach((fn) =>
+          promises.push(
+            Promise.resolve(
+              fn(field, (error: string): void => {
+                errors.add(error);
+              })
+            )
+          )
+        );
         await Promise.all(promises);
         fields.set({
           action: ReducerActions.validate,
           value: { name, errors },
         });
         if (errors.size) {
-          throw errors;
+          throw name;
         }
       }
     },
@@ -131,30 +167,36 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
   const submit = useCallback<UseForm<Fields>["submit"]>(
     async (e) => {
       e.preventDefault();
-      const allFields = fields.get();
       const results = await Promise.allSettled(
-        Object.keys(allFields).map(async (key) => {
+        Object.keys(fields.get()).map(async (key) => {
           return validate(key);
         })
       );
-      const invalid: PromiseRejectedResult[] = [];
+      const invalid: Extract<keyof Fields, string>[] = [];
       results.forEach((res) => {
         if (res.status === "rejected") {
-          invalid.push(res);
+          invalid.push(res.reason);
         }
       });
       if (invalid.length) {
-        console.error("errors");
+        subscriptions.current.finishFailed.forEach((fn) =>
+          fn(invalid, fields.get(), e)
+        );
       } else {
-        console.log("succuss");
+        subscriptions.current.finish.forEach((fn) => fn(fields.get(), e));
       }
     },
     [fields, validate]
   );
 
+  const subscribe = useCallback<UseForm<Fields>["subscribe"]>((event, fn) => {
+    subscriptions.current[event].add(fn);
+    return () => subscriptions.current[event].delete(fn);
+  }, []);
+
   return useMemo(
-    () => ({ fields, register, set, validation, validate, submit }),
-    [fields, register, set, submit, validate, validation]
+    () => ({ fields, register, set, validation, validate, submit, subscribe }),
+    [fields, register, set, submit, validate, validation, subscribe]
   );
 };
 

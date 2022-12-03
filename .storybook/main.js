@@ -17,6 +17,9 @@ const config = {
   features: {
     storyStoreV7: true,
   },
+  reactOptions: {
+    strictMode: true,
+  },
   async viteFinal(config) {
     return mergeConfig(config, {
       publicDir: path.resolve(__dirname, "./public"),

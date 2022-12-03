@@ -8,7 +8,9 @@
   ],
   "scripts": {
     "develop": "vite",
-    "build": "vite build && tsc --project ./tsconfig.prod.json",
+    "build": "yarn build:package && yarn build:types",
+    "build:package": "vite build",
+    "build:types": "tsc --project ./tsconfig.prod.json",
     "preview": "vite preview",
     "workspace:info": "yarn workspaces info",
     "test": "react-scripts test --watchAll=false",

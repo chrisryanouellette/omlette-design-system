@@ -3,7 +3,7 @@
         "input": "/utilities/index.ts",
         "entry": "/build/utilities.js"
     },
-    "tailwind-config": {
+    "tailwind": {
         "input": "/development/tailwind/index.js",
         "entry": "/build/tailwind.js"
     },

@@ -1,3 +1,6 @@
+const resolveConfig = require("tailwindcss/resolveConfig");
+const { call } = require("./utilities");
+
 const colors = {
   "primary-100": "rgb(var(--primary-100) / <alpha-value>)",
   "primary-200": "rgb(var(--primary-200) / <alpha-value>)",
@@ -10,4 +13,21 @@ const colors = {
   "neutral-300": "rgb(var(--neutral-300) / <alpha-value>)",
 };
 
-module.exports.colors = colors;
+/*
+We add all the TW colors as CSS vars so they can be
+used as defaults for the components
+*/
+const colorVariables = { ":root": {} };
+
+const theme = resolveConfig({ theme: {}, content: ["./"] }).theme;
+const defaultTwColors = call(theme?.colors || {});
+
+Object.entries(defaultTwColors).forEach(([color, valueOrObject]) => {
+  if (typeof valueOrObject === "object") {
+    Object.entries(valueOrObject).forEach(([tone, hex]) => {
+      colorVariables[":root"][`--tw-color-${color}-${tone}`] = hex;
+    });
+  }
+});
+
+module.exports = { colors, colorVariables };

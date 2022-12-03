@@ -1,0 +1,19 @@
+:root {
+    --omlette-label-text-color: var(--tw-color-neutral-900);
+    --omlette-label-helper-text-color: var(--tw-color-neutral-700);
+    --omlette-label-helper-text-size: .875rem;
+
+    --omlette-label-padding-button: .25rem
+}
+
+:where(.omlette-input-label-wrapper label) {
+    @apply flex flex-col;
+    color: var(--omlette-label-text-color);
+    padding-bottom: var(--omlette-label-padding-button);
+}
+
+:where(.omlette-input-label-wrapper label span) {
+    @apply flex flex-col;
+    color: var(--omlette-label-helper-text-color);
+    font-size: var(--omlette-label-helper-text-size);
+}
