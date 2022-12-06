@@ -24,6 +24,7 @@
     "./components/**/*.tsx",
     "./components/**/*.ts",
     "./utilities/**/*.ts",
+    "./polyfills/**/*.ts",
     "development/**/*",
     "storybook/**/*"
   ],

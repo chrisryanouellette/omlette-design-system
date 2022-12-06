@@ -1,4 +1,6 @@
 /** Returns an objects key if the value is truthy or returns a truthy value
+ * @param {Object} classes
+ * @return {string[]} Classes with truth values
  * @example
  * classNames({
  *  "class-one": true,

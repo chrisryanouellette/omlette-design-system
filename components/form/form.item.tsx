@@ -16,6 +16,7 @@ import { SelectorFn, useStore } from "@Utilities/store";
 import { isInstanceOf } from "@Utilities/element";
 import { concat } from "@Utilities/concat";
 import "./form.item.styles.css";
+import { isUniqueSet } from "@Utilities/set";
 
 type FormItemProps<T> = {
   name: string;
@@ -74,16 +75,10 @@ const FormItem = <T,>({
     (store, prev) => {
       if (name in store) {
         const current = store[name].errors;
-
-        if (prev && prev.size !== current.size) {
-          const unique = Array.from(current).every((element) => {
-            return !prev.has(element);
-          });
-          if (unique) {
-            return new Set(current);
-          }
-        } else if (!prev) {
+        if (!prev) {
           return current;
+        } else if (isUniqueSet(prev, current)) {
+          return new Set(current);
         }
       }
       return prev ?? new Set();

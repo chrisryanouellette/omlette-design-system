@@ -1,3 +1,41 @@
+:root {
+    --omlette-button-background-color: var(--tw-color-blue-800);
+    --omlette-button-background-color--hover: var(--tw-color-blue-900);
+    --omlette-button-color: var(--tw-color-gray-200);
+    --omlette-button-border-radius: 4px;
+    --omlette-button-padding-x: 2px;
+    --omlette-button-padding-right: var(--omlette-button-padding-x);
+    --omlette-button-padding-left: var(--omlette-button-padding-x);
+    --omlette-button-padding-y: 2px;
+    --omlette-button-padding-top: var(--omlette-button-padding-y);
+    --omlette-button-padding-bottom: var(--omlette-button-padding-y);
+
+    /* Ring */
+    --omlette-button-ring-offset--focus: 2px;
+
+    --omlette-button-ring-color: var(--omlette-button-color--active);
+    --omlette-button-ring-color--hover: var(--omlette-button-color--hover);
+}
+
+.omlette-button {
+    background-color: var(--omlette-button-background-color);
+    color: var(--omlette-button-color);
+    padding: 
+        var(--omlette-button-padding-top)
+        var(--omlette-button-padding-right)
+        var(--omlette-button-padding-bottom)
+        var(--omlette-button-padding-left);
+}
+
+:where(.omlette-button) {
+    border-radius: var(--omlette-button-border-radius);
+}
+
+.omlette-button:where(:hover) {
+    background-color: var(--omlette-button-background-color--hover);
+}
+
+
 .omlette-button {
     @apply outline-offset-4 transition-colors;
 }
@@ -23,7 +61,7 @@
 }
 
 .omlette-button:where(.secondary:active) {
-    @apply bg-secondary-100
+    @apply bg-secondary-100;
 }
 
 .omlette-button:where(.sm) {
@@ -36,8 +74,4 @@
 
 .omlette-button:where(.lg) {
     @apply px-6 py-2.5 text-lg;
-}
-
-.omlette-button {
-    @apply rounded;
 }

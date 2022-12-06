@@ -1,0 +1,41 @@
+:root {
+    --carousel-pagination-button-color: var(--tw-color-slate-600);
+    --carousel-pagination-button-color--hover: var(--tw-color-slate-900);
+    --carousel-pagination-button-border-radius: 100%;
+}
+
+:where(.omlette-carousel) {
+    --omlette-button-background-color: var(--carousel-pagination-button-color);
+    --omlette-button-background-color--hover: var(--carousel-pagination-button-color--hover);
+    --omlette-button-border-radius: var(--carousel-pagination-button-border-radius);
+}
+
+:where(.omlette-carousel) {
+    display: grid;
+    grid-template-columns: [carousel-control] 2rem 1fr [carousel-control] 2rem;
+    grid-template-rows: [carousel-scroller] 1fr [carousel-pagination] 2rem;
+}
+
+:where(.omlette-carousel-container) {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    grid-column: 2;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    overflow: auto;
+    @apply 2xl:overflow-hidden;
+}
+
+:where(.omlette-carousel-item) {
+    width: 100%;
+    scroll-snap-align: center;
+}
+
+:where(.omlette-carousel-pagination) {
+    grid-column: 2;
+}
+
+:where(.omlette-pagination-button) {
+    @apply w-4 h-4;
+}

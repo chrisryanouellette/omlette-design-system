@@ -1,0 +1,37 @@
+import { Canvas, Meta, Story } from "@storybook/addon-docs";
+
+<Meta title="Tokens" />
+
+# Tokens
+
+## Button
+
+### Base
+|Name|Type|Default|Desc|
+|---|---|---|---|
+|--omlette-button-background-color|Color|Blue 800|The backaground color for a button without a varient|
+|--omlette-button-background-color--hover|Color|Blue 900||
+|--omlette-button-color|Color|Gray 200||
+|--omlette-button-ring-color|Color|-|**Inherits** --omlette-button-color--active|
+|--omlette-button-ring-color--hover|Color|-|**Inherits** --omlette-button-color--hover|
+|--omlette-button-border-radius|Unit|4px|The border radius for a button without a varient|
+|--omlette-button-padding-x|Unit|2px||
+|--omlette-button-padding-right|Unit|-|**Inherits** --omlette-button-padding-x|
+|--omlette-button-padding-left|Unit|-|**Inherits** --omlette-button-padding-x|
+|--omlette-button-padding-y|Unit|2px||
+|--omlette-button-padding-top|Unit|-|**Inherits** --omlette-button-padding-y|
+|--omlette-button-padding-bottom|Unit|-|**Inherits** --omlette-button-padding-y|
+|--omlette-button-ring-offset--focus|Unit|2px||
+
+
+
+## Carousel
+
+### Base
+
+|Name|Type|Default|Desc|
+|---|---|---|---|
+|--carousel-pagination-button-color|Color|Slate 600|Tests the non-active color for the buttons<br/>**Overrides** --omlette-button-background-color|
+|--carousel-pagination-button-border-radius|Unit|Slate 600|Tests the non-active color for the buttons<br/>**Overrides** --omlette-button-border-radius|
+
+### Inherits

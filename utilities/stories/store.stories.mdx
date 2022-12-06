@@ -1,0 +1,71 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Utilities/Store" />
+
+# State Storage for Context
+
+The `useCreateStore` and `useStore` hook's prupose are to speed up rendering of a component tree when using context.
+
+## The Issue
+
+When a piece of state is being stored in a parent component and is shared by one or many child components lower in the tree, especially at an unkown distance, context is chosen as the solution for sharing that data. The issue becomes that not all the other components within that tree, notable the intermiate components, need to be re-rendered when data that the children are depndent on changes. When updating state via `useState` it will cause all the children of the component to re-render. So, we need a way implement a way for the data from the parent to the children and only re-render the children that depend on that data.
+
+## useCreateStore
+
+`useCreateStore` is a custom hook that does not store the data in state but instead stores the data inside a ref via `useRef`. We can update a ref without causing a state update which means we will not trigger a re-render for the child compoennts. This soves our problem of re-rendering components that do not need the data. But this also includes the components who do need to be updated with the new data.
+
+## useStore
+
+`useStore` solves the children not updating problem by storing the result of the ref in a local `useState` hook and subscribing to any changes to that data. When the `useStore` hook is notified of a data change, it will set the new value in state causing the dependent component to update without causing the entire tree form the parent to re-render.
+
+## Example
+
+Below is a code example on how to use these two hooks in practice. Context setup was left out of the example to keep it more consice.
+
+```tsx
+const MyParent = ({ children }): JSX.Element => {
+  const store = useCreateStore({ key1: 0, key2: 0 });
+
+  return <MyContext.Provider value={store}>{children}</MyContext.Provider>;
+};
+
+/* Will update anytime any value in store changes */
+const MyChildOne = (): JSX.Element => {
+  const context = useContext(MyContext);
+  const state = useStore(context);
+
+  return <p>{state.key1}</p>;
+};
+
+/* Will only update when key2 changes */
+const MyChildTwo = (): JSX.Element => {
+  const context = useContext(MyContext);
+  /* state = key2 */
+  const state = useStore(context, (state) => state.key2);
+
+  return <p>{state}</p>;
+};
+
+const Update = (): JSX.Element => {
+  const context = useContext(MyContext);
+
+  const handleUpdate = (): void => {
+    const { key1, key2 } = context.get();
+    context.set({ key1: key1++, key2: key2++ });
+  };
+
+  return <button onClick={handleUpdate}>Increment</button>;
+};
+
+const App = (): JSX.Element => {
+  return (
+    <MyParent>
+      <MyChildOne />
+      <MyChildTwo />
+      <Update />
+    </MyParent>
+  );
+};
+```
+
+## Testing Re-Renders

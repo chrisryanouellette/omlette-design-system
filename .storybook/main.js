@@ -2,13 +2,18 @@ const path = require("path");
 const { mergeConfig } = require("vite");
 
 const config = {
-  stories: ["../components/**/*.stories.mdx", "../components/**/*.stories.@(js|jsx|ts|tsx)"],
+  stories: [
+    "../components/**/*.stories.mdx",
+    "../components/**/*.stories.@(js|jsx|ts|tsx)",
+    "../storybook/**/*.stories.@(js|jsx|ts|tsx|md|mdx)",
+    "../utilities/**/*.stories.@(js|jsx|ts|tsx|md|mdx)",
+  ],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "@storybook/preset-create-react-app",
-    '@storybook/addon-a11y'
+    "@storybook/addon-a11y",
   ],
   framework: "@storybook/react",
   core: {
