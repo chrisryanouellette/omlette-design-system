@@ -1,0 +1,48 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Utilities/Tab Trap" />
+
+# Tab Trapping w/ the useTabTrap Hook
+
+The `useTabTrap` hook is designed to make managing focus within a container simple and resilient. It contains a handler that determines which elements can receive focus without needing to define each possible elements.
+
+## The Common Solution
+
+When searching for a tab trapping solution, the most common approach is to define a list of focusable elements. This works for smaller use cases but struggles to scale to all the focusable elements that could be used within an application. A better solution would be to look through all the children within the container and then determine if the element is focusable or not.
+
+## The Better Solution
+
+There is a DOM api called `treeWalker` which will loop through all the nodes within a container. We can then check each element the tree walker parses to check if it is focusable by the user. There are a few checks that occur but the most basic are that they element does not have a `display` style of `none` or a `visibility` style of `hidden`. After running through all the nodes in the container and filtering out all the non-focusable elements we can save the first and last elements and reset focus when the user tabs outside the container.
+
+### The Few Exceptions
+
+There are a few elements who have internal tab states, like a `<video>` with controls that we can not process when the user presses tab. Instead we will use the `focusout` event to listen to when focus leaves those elements. Once the event fires we can either reset focus to the beginning of the container or the end based on if the user navigating forwards or backwards through the container. 
+
+## Example
+
+The following snippet is a basic example on how a developer may enable tap trapping for a modal component.
+
+```jsx
+const Component = (): JSX.Element => {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef(null);
+  const { beginTrap, releaseTrap } = useTabTrap(ref);
+
+  useEffect(() => {
+    isOpen ? beginTrap() : releaseTrap();
+    return releaseTrap;
+  }, [beginTrap]);
+
+  return (
+    <modal ref={ref}>
+      <button>I am focusable</button>
+      <button style={{ display: "none" }}>I am not focusable</button>
+      <button>I am also focusable</button>
+      <div style={{ visibility: "hidden" }}>
+        <button>I am not focusable</button>
+      </div>
+    </modal>
+  );
+};
+```
+
