@@ -6,6 +6,7 @@ import { Label } from "@Components/inputs/utilities";
 import { Errors } from "@Components/inputs/utilities/errors";
 import { Input, Checkbox, TextInput, NumberInput } from "@Components/inputs";
 import { Button } from "@Components/button";
+import { Container } from "@Components/container";
 
 type BasicForm = {
   firstName: string;
@@ -47,34 +48,36 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
   const form = useForm<BasicForm>();
 
   return (
-    <Form {...props} form={form} className="light w-72">
-      <Form.Item required name="firstName" validation={firstNameValidation}>
-        <TextInput label="First Name" />
-      </Form.Item>
-      <Form.Item required name="password" validation={passwordValidation}>
-        <TextInput
-          label="Password"
-          helper={[
-            "Must be at least 5 characters.",
-            "Must contain a special character",
-          ]}
-        />
-      </Form.Item>
-      <Form.Item name="amount">
-        <NumberInput label="Age" inputProps={{ min: 0, max: 99 }} />
-      </Form.Item>
-      <Form.Item
-        required
-        inline
-        name="termsAndConditions"
-        validation={termsAndConditionsValidation}
-      >
-        <Checkbox label="Terms and conditions" />
-      </Form.Item>
-      <Button type="submit" variant="secondary" size="md">
-        Submit
-      </Button>
-    </Form>
+    <Container placement="center">
+      <Form {...props} form={form} className="light w-72">
+        <Form.Item required name="firstName" validation={firstNameValidation}>
+          <TextInput label="First Name" />
+        </Form.Item>
+        <Form.Item required name="password" validation={passwordValidation}>
+          <TextInput
+            label="Password"
+            helper={[
+              "Must be at least 5 characters.",
+              "Must contain a special character",
+            ]}
+          />
+        </Form.Item>
+        <Form.Item name="amount">
+          <NumberInput label="Age" inputProps={{ min: 0, max: 99 }} />
+        </Form.Item>
+        <Form.Item
+          required
+          inline
+          name="termsAndConditions"
+          validation={termsAndConditionsValidation}
+        >
+          <Checkbox label="Terms and conditions" />
+        </Form.Item>
+        <Button type="submit" variant="secondary" size="md">
+          Submit
+        </Button>
+      </Form>
+    </Container>
   );
 });
 

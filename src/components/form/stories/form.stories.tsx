@@ -16,6 +16,9 @@ export default {
   parameters: { controls: { sort: "alpha" } },
 };
 
+Basic.parameters = {
+  layout: "fullscreen",
+};
 Basic.argTypes = {
   ...commonArgs,
 };

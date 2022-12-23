@@ -1,6 +1,6 @@
 import { IconProps } from "..";
-import { ControlTypes } from "../../../storybook/types";
 import { IconStory as Icon } from "./story/icon";
+import { ControlTypes } from "@Storybook/types";
 
 export type IconControls = {
   Name: string;

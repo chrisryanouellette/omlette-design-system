@@ -24,7 +24,6 @@
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
     overflow: auto;
-    @apply 2xl:overflow-hidden;
 }
 
 :where(.omlette-carousel-item) {
