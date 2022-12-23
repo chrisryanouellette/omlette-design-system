@@ -9,11 +9,8 @@
       ".eslintrc.js",
       "*.js",
       "*.ts",
-      "components/**/*",
-      "utilities/**/*",
+      "src/**/*",
       "storybook/**/*",
-      "development/**/*",
-      "polyfills/**/*",
       "./.storybook/**/*"
     ]
   }

@@ -15,18 +15,15 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "paths": {
-      "@Components/*": ["./components/*"],
+      "@Utilities/*": ["./src/utilities/*"],
+      "@Utilities": ["./src/utilities/index.ts"],
+      "@Components/*": ["./src/components/*"],
       "@Storybook/*": ["./storybook/*"],
-      "@Utilities/*": ["./utilities/*"]
     }
   },
   "include": [
-    "./components/**/*.tsx",
-    "./components/**/*.ts",
-    "./utilities/**/*.ts",
-    "./polyfills/**/*.ts",
-    "development/**/*",
-    "storybook/**/*"
+    "./src/**/*.tsx",
+    "./src/**/*.ts",
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

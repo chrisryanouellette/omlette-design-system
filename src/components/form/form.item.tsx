@@ -11,7 +11,7 @@ import {
 } from "react";
 import { useFormContext } from "./context";
 import { FormFields, GenericFields, Validation } from "./useForm";
-import { isElement } from "@Utilities/react";
+import { isElement } from "@Utilities";
 import { SelectorFn, useStore } from "@Utilities/store";
 import { isInstanceOf } from "@Utilities/element";
 import { concat } from "@Utilities/concat";

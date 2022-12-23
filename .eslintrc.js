@@ -64,8 +64,8 @@ module.exports = {
       alias: {
         map: [
           ["@Storybook", "./storybook"],
-          ["@Utilities", "./utilities"],
-          ["@Components", "./components"],
+          ["@Utilities", "./src/utilities"],
+          ["@Components", "./src/components"],
         ],
         extensions: [".ts", ".tsx", ".js", ".jsx"],
       },
