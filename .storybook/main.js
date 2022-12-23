@@ -3,10 +3,9 @@ const { mergeConfig } = require("vite");
 
 const config = {
   stories: [
-    "../components/**/*.stories.mdx",
-    "../components/**/*.stories.@(js|jsx|ts|tsx)",
+    "../src/**/*.stories.mdx",
+    "../src/**/*.stories.@(js|jsx|ts|tsx)",
     "../storybook/**/*.stories.@(js|jsx|ts|tsx|md|mdx)",
-    "../utilities/**/*.stories.@(js|jsx|ts|tsx|md|mdx)",
   ],
   addons: [
     "@storybook/addon-links",
@@ -31,8 +30,8 @@ const config = {
       resolve: {
         alias: {
           ...config.resolve.alias,
-          "@Utilities": path.resolve(__dirname, "../utilities"),
-          "@Components": path.resolve(__dirname, "../components"),
+          "@Utilities": path.resolve(__dirname, "../src/utilities"),
+          "@Components": path.resolve(__dirname, "../src/components"),
           "@Storybook": path.resolve(__dirname, "../storybook"),
         },
       },
