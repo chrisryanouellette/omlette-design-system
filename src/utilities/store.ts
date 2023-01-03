@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+export type GlobalStoreKey<Store> = {
+  subscriptions: Set<(value: Store) => void>;
+};
 export type GetStore<Store> = () => Store;
 export type SetStore<Action> = (update: Action) => void;
 export type SubscribeToStore<Store> = (
@@ -13,6 +16,32 @@ export type UseCreateStore<Store, Action = Partial<Store>> = {
 };
 
 export type ReadOnlyUseCreateStore<Store> = Omit<UseCreateStore<Store>, "set">;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const globalStore = new Map<GlobalStoreKey<any>, any>();
+
+/*
+ * Creates a store outside of a React component.
+ * This is useful when you want multiple components without a common parent
+ * to be able to communicate.
+ */
+export const createGlobalStore = <T>(value: T): UseCreateStore<T> => {
+  const key: GlobalStoreKey<T> = {
+    subscriptions: new Set(),
+  };
+  globalStore.set(key, value);
+
+  const get: UseCreateStore<T>["get"] = () => globalStore.get(key);
+  const set: UseCreateStore<T>["set"] = (value) => {
+    globalStore.set(key, value);
+    key.subscriptions.forEach((sub) => sub(get()));
+  };
+  const subscribe: UseCreateStore<T>["subscribe"] = (cb) => {
+    key.subscriptions.add(cb);
+    return () => key.subscriptions.delete(cb);
+  };
+  return { get, set, subscribe };
+};
 
 /*
  * Used to create a new store without using useState.
