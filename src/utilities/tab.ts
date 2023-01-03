@@ -1,6 +1,6 @@
 /* Handles tab management for a container */
 
-import { RefObject, useCallback, useEffect, useRef } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useRef } from "react";
 import { isInstanceOf } from "./element";
 
 /**
@@ -60,11 +60,16 @@ const treeWalkerFilter = (node: Node, root: HTMLElement): number => {
   return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
 };
 
+export type SubscriptionFn = (
+  event: "initialize" | "beginTrap" | "releaseTrap"
+) => void;
+
 type UseTabTrap = {
   initialize: (originalTarget?: Element | null) => void;
   beginTrap: (originalTarget?: Element | null) => () => void;
   releaseTrap: () => void;
   resetFocus: () => void;
+  subscribe: (cb: SubscriptionFn) => () => void;
 };
 
 /**
@@ -90,6 +95,7 @@ const useTabTrap = (contentRef: RefObject<HTMLElement>): UseTabTrap => {
   const originalFocus = useRef<HTMLElement>();
   const isFocusWithin = useRef<boolean>(false);
   const isTrapping = useRef<boolean>(false);
+  const subscriptions = useRef<Set<SubscriptionFn>>(new Set());
 
   const setFirstAndLastFocusableElements = useCallback<
     (root: HTMLElement) => void
@@ -212,6 +218,7 @@ const useTabTrap = (contentRef: RefObject<HTMLElement>): UseTabTrap => {
           originalFocus.current?.focus();
           isFocusWithin.current = false;
         }
+        subscriptions.current.forEach((sub) => sub("releaseTrap"));
       }
     },
     [handleFocusOut, handleTab, handleWatchTab]
@@ -222,9 +229,11 @@ const useTabTrap = (contentRef: RefObject<HTMLElement>): UseTabTrap => {
       if (isInstanceOf(originalElement, [HTMLElement])) {
         originalFocus.current = originalElement;
         document.addEventListener("focusout", handleWatchTab);
+        subscriptions.current.forEach((sub) => sub("initialize"));
       } else if (isInstanceOf(document.activeElement, [HTMLElement])) {
         originalFocus.current = document.activeElement;
         document.addEventListener("focusout", handleWatchTab);
+        subscriptions.current.forEach((sub) => sub("initialize"));
       } else {
         throw new Error(
           "useTabTrap was initialized with an active element that is not a HTMLElement"
@@ -245,6 +254,7 @@ const useTabTrap = (contentRef: RefObject<HTMLElement>): UseTabTrap => {
       originalFocus.current?.focus();
       isFocusWithin.current = false;
     }
+    subscriptions.current.forEach((sub) => sub("releaseTrap"));
   }, [handleEscape, handleFocusOut, handleTab, handleWatchTab]);
 
   /** Starts locking the user's tab to the focusable elements in the content */
@@ -270,6 +280,7 @@ const useTabTrap = (contentRef: RefObject<HTMLElement>): UseTabTrap => {
         if (firstFocusableElement.current) {
           isFocusWithin.current = true;
         }
+        subscriptions.current.forEach((sub) => sub("beginTrap"));
         return releaseTrap;
       } else {
         throw new Error(`contentRef has not been set for the useTabTrap hook`);
@@ -293,6 +304,13 @@ const useTabTrap = (contentRef: RefObject<HTMLElement>): UseTabTrap => {
       isFocusWithin.current = false;
     }
   }, [handleWatchTab]);
+
+  const subscribe = useCallback<UseTabTrap["subscribe"]>((cb) => {
+    subscriptions.current.add(cb);
+    return () => {
+      subscriptions.current.delete(cb);
+    };
+  }, []);
 
   useEffect(() => {
     /**
@@ -336,7 +354,10 @@ const useTabTrap = (contentRef: RefObject<HTMLElement>): UseTabTrap => {
     setFirstAndLastFocusableElements,
   ]);
 
-  return { initialize, beginTrap, releaseTrap, resetFocus };
+  return useMemo(
+    () => ({ initialize, beginTrap, releaseTrap, resetFocus, subscribe }),
+    [beginTrap, initialize, releaseTrap, resetFocus, subscribe]
+  );
 };
 
 export { useTabTrap };
