@@ -5,7 +5,7 @@ const {
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./components/**/*.{ts,tsx}"],
+  content: ["./src/components/**/*.{ts,tsx}"],
   theme: {
     extend: { ...omletteTailwindTheme },
   },
