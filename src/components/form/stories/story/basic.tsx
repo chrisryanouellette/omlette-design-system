@@ -2,16 +2,23 @@ import { FC } from "react";
 import { FormControls } from "../form.stories";
 import { bindTemplate } from "@Storybook/types";
 import { Form, useForm, Validation } from "@Components/form";
-import { Label } from "@Components/inputs/utilities";
-import { Errors } from "@Components/inputs/utilities/errors";
-import { Input, Checkbox, TextInput, NumberInput } from "@Components/inputs";
+import {
+  Checkbox,
+  TextInput,
+  NumberInput,
+  SelectInput,
+} from "@Components/inputs";
 import { Button } from "@Components/button";
 import { Container } from "@Components/container";
+import { DateInput } from "@Components/inputs/date";
 
 type BasicForm = {
   firstName: string;
   password: string;
   amount: string;
+  date: string;
+  select: string;
+  multi: string[];
   termsAndConditions: boolean;
 };
 
@@ -64,6 +71,23 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
         </Form.Item>
         <Form.Item name="amount">
           <NumberInput label="Age" inputProps={{ min: 0, max: 99 }} />
+        </Form.Item>
+        <Form.Item name="date">
+          <DateInput label="Start Date" />
+        </Form.Item>
+        <Form.Item name="select">
+          <SelectInput label="Favorite Animal">
+            <SelectInput.Option value="dog">Dog</SelectInput.Option>
+            <SelectInput.Option value="cat">Cat</SelectInput.Option>
+            <SelectInput.Option value="parrot">Parrot</SelectInput.Option>
+          </SelectInput>
+        </Form.Item>
+        <Form.Item name="multi">
+          <SelectInput multiple label="Fun Programing Languages">
+            <SelectInput.Option value="js">JS</SelectInput.Option>
+            <SelectInput.Option value="dotnet">DotNet</SelectInput.Option>
+            <SelectInput.Option value="groovy">Groovy</SelectInput.Option>
+          </SelectInput>
         </Form.Item>
         <Form.Item
           required

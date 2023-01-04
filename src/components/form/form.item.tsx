@@ -15,8 +15,8 @@ import { isElement } from "@Utilities";
 import { SelectorFn, useStore } from "@Utilities/store";
 import { isInstanceOf } from "@Utilities/element";
 import { concat } from "@Utilities/concat";
-import "./form.item.styles.css";
 import { isUniqueSet } from "@Utilities/set";
+import "./form.item.styles.css";
 
 type FormItemProps<T> = {
   name: string;
@@ -30,7 +30,13 @@ type FormItemProps<T> = {
   onChange?: (e: ChangeEvent<HTMLElement>) => void;
 };
 
-const ComposedInputs = ["TextInput", "NumberInput", "Checkbox"];
+const ComposedInputs = [
+  "TextInput",
+  "NumberInput",
+  "DateInput",
+  "Checkbox",
+  "SelectInput",
+];
 const InternalFormInputs = ["Input"];
 const FormElements = ["input"];
 const LabelElements = ["Label", "label"];
@@ -96,6 +102,11 @@ const FormItem = <T,>({
           e.target.getAttribute("type") === "checkbox"
         ) {
           formContext.set(name, e.target.checked);
+        } else if (isInstanceOf(e.target, [HTMLSelectElement])) {
+          const selected = Array.from(e.target.selectedOptions).map(
+            (elem) => elem.value
+          );
+          formContext.set(name, selected);
         } else {
           formContext.set(name, e.target.value);
         }
