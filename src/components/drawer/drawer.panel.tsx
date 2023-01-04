@@ -79,7 +79,7 @@ const DrawerPanel = ({
         key="drawer"
         in={isOpen}
         nodeRef={ref}
-        timeout={500}
+        timeout={duration ?? 300}
         classNames="omlette-drawer-panel"
       >
         <Container
