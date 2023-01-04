@@ -1,0 +1,21 @@
+:root {
+  --omlette-collapse-duration: 300ms;
+}
+
+:where(.omlette-collapse-panel-container) {
+  @apply overflow-hidden;
+}
+
+:where(.omlette-collapse-panel) {
+  @apply transition-transform overflow-auto shadow-md shadow-slate-100 mb-4;
+  background-color: var(--omlette-drawer-background-color);
+  transition-duration: var(--omlette-collapse-duration);
+}
+
+:where(.omlette-collapse-panel) {
+  transform: translateY(-150%);
+}
+
+:where(.omlette-collapse-panel-enter, .omlette-collapse-panel-enter-done) {
+  transform: translateY(0);
+}
