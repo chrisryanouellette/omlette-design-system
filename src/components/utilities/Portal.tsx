@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { createPortal } from "react-dom";
 
-type PortalProps = {
+export type PortalProps = {
   elem?: HTMLElement | string;
   children?: ReactNode;
 };
