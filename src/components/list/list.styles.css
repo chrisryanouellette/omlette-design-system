@@ -3,11 +3,11 @@
     Corresponds to text-base.
 */
 :root {
-    --omlette-list-text-size: 1rem;
-    --omlette-list-font-size: 1;
-    --omlette-list-line-height: 1.5;
-    --omlette-list-offset: 0;
-    --omlette-marker-offset: 0px;
+  --omlette-list-text-size: 1rem;
+  --omlette-list-font-size: 1;
+  --omlette-list-line-height: 1.5;
+  --omlette-list-offset: 0;
+  --omlette-marker-offset: 0px;
 }
 
 /**
@@ -15,28 +15,28 @@
     By default the spacing is less then 12px.
 */
 :where(ol.omlette-list .omlette-list-item) {
-    --omlette-marker-offset: var(--omlette-number-marker-offset, 0.5rem);
+  --omlette-marker-offset: var(--omlette-number-marker-offset, 0.5rem);
 }
 
 /**
     For nested ul lists, reset the offset.
 */
 :where(ul.omlette-list .omlette-list-item) {
-    --omlette-marker-offset: 0;
+  --omlette-marker-offset: 0;
 }
 
 /** Inline the icon with the list text */
 :where(.omlette-list-item[data-list-style="custom"]) {
-    @apply grid grid-cols-[auto_1fr] gap-x-1;
+  @apply grid grid-cols-[auto_1fr] gap-x-1;
 }
 
 /** Wraps the icon component and ensures the content will not shrink */
 :where(.zest-list-marker) {
-    @apply shrink-0 w-[1em];
+  @apply shrink-0 w-[1em];
 }
 
 :where(.omlette-list) svg:where(.omlette-icon) {
-    @apply w-[1em] h-auto;
+  @apply w-[1em] h-auto;
 }
 
 /**
@@ -45,15 +45,16 @@
     list-style-position: inside causes invalid line wrap, text goes below marker.
     @see {@link [MDN list-style-position](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-position)}
 */
-:where(.omlette-list .omlette-list-item[data-list-style="standard"]:not(.list-none)) {
-    --omlette-list-offset: 1.25em;
+:where(.omlette-list
+    .omlette-list-item[data-list-style="standard"]:not(.list-none)) {
+  --omlette-list-offset: 1.25em;
 }
 
 /** Apply offsets to list items. */
 :where(.omlette-list-item) {
-    transform: translateX(var(--omlette-list-offset, 0em));
-    padding-left: var(--omlette-marker-offset, 0em);
-    padding-right: var(--omlette-list-offset, 0em);
+  transform: translateX(var(--omlette-list-offset, 0em));
+  padding-left: var(--omlette-marker-offset, 0em);
+  padding-right: var(--omlette-list-offset, 0em);
 }
 
 /**
@@ -61,12 +62,12 @@
     This transform moves the list to align with the beginning of the parent list's marker.
 */
 :where(li > ul) {
-    --omlette-list-offset: 0;
-    --omlette-nested-offset: calc(
-        var(--omlette-list-offset) + var(--omlette-marker-offset)
-    );
-    transform: translateX(calc(var(--omlette-nested-offset) * -1));
-    grid-column-start: 2;
+  --omlette-list-offset: 0;
+  --omlette-nested-offset: calc(
+    var(--omlette-list-offset) + var(--omlette-marker-offset)
+  );
+  transform: translateX(calc(var(--omlette-nested-offset) * -1));
+  grid-column-start: 2;
 }
 
 /**
@@ -74,14 +75,14 @@
     regardless of font size or line height.
 */
 :where(.omlette-list-marker) {
-    --omlette-list-offset: calc(
-        var(--omlette-list-line-height) / var(--omlette-list-font-size)
-    );
-    --omlette-list-baseline: calc(
-        var(--omlette-list-text-size) * var(--omlette-list-offset)
-    );
-    --omlette-marker-offset: calc(
-        calc(var(--omlette-list-baseline) - var(--omlette-list-text-size)) / 2
-    );
-    transform: translateY(var(--omlette-marker-offset));
+  --omlette-list-offset: calc(
+    var(--omlette-list-line-height) / var(--omlette-list-font-size)
+  );
+  --omlette-list-baseline: calc(
+    var(--omlette-list-text-size) * var(--omlette-list-offset)
+  );
+  --omlette-marker-offset: calc(
+    calc(var(--omlette-list-baseline) - var(--omlette-list-text-size)) / 2
+  );
+  transform: translateY(var(--omlette-marker-offset));
 }

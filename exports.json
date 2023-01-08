@@ -1,10 +1,10 @@
 {
-    "main": {
-        "input": "/src/index.ts",
-        "entry": "/build/main.js"
-    },
-    "tailwind": {
-        "input": "/development/tailwind/index.js",
-        "entry": "/build/tailwind.js"
-    }
+  "main": {
+    "input": "/src/index.ts",
+    "entry": "/build/main.js"
+  },
+  "tailwind": {
+    "input": "/development/tailwind/index.js",
+    "entry": "/build/tailwind.js"
+  }
 }

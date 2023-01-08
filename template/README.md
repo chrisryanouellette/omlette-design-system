@@ -1,5 +1,3 @@
-
-
 ## Dependencies
 
 ```bash
@@ -43,4 +41,3 @@ yarn add -D @testing-library/dom \
   typescript \
   webpack-bundle-analyzer
 ```
-

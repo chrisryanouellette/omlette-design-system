@@ -24,8 +24,8 @@
     "eslint:base": "eslint --ignore-path .gitignore --ext ts,tsx -c ./.eslintrc.js",
     "eslint:check": "yarn eslint --fix-dry-run .",
     "eslint:fix": "yarn eslint --fix .",
-    "format": "prettier './**'",
-    "format:fix": "prettier --write './**'",
+    "format": "prettier --ignore-path='./.gitignore' './**'",
+    "format:fix": "prettier --ignore-path='./.gitignore' --write './**'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },

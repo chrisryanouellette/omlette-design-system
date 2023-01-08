@@ -1,11 +1,11 @@
 :root {
-    --omlette-input-errors-text-color: var(--tw-color-red-600);
-    --omlette-input-errors-fill: var(--tw-color-red-600);
-    --omlette-errors-text-size: .875rem;
+  --omlette-input-errors-text-color: var(--tw-color-red-600);
+  --omlette-input-errors-fill: var(--tw-color-red-600);
+  --omlette-errors-text-size: 0.875rem;
 }
 
 :where(.omlette-input-errors-wrapper) {
-    fill: var(--omlette-input-errors-fill);
-    color: var(--omlette-input-errors-text-color);
-    font-size: var(--omlette-errors-text-size);
+  fill: var(--omlette-input-errors-fill);
+  color: var(--omlette-input-errors-text-color);
+  font-size: var(--omlette-errors-text-size);
 }

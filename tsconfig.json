@@ -18,12 +18,9 @@
       "@Utilities/*": ["./src/utilities/*"],
       "@Utilities": ["./src/utilities/index.ts"],
       "@Components/*": ["./src/components/*"],
-      "@Storybook/*": ["./storybook/*"],
+      "@Storybook/*": ["./storybook/*"]
     }
   },
-  "include": [
-    "./src/**/*.tsx",
-    "./src/**/*.ts",
-  ],
+  "include": ["./src/**/*.tsx", "./src/**/*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

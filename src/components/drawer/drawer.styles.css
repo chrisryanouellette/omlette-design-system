@@ -38,7 +38,6 @@
   transform: translateY(-100%);
 }
 
-
 :where(.omlette-drawer-panel-bottom) {
   @apply mt-auto;
   transform: translateY(100%);
@@ -61,4 +60,3 @@
 :where(.omlette-drawer-panel-enter, .omlette-drawer-panel-enter-done) {
   transform: translate(0, 0);
 }
-

@@ -9,11 +9,10 @@
   "jest.autoRun": "off",
   "css.lint.unknownAtRules": "ignore",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": [
-    "omlette",
-    "scrollend"
-  ],
-  "cSpell.enableFiletypes": [
-    "mdx"
-  ]
+  "cSpell.words": ["omlette", "scrollend"],
+  "cSpell.enableFiletypes": ["mdx"],
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  }
 }

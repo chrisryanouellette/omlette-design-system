@@ -1,16 +1,16 @@
 {
-    "compilerOptions": {
-      "types": ["@types/node"],
-      "noEmit": true,
-      "allowJs": true
-    },
-    "extends": "./tsconfig.json",
-    "include": [
-      ".eslintrc.js",
-      "*.js",
-      "*.ts",
-      "src/**/*",
-      "storybook/**/*",
-      "./.storybook/**/*"
-    ]
-  }
+  "compilerOptions": {
+    "types": ["@types/node"],
+    "noEmit": true,
+    "allowJs": true
+  },
+  "extends": "./tsconfig.json",
+  "include": [
+    ".eslintrc.js",
+    "*.js",
+    "*.ts",
+    "src/**/*",
+    "storybook/**/*",
+    "./.storybook/**/*"
+  ]
+}

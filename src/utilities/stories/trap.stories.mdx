@@ -16,7 +16,7 @@ There is a DOM api called `treeWalker` which will loop through all the nodes wit
 
 ### The Few Exceptions
 
-There are a few elements who have internal tab states, like a `<video>` with controls that we can not process when the user presses tab. Instead we will use the `focusout` event to listen to when focus leaves those elements. Once the event fires we can either reset focus to the beginning of the container or the end based on if the user navigating forwards or backwards through the container. 
+There are a few elements who have internal tab states, like a `<video>` with controls that we can not process when the user presses tab. Instead we will use the `focusout` event to listen to when focus leaves those elements. Once the event fires we can either reset focus to the beginning of the container or the end based on if the user navigating forwards or backwards through the container.
 
 ## Example
 
@@ -45,4 +45,3 @@ const Component = (): JSX.Element => {
   );
 };
 ```
-

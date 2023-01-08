@@ -1,66 +1,66 @@
 .omlette-button:where(:has(svg)) {
-    @apply flex items-center p-1;        
+  @apply flex items-center p-1;
 }
 
 .omlette-button :where(svg) {
-    @apply rounded p-1 transition-colors;
+  @apply rounded p-1 transition-colors;
 }
 
 .omlette-button:where(.primary) :where(svg) {
-    @apply fill-black;
+  @apply fill-black;
 }
 
 .omlette-button:where(.secondary) :where(svg) {
-    @apply fill-neutral-200;
+  @apply fill-neutral-200;
 }
 
 .omlette-button:where(.primary:not(.icon-only)) :where(svg) {
-    @apply bg-primary-300 p-2;
+  @apply bg-primary-300 p-2;
 }
 
 .omlette-button:where(.secondary:not(.icon-only)) :where(svg) {
-    @apply bg-secondary-300 p-2;
+  @apply bg-secondary-300 p-2;
 }
 
 .omlette-button:where(.primary:active) :where(svg) {
-    @apply bg-primary-100;
+  @apply bg-primary-100;
 }
 
 .omlette-button:where(.secondary:active) :where(svg) {
-    @apply bg-secondary-100;
+  @apply bg-secondary-100;
 }
 
 /* Small */
 .omlette-button:where(.sm:has(svg)) {
-    @apply text-sm;
+  @apply text-sm;
 }
 
 .omlette-button:where(.sm:not(.icon-only):has(svg)) :where(span) {
-    @apply px-2;
+  @apply px-2;
 }
 
 .omlette-button:where(.sm) :where(svg) {
-    @apply w-8 h-8;
+  @apply w-8 h-8;
 }
 
 /* Medium */
 .omlette-button:where(.md) :where(svg) {
-    @apply w-9 h-9;
+  @apply w-9 h-9;
 }
 
 .omlette-button:where(.md:not(.icon-only):has(svg)) :where(span) {
-    @apply px-3;
+  @apply px-3;
 }
 
 /* Large */
 .omlette-button:where(.lg:has(svg)) {
-    @apply text-lg;
+  @apply text-lg;
 }
 
 .omlette-button:where(.lg) :where(svg) {
-    @apply w-10 h-10;
+  @apply w-10 h-10;
 }
 
 .omlette-button:where(.lg:not(.icon-only):has(svg)) :where(span) {
-    @apply px-4;
+  @apply px-4;
 }

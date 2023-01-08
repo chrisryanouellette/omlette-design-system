@@ -1,34 +1,34 @@
 :root {
-    /* Base */
-    --omlette-input-color: var(--tw-color-neutral-500);
-    --omlette-input-color--hover: var(--tw-color-blue-200);
-    --omlette-input-color--active: var(--tw-color-blue-600);
-    --omlette-input-color--error: var(--tw-color-red-700);
-    --omlette-input-color--error-light: var(--tw-color-red-200);
-    --omlette-input-color-shadow: var(--tw-color-slate-200);
+  /* Base */
+  --omlette-input-color: var(--tw-color-neutral-500);
+  --omlette-input-color--hover: var(--tw-color-blue-200);
+  --omlette-input-color--active: var(--tw-color-blue-600);
+  --omlette-input-color--error: var(--tw-color-red-700);
+  --omlette-input-color--error-light: var(--tw-color-red-200);
+  --omlette-input-color-shadow: var(--tw-color-slate-200);
 
-    /* Border */
-    --omlette-input-border: 2px;
-    --omlette-input-border-radius: 4px;
-    --omlette-input-border-color: var(--omlette-input-color);
-    --omlette-input-border-color--active: var(--omlette-input-color--active);
-    --omlette-input-border-color--error: var(--omlette-input-color--error);
+  /* Border */
+  --omlette-input-border: 2px;
+  --omlette-input-border-radius: 4px;
+  --omlette-input-border-color: var(--omlette-input-color);
+  --omlette-input-border-color--active: var(--omlette-input-color--active);
+  --omlette-input-border-color--error: var(--omlette-input-color--error);
 
-    /* Ring */
-    --omlette-input-ring-offset--focus: 2px;
+  /* Ring */
+  --omlette-input-ring-offset--focus: 2px;
 
-    --omlette-input-ring-color: var(--omlette-input-color--active);
-    --omlette-input-ring-color--hover: var(--omlette-input-color--hover);
-    --omlette-input-ring-color--error: var(--omlette-input-color--error-light);
+  --omlette-input-ring-color: var(--omlette-input-color--active);
+  --omlette-input-ring-color--hover: var(--omlette-input-color--hover);
+  --omlette-input-ring-color--error: var(--omlette-input-color--error-light);
 
-    --omlette-input-outline-color: var(--omlette-input-color--active);
-    --omlette-input-outline-color--error: var(--omlette-input-color--error);
+  --omlette-input-outline-color: var(--omlette-input-color--active);
+  --omlette-input-outline-color--error: var(--omlette-input-color--error);
 
-    /* Layout */
-    --omlette-input-padding-x: .5rem;
-    --omlette-input-padding-y: .25rem;
+  /* Layout */
+  --omlette-input-padding-x: 0.5rem;
+  --omlette-input-padding-y: 0.25rem;
 
-   /* Presentation */
-    --omlette-input-shadow-color: var(--omlette-input-color-shadow);
-    --omlette-input-width: 100%;
+  /* Presentation */
+  --omlette-input-shadow-color: var(--omlette-input-color-shadow);
+  --omlette-input-width: 100%;
 }

@@ -7,28 +7,22 @@ import { Meta } from "@storybook/addon-docs";
 The `createGlobalStore` function creates a piece of data in the global scope that can be subscripted to inside of a component. When the data changes the component will be updated and trigger a re-render so the UI can be updated.
 
 ```tsx
-
 const selector = createGlobalStore(false);
 
 const MyValueComponent = (): JSX.Element => {
   const value = useStore(selector);
 
-  return <p>Value: {value}</p>
-}
+  return <p>Value: {value}</p>;
+};
 
 const MyButtonComponent = (): JSX.Element => {
   const handleClick = () => {
     const currentValue = selector.get();
     selector.set(!currentValue);
-  }
+  };
 
-  return (
-    <button onClick={handleClick}>
-      Toggle Value
-    </button>
-  )
-}
-
+  return <button onClick={handleClick}>Toggle Value</button>;
+};
 ```
 
 # State Storage for Context

@@ -1,123 +1,117 @@
 :root {
-    --omlette-container-2xl-max-width: 1536px;
-    --omlette-container-xl-max-width: 1280px;
-    --omlette-container-lg-max-width: 1024px;
-    --omlette-container-md-max-width: 768px;
-    --omlette-container-sm-max-width: 640px;
+  --omlette-container-2xl-max-width: 1536px;
+  --omlette-container-xl-max-width: 1280px;
+  --omlette-container-lg-max-width: 1024px;
+  --omlette-container-md-max-width: 768px;
+  --omlette-container-sm-max-width: 640px;
 
-    --omlette-container-padding-x: 1rem;
-    --omlette-container-padding-left: var(--omlette-container-padding-x);
-    --omlette-container-padding-right: var(--omlette-container-padding-x);
-    --omlette-container-padding-y: 1rem;
-    --omlette-container-padding-top: var(--omlette-container-padding-y);
-    --omlette-container-padding-bottom: var(--omlette-container-padding-y);
+  --omlette-container-padding-x: 1rem;
+  --omlette-container-padding-left: var(--omlette-container-padding-x);
+  --omlette-container-padding-right: var(--omlette-container-padding-x);
+  --omlette-container-padding-y: 1rem;
+  --omlette-container-padding-top: var(--omlette-container-padding-y);
+  --omlette-container-padding-bottom: var(--omlette-container-padding-y);
 
-    --omlette-container-sm-padding-x: 1.5rem;
-    --omlette-container-sm-padding-left: var(--omlette-container-sm-padding-x);
-    --omlette-container-sm-padding-right: var(--omlette-container-sm-padding-x);
-    --omlette-container-sm-padding-y: 1.5rem;
-    --omlette-container-sm-padding-top: var(--omlette-container-sm-padding-y);
-    --omlette-container-sm-padding-bottom: var(--omlette-container-sm-padding-y);
+  --omlette-container-sm-padding-x: 1.5rem;
+  --omlette-container-sm-padding-left: var(--omlette-container-sm-padding-x);
+  --omlette-container-sm-padding-right: var(--omlette-container-sm-padding-x);
+  --omlette-container-sm-padding-y: 1.5rem;
+  --omlette-container-sm-padding-top: var(--omlette-container-sm-padding-y);
+  --omlette-container-sm-padding-bottom: var(--omlette-container-sm-padding-y);
 
-    --omlette-container-md-padding-x: 2rem;
-    --omlette-container-md-padding-left: var(--omlette-container-md-padding-x);
-    --omlette-container-md-padding-right: var(--omlette-container-md-padding-x);
-    --omlette-container-md-padding-y: 2rem;
-    --omlette-container-md-padding-top: var(--omlette-container-md-padding-y);
-    --omlette-container-md-padding-bottom: var(--omlette-container-md-padding-y);
+  --omlette-container-md-padding-x: 2rem;
+  --omlette-container-md-padding-left: var(--omlette-container-md-padding-x);
+  --omlette-container-md-padding-right: var(--omlette-container-md-padding-x);
+  --omlette-container-md-padding-y: 2rem;
+  --omlette-container-md-padding-top: var(--omlette-container-md-padding-y);
+  --omlette-container-md-padding-bottom: var(--omlette-container-md-padding-y);
 
-    --omlette-container-lg-padding-x: var(--omlette-container-md-padding-x);
-    --omlette-container-lg-padding-left: var(--omlette-container-lg-padding-x);
-    --omlette-container-lg-padding-right: var(--omlette-container-lg-padding-x);
-    --omlette-container-lg-padding-y: var(--omlette-container-md-padding-y);
-    --omlette-container-lg-padding-top: var(--omlette-container-lg-padding-y);
-    --omlette-container-lg-padding-bottom: var(--omlette-container-lg-padding-y);
+  --omlette-container-lg-padding-x: var(--omlette-container-md-padding-x);
+  --omlette-container-lg-padding-left: var(--omlette-container-lg-padding-x);
+  --omlette-container-lg-padding-right: var(--omlette-container-lg-padding-x);
+  --omlette-container-lg-padding-y: var(--omlette-container-md-padding-y);
+  --omlette-container-lg-padding-top: var(--omlette-container-lg-padding-y);
+  --omlette-container-lg-padding-bottom: var(--omlette-container-lg-padding-y);
 
-    --omlette-container-xl-padding-x: var(--omlette-container-lg-padding-x);
-    --omlette-container-xl-padding-left: var(--omlette-container-xl-padding-x);
-    --omlette-container-xl-padding-right: var(--omlette-container-xl-padding-x);
-    --omlette-container-xl-padding-y: var(--omlette-container-lg-padding-y);
-    --omlette-container-xl-padding-top: var(--omlette-container-xl-padding-y);
-    --omlette-container-xl-padding-bottom: var(--omlette-container-xl-padding-y);
+  --omlette-container-xl-padding-x: var(--omlette-container-lg-padding-x);
+  --omlette-container-xl-padding-left: var(--omlette-container-xl-padding-x);
+  --omlette-container-xl-padding-right: var(--omlette-container-xl-padding-x);
+  --omlette-container-xl-padding-y: var(--omlette-container-lg-padding-y);
+  --omlette-container-xl-padding-top: var(--omlette-container-xl-padding-y);
+  --omlette-container-xl-padding-bottom: var(--omlette-container-xl-padding-y);
 
-    --omlette-container-2xl-padding-x: var(--omlette-container-xl-padding-x);
-    --omlette-container-2xl-padding-left: var(--omlette-container-2xl-padding-x);
-    --omlette-container-2xl-padding-right: var(--omlette-container-2xl-padding-x);
-    --omlette-container-2xl-padding-y: var(--omlette-container-xl-padding-y);
-    --omlette-container-2xl-padding-top: var(--omlette-container-2xl-padding-y);
-    --omlette-container-2xl-padding-bottom: var(--omlette-container-2xl-padding-y);
+  --omlette-container-2xl-padding-x: var(--omlette-container-xl-padding-x);
+  --omlette-container-2xl-padding-left: var(--omlette-container-2xl-padding-x);
+  --omlette-container-2xl-padding-right: var(--omlette-container-2xl-padding-x);
+  --omlette-container-2xl-padding-y: var(--omlette-container-xl-padding-y);
+  --omlette-container-2xl-padding-top: var(--omlette-container-2xl-padding-y);
+  --omlette-container-2xl-padding-bottom: var(
+    --omlette-container-2xl-padding-y
+  );
 }
 
 :where(.omlette-container) {
-    padding: 
-        var(--omlette-container-padding-top)
-        var(--omlette-container-padding-right)
-        var(--omlette-container-padding-bottom)
-        var(--omlette-container-padding-left);
+  padding: var(--omlette-container-padding-top)
+    var(--omlette-container-padding-right)
+    var(--omlette-container-padding-bottom)
+    var(--omlette-container-padding-left);
 }
 
 @media (min-width: 640px) {
-    :where(.omlette-container) {
-        max-width: var(--omlette-container-sm-max-width);
-        padding: 
-            var(--omlette-container-sm-padding-top)
-            var(--omlette-container-sm-padding-right)
-            var(--omlette-container-sm-padding-bottom)
-            var(--omlette-container-sm-padding-left);
-    
-    }
+  :where(.omlette-container) {
+    max-width: var(--omlette-container-sm-max-width);
+    padding: var(--omlette-container-sm-padding-top)
+      var(--omlette-container-sm-padding-right)
+      var(--omlette-container-sm-padding-bottom)
+      var(--omlette-container-sm-padding-left);
+  }
 }
 
 @media (min-width: 768px) {
-    :where(.omlette-container) {
-        max-width: var(--omlette-container-md-max-width);
-        padding: 
-            var(--omlette-container-md-padding-top)
-            var(--omlette-container-md-padding-right)
-            var(--omlette-container-md-padding-bottom)
-            var(--omlette-container-md-padding-left);
-    }
+  :where(.omlette-container) {
+    max-width: var(--omlette-container-md-max-width);
+    padding: var(--omlette-container-md-padding-top)
+      var(--omlette-container-md-padding-right)
+      var(--omlette-container-md-padding-bottom)
+      var(--omlette-container-md-padding-left);
+  }
 }
 
 @media (min-width: 1024px) {
-    :where(.omlette-container) {
-        max-width: var(--omlette-container-lg-max-width);
-        padding: 
-            var(--omlette-container-lg-padding-top)
-            var(--omlette-container-lg-padding-right)
-            var(--omlette-container-lg-padding-bottom)
-            var(--omlette-container-lg-padding-left);
-    }
+  :where(.omlette-container) {
+    max-width: var(--omlette-container-lg-max-width);
+    padding: var(--omlette-container-lg-padding-top)
+      var(--omlette-container-lg-padding-right)
+      var(--omlette-container-lg-padding-bottom)
+      var(--omlette-container-lg-padding-left);
+  }
 }
 
 @media (min-width: 1280px) {
-    :where(.omlette-container) {
-        max-width: var(--omlette-container-xl-max-width);
-        padding: 
-            var(--omlette-container-xl-padding-top)
-            var(--omlette-container-xl-padding-right)
-            var(--omlette-container-xl-padding-bottom)
-            var(--omlette-container-xl-padding-left);
-    }
+  :where(.omlette-container) {
+    max-width: var(--omlette-container-xl-max-width);
+    padding: var(--omlette-container-xl-padding-top)
+      var(--omlette-container-xl-padding-right)
+      var(--omlette-container-xl-padding-bottom)
+      var(--omlette-container-xl-padding-left);
+  }
 }
 
 @media (min-width: 1536px) {
-    :where(.omlette-container) {
-        max-width: var(--omlette-container-2xl-max-width);
-        padding: 
-            var(--omlette-container-2xl-padding-top)
-            var(--omlette-container-2xl-padding-right)
-            var(--omlette-container-2xl-padding-bottom)
-            var(--omlette-container-2xl-padding-left);
-    }
+  :where(.omlette-container) {
+    max-width: var(--omlette-container-2xl-max-width);
+    padding: var(--omlette-container-2xl-padding-top)
+      var(--omlette-container-2xl-padding-right)
+      var(--omlette-container-2xl-padding-bottom)
+      var(--omlette-container-2xl-padding-left);
+  }
 }
 
 :where(.omlette-container.center) {
-    margin-left: auto;
-    margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 :where(.omlette-container.right) {
-    margin-left: auto;
+  margin-left: auto;
 }
-

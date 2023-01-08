@@ -1,27 +1,28 @@
 :root {
-    --omlette-checkbox-input-border-radius: var(--omlette-input-border-radius);
-    --omlette-checkbox-input-ring-color--error: var(--tw-color-red-700);
-    --omlette-checkbox-input-outline-color: var(--omlette-input-outline-color);
-    --omlette-checkbox-input-border-color--active: var(--omlette-input-border-color--active);
+  --omlette-checkbox-input-border-radius: var(--omlette-input-border-radius);
+  --omlette-checkbox-input-ring-color--error: var(--tw-color-red-700);
+  --omlette-checkbox-input-outline-color: var(--omlette-input-outline-color);
+  --omlette-checkbox-input-border-color--active: var(
+    --omlette-input-border-color--active
+  );
 }
 
-
 :where(.omlette-checkbox + .omlette-input-label-wrapper label) {
-    --omlette-label-padding-button: 0;
+  --omlette-label-padding-button: 0;
 }
 
 input:where(.omlette-checkbox) {
-    @apply shadow-none;
-    border-radius: var(--omlette-checkbox-input-border-radius);
-    outline-color: var(--omlette-checkbox-input-outline-color);
+  @apply shadow-none;
+  border-radius: var(--omlette-checkbox-input-border-radius);
+  outline-color: var(--omlette-checkbox-input-outline-color);
 }
 
 input:where(.omlette-checkbox.error) {
-    @apply ring-2;
-    --tw-ring-color: var(--omlette-checkbox-input-ring-color--error);
+  @apply ring-2;
+  --tw-ring-color: var(--omlette-checkbox-input-ring-color--error);
 }
 
 input:where(.omlette-checkbox:hover:not(:focus)) {
-    @apply ring-2;
-    border-color: var(--omlette-checkbox-input-border-color--active);
+  @apply ring-2;
+  border-color: var(--omlette-checkbox-input-border-color--active);
 }
