@@ -19,3 +19,13 @@
 :where(.omlette-collapse-panel-enter, .omlette-collapse-panel-enter-done) {
   transform: translateY(0);
 }
+
+:where(.omlette-collapse-carrot) {
+  @apply transition-transform;
+  transform: rotate(0deg);
+  transition-duration: var(--omlette-collapse-duration);
+}
+
+:where(.omlette-collapse-carrot-enter, .omlette-collapse-carrot-enter-done) {
+  transform: rotate(-180deg);
+}

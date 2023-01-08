@@ -4,6 +4,7 @@ import { CollapseTrigger } from "./collapse.trigger";
 import { CollapseContext } from "./context";
 import { UseCollapse, useCollapse } from "./useCollapse";
 import "./collapse.styles.css";
+import { CollapseCarrot } from "./collapse.carrot";
 
 export type CollapseProps = {
   collapse?: UseCollapse;
@@ -30,5 +31,6 @@ const Collapse = ({
 
 Collapse.Trigger = CollapseTrigger;
 Collapse.Panel = CollapsePanel;
+Collapse.Carrot = CollapseCarrot;
 
 export { Collapse };
