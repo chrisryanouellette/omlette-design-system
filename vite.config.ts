@@ -33,8 +33,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@Components": path.resolve(__dirname, "./components"),
-      "@Utilities": path.resolve(__dirname, "./utilities"),
+      "@Components": path.resolve(__dirname, "./src/components"),
+      "@Utilities": path.resolve(__dirname, "./src/utilities"),
     },
   },
 });

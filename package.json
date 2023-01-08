@@ -82,17 +82,5 @@
     "typescript": "^4.8.4",
     "vite": "^3.2.2",
     "webpack-bundle-analyzer": "^4.7.0"
-  },
-  "eslintConfig": {
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
-    ]
   }
 }

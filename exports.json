@@ -1,7 +1,7 @@
 {
-    "utilities": {
-        "input": "/src/utilities/index.ts",
-        "entry": "/build/utilities.js"
+    "main": {
+        "input": "/src/index.ts",
+        "entry": "/build/main.js"
     },
     "tailwind": {
         "input": "/development/tailwind/index.js",

@@ -52,6 +52,12 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": 0,
       },
     },
+    {
+      files: ["**/*.stories.*"],
+      rules: {
+        "import/no-anonymous-default-export": "off",
+      },
+    },
   ],
   settings: {
     react: {
