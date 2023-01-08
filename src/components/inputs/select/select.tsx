@@ -1,8 +1,10 @@
 import { OptionHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
+import { State } from "..";
 import { Errors, ErrorsProps, Label, LabelProps } from "../utilities";
 import { SelectOption } from "./select.option";
 import { concat } from "@Utilities/concat";
 import { ChildOrNull } from "@Components/utilities/ChildOrNull";
+import "./select.styles.css";
 
 export type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
   emptyOption?: boolean;
@@ -11,7 +13,9 @@ export type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
   label?: ReactNode;
   helper?: LabelProps["helper"];
   labelProps?: LabelProps;
-  inputProps?: SelectHTMLAttributes<HTMLSelectElement>;
+  inputProps?: SelectHTMLAttributes<HTMLSelectElement> & {
+    state?: State | State[];
+  };
   errorProps?: ErrorsProps;
   children?: ReactNode;
 };
@@ -31,7 +35,8 @@ const SelectInput = ({
   value,
   ...rest
 }: SelectInputProps): JSX.Element => {
-  console.log(inputProps?.value);
+  const selected = value ?? inputProps?.value;
+
   return (
     <>
       <Label {...labelProps} helper={helper}>
@@ -41,8 +46,13 @@ const SelectInput = ({
         {...inputProps}
         {...rest}
         multiple={multiple}
-        value={value || inputProps?.value || multiple ? [] : ""}
-        className={concat("omlette-select-input", className)}
+        value={selected ? selected : multiple ? [] : ""}
+        className={concat(
+          "omlette-select-input",
+          inputProps?.state,
+          inputProps?.className,
+          className
+        )}
       >
         <ChildOrNull condition={!multiple && !!emptyOption}>
           <SelectOption {...emptyOptionProps} value="">

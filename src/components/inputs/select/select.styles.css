@@ -1,0 +1,64 @@
+:root {
+  --omlette-select-border: var(--omlette-input-border);
+  --omlette-select-padding-x: var(--omlette-input-padding-x);
+  --omlette-select-padding-y: var(--omlette-input-padding-y);
+  --omlette-select-border-color: var(--omlette-input-border-color);
+  --omlette-select-border-color--error: var(
+    --omlette-input-border-color--error
+  );
+  --omlette-select-shadow-color: var(--omlette-input-shadow-color);
+  --omlette-select-border-radius: var(--omlette-input-border-radius);
+  --omlette-select-ring-offset--focus: var(--omlette-input-ring-offset--focus);
+  --omlette-select-ring-offset--hover: var(--omlette-input-ring-offset--hover);
+  --omlette-select-ring-color: var(--omlette-input-ring-color);
+  --omlette-select-ring-color--hover: var(--omlette-input-ring-color--hover);
+  --omlette-select-ring-color--error: var(--omlette-input-ring-color--error);
+  --omlette-select-outline-color: var(--omlette-input-outline-color);
+  --omlette-select-outline-color--error: var(
+    --omlette-input-outline-color--error
+  );
+  --omlette-select-border-color--active: var(
+    --omlette-input-border-color--active
+  );
+  --omlette-select-width: var(--omlette-input-width);
+}
+
+select:where(.omlette-select-input) {
+  @apply shadow-inner;
+  border-radius: var(--omlette-select-border-radius);
+  border-width: var(--omlette-select-border);
+  border-color: var(--omlette-select-border-color);
+  outline-color: var(--omlette-select-outline-color);
+  padding: var(--omlette-select-padding-y) var(--omlette-select-padding-x);
+  width: var(--omlette-select-width);
+
+  --tw-shadow-color: var(--omlette-select-shadow-color);
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+select:where(.omlette-select-input.error) {
+  @apply ring-2;
+  outline-color: var(--omlette-select-outline-color--error);
+  --tw-ring-color: var(--omlette-select-ring-color--error);
+}
+
+select:where(.omlette-select-input:hover:not(:focus)) {
+  @apply ring-4;
+  border-color: var(--omlette-select-border-color--active);
+  --tw-ring-color: var(--omlette-select-ring-color--hover);
+}
+
+select:where(.omlette-select-input:focus) {
+  @apply ring-2;
+  border-color: var(--omlette-select-border-color--active);
+  --tw-ring-offset-width: var(--omlette-select-ring-offset--focus);
+  --tw-ring-color: var(--omlette-select-ring-color);
+}
+
+select:where(.omlette-select-input:active:not(:focus)) {
+  border-color: var(--omlette-select-border-color--active);
+}
+
+select:where(.omlette-select-input.error) {
+  border-color: var(--omlette-select-border-color--error);
+}

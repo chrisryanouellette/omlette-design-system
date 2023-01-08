@@ -43,6 +43,12 @@ const passwordValidation: Validation<BasicForm["password"]> = (
   }
 };
 
+const selectValidation: Validation<BasicForm["select"]> = (field, addError) => {
+  if (!field.value) {
+    addError("This field is required.");
+  }
+};
+
 const termsAndConditionsValidation: Validation<
   BasicForm["termsAndConditions"]
 > = (field, addError) => {
@@ -75,7 +81,7 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
         <Form.Item name="date">
           <DateInput label="Start Date" />
         </Form.Item>
-        <Form.Item name="select">
+        <Form.Item name="select" required validation={selectValidation}>
           <SelectInput label="Favorite Animal">
             <SelectInput.Option value="dog">Dog</SelectInput.Option>
             <SelectInput.Option value="cat">Cat</SelectInput.Option>

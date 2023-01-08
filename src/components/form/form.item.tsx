@@ -106,7 +106,7 @@ const FormItem = <T,>({
           const selected = Array.from(e.target.selectedOptions).map(
             (elem) => elem.value
           );
-          formContext.set(name, selected);
+          formContext.set(name, e.target.multiple ? selected : selected[0]);
         } else {
           formContext.set(name, e.target.value);
         }
