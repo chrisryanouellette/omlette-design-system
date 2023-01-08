@@ -124,6 +124,8 @@ if (!isSupported) {
     }
 
     /* I'm unsure what this does */
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     data[type]--;
 
     /* If there are still listeners then stop processing */

@@ -1,10 +1,4 @@
-import {
-  Children,
-  createContext,
-  ReactNode,
-  RefObject,
-  useContext,
-} from "react";
+import { createContext, ReactNode, useContext } from "react";
 import { UseCarousel } from "./useCarousel";
 
 type CarouselContextType = {

@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
-import { Input, InputProp } from "../standard";
+import { Input, InputProps } from "../standard";
 import { Errors, ErrorsProps, Label, LabelProps } from "../utilities";
 
 export type NumberInputProps = {
   label?: ReactNode;
   helper?: LabelProps["helper"];
   labelProps?: LabelProps;
-  inputProps?: InputProp;
+  inputProps?: InputProps;
   errorProps?: ErrorsProps;
 };
 

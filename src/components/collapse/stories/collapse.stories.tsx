@@ -1,6 +1,6 @@
 import { BasicCollapseStory as Basic } from "./story/basic";
 
-export type CollapseControls = {};
+export type CollapseControls = void;
 
 export default {
   title: "Components/Collapse",

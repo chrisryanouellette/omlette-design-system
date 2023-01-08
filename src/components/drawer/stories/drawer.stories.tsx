@@ -1,6 +1,6 @@
 import { BasicDrawerStory as Basic } from "./story/basic";
 
-export type ContainerControls = {};
+export type ContainerControls = void;
 
 export default {
   title: "Components/Drawer",

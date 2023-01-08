@@ -1,6 +1,6 @@
-export type CarouselControls = {};
+export type CarouselControls = void;
 
-export type IconButtonControls = CarouselControls & {};
+export type IconButtonControls = CarouselControls & void;
 
 export default {
   title: "Components/Carousel",

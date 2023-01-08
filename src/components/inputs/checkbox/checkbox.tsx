@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Input, InputProp } from "../standard";
+import { Input, InputProps } from "../standard";
 import { Errors, ErrorsProps, Label, LabelProps } from "../utilities";
 import { concat } from "@Utilities/concat";
 import "./checkbox.styles.css";
@@ -24,7 +24,7 @@ export type CheckboxProps = {
   label?: ReactNode;
   helper?: LabelProps["helper"];
   labelProps?: LabelProps;
-  inputProps?: InputProp;
+  inputProps?: InputProps;
   errorProps?: ErrorsProps;
 };
 
