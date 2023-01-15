@@ -16,19 +16,19 @@ export type CollapsePanelProps = HTMLAttributes<HTMLElement> & {
 };
 
 const CollapsePanel = ({
+  children,
+  className,
   container = "div",
   containerProps,
-  className,
-  element = "div",
   duration = 300,
+  element = "div",
   trapFocus,
-  children,
   ...rest
 }: CollapsePanelProps): JSX.Element => {
   const context = useCollapseContext();
   const isOpen = useStore(context.store, (s) => s.isOpen);
   const ref = useRef<HTMLDivElement>(null);
-  const { initialize, beginTrap, releaseTrap, subscribe } = useTabTrap(ref);
+  const { beginTrap, initialize, releaseTrap, subscribe } = useTabTrap(ref);
   const Container = container;
   const Element = element;
 

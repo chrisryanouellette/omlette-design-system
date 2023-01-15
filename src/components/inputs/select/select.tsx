@@ -4,6 +4,7 @@ import { Errors, ErrorsProps, Label, LabelProps } from "../utilities";
 import { SelectOption } from "./select.option";
 import { concat } from "@Utilities/concat";
 import { ChildOrNull } from "@Components/utilities/ChildOrNull";
+
 import "./select.styles.css";
 
 export type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
@@ -21,16 +22,16 @@ export type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
 };
 
 const SelectInput = ({
-  emptyOption = true,
-  emptyOptionText = "Please select a value",
-  emptyOptionProps,
-  label,
-  helper,
-  labelProps,
-  inputProps,
-  errorProps,
-  className,
   children,
+  className,
+  emptyOption = true,
+  emptyOptionProps,
+  emptyOptionText = "Please select a value",
+  errorProps,
+  helper,
+  inputProps,
+  label,
+  labelProps,
   multiple,
   value,
   ...rest

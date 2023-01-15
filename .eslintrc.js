@@ -7,21 +7,7 @@ module.exports = {
   globals: {
     JSX: "readonly",
   },
-  extends: [
-    "eslint:recommended",
-    "google",
-    "plugin:import/recommended",
-    "plugin:jest/recommended",
-    "plugin:react/recommended",
-    "plugin:react/jsx-runtime",
-    "plugin:react-hooks/recommended",
-    "plugin:import/typescript",
-    "plugin:testing-library/react",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "plugin:storybook/recommended",
-  ],
+  extends: ["eslint-config-omlette"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: "latest",
@@ -32,8 +18,6 @@ module.exports = {
     },
   },
   rules: {
-    "@typescript-eslint/explicit-function-return-type": 2,
-    "import/order": 2,
     "spaced-comment": [
       "error",
       "always",

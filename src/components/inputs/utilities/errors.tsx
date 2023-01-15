@@ -1,6 +1,7 @@
 import { HTMLAttributes, ReactNode } from "react";
 import { List, ListProps, ListItemProps } from "@Components/list";
 import { concat } from "@Utilities/concat";
+
 import "./errors.styles.css";
 
 export type ErrorsProps = ListProps & {
@@ -11,8 +12,8 @@ export type ErrorsProps = ListProps & {
 };
 
 const Errors = ({
-  errors,
   children,
+  errors,
   listItemProps,
   wrapperClassName,
   ...rest

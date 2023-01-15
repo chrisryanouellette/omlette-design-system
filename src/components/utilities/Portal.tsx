@@ -6,7 +6,7 @@ export type PortalProps = {
   children?: ReactNode;
 };
 
-const Portal = ({ elem = "#root", children }: PortalProps): JSX.Element => {
+const Portal = ({ children, elem = "#root" }: PortalProps): JSX.Element => {
   const element =
     typeof elem === "string" ? document.querySelector(elem) : elem;
 

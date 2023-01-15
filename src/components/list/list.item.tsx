@@ -28,8 +28,8 @@ export type ListItemProps = HTMLAttributes<HTMLLIElement> & {
 };
 
 const ListItem = ({
-  className,
   children,
+  className,
   iconProps,
   listStyle = "none",
   wrapperProps,

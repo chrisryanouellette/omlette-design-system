@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes, FC } from "react";
 import { concat } from "@Utilities/concat";
+
 import "./button.styles.css";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -8,10 +9,10 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const Button: FC<ButtonProps> = ({
-  size,
-  className,
-  variant,
   children,
+  className,
+  size,
+  variant,
   ...rest
 }) => {
   return (

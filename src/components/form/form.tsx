@@ -19,10 +19,10 @@ export type FormProps<Fields extends GenericFields> =
   };
 
 const Form = <Fields extends GenericFields>({
+  children,
   form: controlledForm,
   onFinish,
   onFinishFailed,
-  children,
   ...rest
 }: FormProps<Fields>): JSX.Element => {
   const internalForm = useForm<Fields>();

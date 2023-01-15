@@ -6,8 +6,8 @@ export type ChildOrNullProps = {
 };
 
 const ChildOrNull = ({
-  condition,
   children,
+  condition,
 }: ChildOrNullProps): JSX.Element | null => {
   return condition ? <>{children}</> : null;
 };

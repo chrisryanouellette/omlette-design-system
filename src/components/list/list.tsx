@@ -1,6 +1,7 @@
 import { HTMLAttributes, ReactNode } from "react";
 import { ListItem } from "./list.item";
 import { concat } from "@Utilities/concat";
+
 import "./list.styles.css";
 
 export type ListProps = HTMLAttributes<HTMLUListElement> & {
@@ -9,9 +10,9 @@ export type ListProps = HTMLAttributes<HTMLUListElement> & {
 };
 
 const List = ({
-  ordered,
-  className,
   children,
+  className,
+  ordered,
   ...rest
 }: ListProps): JSX.Element => {
   const Element = ordered ? "ol" : "ul";

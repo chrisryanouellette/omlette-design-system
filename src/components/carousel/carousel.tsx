@@ -7,8 +7,9 @@ import { CarouselPagination } from "./carousel.pagination";
 import { CarouselItem } from "./carousel.item";
 import { concat } from "@Utilities/concat";
 import { Icon, IconProps } from "@Components/icon";
-import "./carousel.styles.css";
 import { ChildOrNull } from "@Components/utilities/ChildOrNull";
+
+import "./carousel.styles.css";
 
 export type CarouselStore = {
   items: Set<string>;
@@ -29,15 +30,15 @@ type CarouselProps = HTMLAttributes<HTMLDivElement> & {
 
 const Carousel = ({
   "aria-label": ariaLabel,
-  className,
-  start,
-  hidePagination,
-  hideArrows,
   children,
+  className,
+  hideArrows,
+  hidePagination,
   leftArrowIcon = "ri-arrow-left-s-line",
   leftArrowIconProps,
   rightArrowIcon = "ri-arrow-right-s-line",
   rightArrowIconProps,
+  start,
   ...rest
 }: CarouselProps): JSX.Element => {
   const carousel = useCarousel({ start });

@@ -10,9 +10,9 @@ type CarouselItemProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const CarouselItem = ({
-  id: controlledId,
   children,
   className,
+  id: controlledId,
   ...rest
 }: CarouselItemProps): JSX.Element => {
   const context = useCarouselContext();

@@ -1,5 +1,6 @@
 import { AriaAttributes, FC, SVGAttributes, useId } from "react";
 import { concat } from "@Utilities/concat";
+
 import "./icon.styles.css";
 
 export type IconProps = SVGAttributes<SVGElement> & {
@@ -11,12 +12,12 @@ export type IconProps = SVGAttributes<SVGElement> & {
 };
 
 const Icon: FC<IconProps> = ({
-  name,
+  className,
   href = "remixicon.symbol.svg",
-  title,
+  name,
   role,
   size,
-  className,
+  title,
   ...rest
 }) => {
   const id = useId();

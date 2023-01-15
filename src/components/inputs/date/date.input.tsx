@@ -11,11 +11,11 @@ export type DateInputProps = {
 };
 
 const DateInput = ({
-  label,
-  helper,
-  labelProps,
-  inputProps,
   errorProps,
+  helper,
+  inputProps,
+  label,
+  labelProps,
 }: DateInputProps): JSX.Element => {
   return (
     <>

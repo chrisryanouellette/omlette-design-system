@@ -1,5 +1,6 @@
 import { HTMLAttributes, ReactNode } from "react";
 import { concat } from "@Utilities/concat";
+
 import "./label.styles.css";
 
 export type LabelProps = HTMLAttributes<HTMLLabelElement> & {
@@ -10,8 +11,8 @@ export type LabelProps = HTMLAttributes<HTMLLabelElement> & {
 };
 
 const Label = ({
-  helper,
   children,
+  helper,
   required,
   wrapperProps,
   ...rest

@@ -9,9 +9,9 @@ type DrawerTriggerProps = ButtonProps & {
 };
 
 const DrawerTrigger = ({
+  children,
   drawer,
   element,
-  children,
   ...rest
 }: DrawerTriggerProps): JSX.Element => {
   const Element = element ?? Button;

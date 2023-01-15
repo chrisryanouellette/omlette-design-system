@@ -9,9 +9,9 @@ export type CollapseTriggerProps = ButtonProps & {
 };
 
 const CollapseTrigger = ({
-  element,
-  className,
   children,
+  className,
+  element,
   ...rest
 }: CollapseTriggerProps): JSX.Element => {
   const context = useCollapseContext();

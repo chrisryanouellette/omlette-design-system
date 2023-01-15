@@ -4,11 +4,11 @@ import { IconButton } from "@Components/button/icon-button";
 const IconButtonStory = ({
   Children,
   Name,
+  Position,
   Size: size,
-  Variant: variant,
   Theme: theme,
   Title: title,
-  Position,
+  Variant: variant,
   ...rest
 }: IconButtonControls): JSX.Element => (
   <IconButton

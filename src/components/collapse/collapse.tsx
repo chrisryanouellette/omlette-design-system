@@ -3,8 +3,9 @@ import { CollapsePanel } from "./collapse.panel";
 import { CollapseTrigger } from "./collapse.trigger";
 import { CollapseContext } from "./context";
 import { UseCollapse, useCollapse } from "./useCollapse";
-import "./collapse.styles.css";
 import { CollapseCarrot } from "./collapse.carrot";
+
+import "./collapse.styles.css";
 
 export type CollapseProps = {
   collapse?: UseCollapse;
@@ -13,9 +14,9 @@ export type CollapseProps = {
 };
 
 const Collapse = ({
+  children,
   collapse: controlledCollapse,
   element = "div",
-  children,
 }: CollapseProps): JSX.Element => {
   const internalCollapse = useCollapse();
   const collapse = controlledCollapse ?? internalCollapse;

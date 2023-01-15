@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Input, InputProps } from "../standard";
 import { Errors, ErrorsProps, Label, LabelProps } from "../utilities";
 import { concat } from "@Utilities/concat";
+
 import "./checkbox.styles.css";
 
 // export type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -29,11 +30,11 @@ export type CheckboxProps = {
 };
 
 const Checkbox = ({
-  label,
-  helper,
-  labelProps,
-  inputProps,
   errorProps,
+  helper,
+  inputProps,
+  label,
+  labelProps,
 }: CheckboxProps): JSX.Element => {
   const classes = concat("omlette-checkbox", inputProps?.className);
   return (

@@ -11,11 +11,11 @@ export type TextInputProps = {
 };
 
 const TextInput = ({
-  label,
-  helper,
-  labelProps,
-  inputProps,
   errorProps,
+  helper,
+  inputProps,
+  label,
+  labelProps,
 }: TextInputProps): JSX.Element => {
   return (
     <>

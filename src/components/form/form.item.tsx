@@ -16,6 +16,7 @@ import { SelectorFn, useStore } from "@Utilities/store";
 import { isInstanceOf } from "@Utilities/element";
 import { concat } from "@Utilities/concat";
 import { isUniqueSet } from "@Utilities/set";
+
 import "./form.item.styles.css";
 
 type FormItemProps<T> = {
@@ -49,14 +50,14 @@ const HtmlInstances = [
 
 const FormItem = <T,>({
   children,
-  id: controlledId,
   errorsId: controlledErrorsId,
-  name,
-  wrapperProps,
-  required,
+  id: controlledId,
   inline,
-  validation: validationFn,
+  name,
   onChange,
+  required,
+  validation: validationFn,
+  wrapperProps,
 }: FormItemProps<T>): JSX.Element => {
   const internalId = useId();
   const internalErrorsId = useId();

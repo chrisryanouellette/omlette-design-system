@@ -3,6 +3,7 @@ import { Button, ButtonProps } from "./button";
 import { concat } from "@Utilities/concat";
 import { Icon, IconProps } from "@Components/icon";
 import { ChildOrNull } from "@Components/utilities/ChildOrNull";
+
 import "./button.styles.css";
 import "./icon-button.styles.css";
 
@@ -14,14 +15,14 @@ export type IconButtonProps = ButtonProps & {
 };
 
 const IconButton: FC<IconButtonProps> = ({
-  size,
+  children,
+  className,
+  iconProps,
   name = "ri-star-line",
   position = "left",
+  size,
   title,
-  iconProps,
-  className,
   variant,
-  children,
   ...rest
 }) => {
   return (

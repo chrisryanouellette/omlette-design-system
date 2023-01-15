@@ -11,11 +11,11 @@ export type NumberInputProps = {
 };
 
 const NumberInput = ({
-  label,
-  helper,
-  labelProps,
-  inputProps,
   errorProps,
+  helper,
+  inputProps,
+  label,
+  labelProps,
 }: NumberInputProps): JSX.Element => {
   return (
     <>
