@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
-import { CarouselStore } from "./carousel";
 import { useCreateStore, UseCreateStore } from "@Utilities/store";
+import { CarouselStore } from "./carousel";
 
 export type UseCarouselProps = {
   start?: string | null;

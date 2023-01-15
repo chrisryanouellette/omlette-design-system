@@ -1,10 +1,10 @@
 import { ButtonHTMLAttributes, useEffect, useState } from "react";
-import { CarouselStore } from "./carousel";
-import { useCarouselContext } from "./carousel.context";
 import { concat } from "@Utilities/concat";
 import { isUniqueSet } from "@Utilities/set";
 import { useStore } from "@Utilities/store";
 import { Button } from "@Components/button";
+import { useCarouselContext } from "./carousel.context";
+import { CarouselStore } from "./carousel";
 
 type PaginationButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   id: string;

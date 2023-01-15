@@ -1,5 +1,5 @@
-import { IconButtonControls } from "../button.stories";
 import { IconButton } from "@Components/button/icon-button";
+import { IconButtonControls } from "../button.stories";
 
 const IconButtonStory = ({
   Children,

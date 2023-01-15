@@ -9,13 +9,13 @@ import {
   useEffect,
   useId,
 } from "react";
-import { useFormContext } from "./context";
-import { FormFields, GenericFields, Validation } from "./useForm";
-import { isElement } from "@Utilities";
 import { SelectorFn, useStore } from "@Utilities/store";
 import { isInstanceOf } from "@Utilities/element";
 import { concat } from "@Utilities/concat";
 import { isUniqueSet } from "@Utilities/set";
+import { FormFields, GenericFields, Validation } from "./useForm";
+import { useFormContext } from "./context";
+import { isElement } from "@Utilities";
 
 import "./form.item.styles.css";
 

@@ -1,6 +1,6 @@
 import { FormEvent, useCallback, useMemo, useRef } from "react";
-import { fieldsReducer, FormFieldsActions, ReducerActions } from "./reducers";
 import { ReadOnlyUseCreateStore, useCreateStore } from "@Utilities/store";
+import { fieldsReducer, FormFieldsActions, ReducerActions } from "./reducers";
 
 export type GenericFields = { [field: string]: unknown };
 

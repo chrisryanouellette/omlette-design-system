@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { FormControls } from "../form.stories";
 import { bindTemplate } from "@Storybook/types";
 import { Form, useForm, Validation } from "@Components/form";
 import {
@@ -11,6 +10,7 @@ import {
 import { Button } from "@Components/button";
 import { Container } from "@Components/container";
 import { DateInput } from "@Components/inputs/date";
+import { FormControls } from "../form.stories";
 
 type BasicForm = {
   firstName: string;

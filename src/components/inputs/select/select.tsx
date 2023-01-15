@@ -1,9 +1,9 @@
 import { OptionHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
+import { concat } from "@Utilities/concat";
+import { ChildOrNull } from "@Components/utilities/ChildOrNull";
 import { State } from "..";
 import { Errors, ErrorsProps, Label, LabelProps } from "../utilities";
 import { SelectOption } from "./select.option";
-import { concat } from "@Utilities/concat";
-import { ChildOrNull } from "@Components/utilities/ChildOrNull";
 
 import "./select.styles.css";
 

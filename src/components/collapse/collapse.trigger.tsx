@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
-import { useCollapseContext } from "./context";
 import { Button, ButtonProps } from "@Components/button";
 import { concat } from "@Utilities/concat";
+import { useCollapseContext } from "./context";
 
 export type CollapseTriggerProps = ButtonProps & {
   element?: FC<any>;

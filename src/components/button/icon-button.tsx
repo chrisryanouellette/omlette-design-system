@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { Button, ButtonProps } from "./button";
 import { concat } from "@Utilities/concat";
 import { Icon, IconProps } from "@Components/icon";
 import { ChildOrNull } from "@Components/utilities/ChildOrNull";
+import { Button, ButtonProps } from "./button";
 
 import "./button.styles.css";
 import "./icon-button.styles.css";

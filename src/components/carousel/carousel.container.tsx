@@ -5,13 +5,13 @@ import {
   useEffect,
   useRef,
 } from "react";
+import { useStore } from "@Utilities/store";
+import { concat } from "@Utilities/concat";
 import { CarouselStore } from "./carousel";
 import {
   CarouselContainerProvider,
   useCarouselContext,
 } from "./carousel.context";
-import { useStore } from "@Utilities/store";
-import { concat } from "@Utilities/concat";
 
 export type CarouselContainerProps = HTMLAttributes<HTMLDivElement> & {
   children?: ReactNode;

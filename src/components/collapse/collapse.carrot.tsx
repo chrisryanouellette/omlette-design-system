@@ -1,9 +1,9 @@
 import { CSSTransition } from "react-transition-group";
 import { HTMLAttributes, useRef } from "react";
-import { useCollapseContext } from "./context";
 import { Icon, IconProps } from "@Components/icon";
 import { useStore } from "@Utilities/store";
 import { concat } from "@Utilities/concat";
+import { useCollapseContext } from "./context";
 
 export type CollapseCarrotProps = Partial<IconProps> & {
   containerProps?: HTMLAttributes<HTMLSpanElement>;

@@ -1,6 +1,6 @@
+import { ControlTypes } from "@Storybook/types";
 import { ContainerProps } from "../container";
 import { BasicContainerStory as Basic } from "./stories/basic";
-import { ControlTypes } from "@Storybook/types";
 
 export type ContainerControls = {
   Placement: ContainerProps["placement"];

@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { IconControls } from "../icon.stories";
 import { bindTemplate } from "@Storybook/types";
 import { Icon } from "@Components/icon";
 import { concat } from "@Utilities/concat";
+import { IconControls } from "../icon.stories";
 
 const IconStory = bindTemplate<FC<IconControls>>(({ Name, Size, ...rest }) => (
   <Icon

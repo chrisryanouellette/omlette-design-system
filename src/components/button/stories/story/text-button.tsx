@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { ButtonControls } from "../button.stories";
 import { bindTemplate } from "@Storybook/types";
 import { Button } from "@Components/button";
+import { ButtonControls } from "../button.stories";
 
 const TextButtonStory = bindTemplate<FC<ButtonControls>>(
   ({ Children, Size: size, Theme: theme, Variant: variant, ...rest }) => (

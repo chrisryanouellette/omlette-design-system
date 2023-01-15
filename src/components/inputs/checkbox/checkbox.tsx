@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
+import { concat } from "@Utilities/concat";
 import { Input, InputProps } from "../standard";
 import { Errors, ErrorsProps, Label, LabelProps } from "../utilities";
-import { concat } from "@Utilities/concat";
 
 import "./checkbox.styles.css";
 

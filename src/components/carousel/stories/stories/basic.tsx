@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { CarouselControls } from "../carousel.stories";
 import { bindTemplate } from "@Storybook/types";
 import { Carousel } from "@Components/carousel";
 import { Container } from "@Components/container";
+import { CarouselControls } from "../carousel.stories";
 
 const BasicCarouselStory = bindTemplate<FC<CarouselControls>>(() => (
   <Container placement="center">

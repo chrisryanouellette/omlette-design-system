@@ -1,6 +1,6 @@
 import { InputHTMLAttributes } from "react";
-import { State } from "..";
 import { concat } from "@Utilities/concat";
+import { State } from "..";
 
 import "./input.styles.css";
 import "./input.number.styles.css";

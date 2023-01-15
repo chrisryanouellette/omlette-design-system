@@ -1,6 +1,6 @@
+import { ControlTypes } from "@Storybook/types";
 import { ListStyle } from "../list.item";
 import { BasicListStory as Basic } from "./story/basic";
-import { ControlTypes } from "@Storybook/types";
 
 export type ListControls = {
   "List Element": "ul" | "ol";

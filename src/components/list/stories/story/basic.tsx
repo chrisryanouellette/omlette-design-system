@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { ListControls } from "../list.stories";
 import { bindTemplate } from "@Storybook/types";
 import { List } from "@Components/list";
+import { ListControls } from "../list.stories";
 
 const BasicListStory = bindTemplate<FC<ListControls>>(
   ({ "List Element": listElement, "List Style": listStyle }) => {

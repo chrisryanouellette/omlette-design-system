@@ -1,13 +1,13 @@
 import { HTMLAttributes, ReactNode } from "react";
+import { concat } from "@Utilities/concat";
+import { Icon, IconProps } from "@Components/icon";
+import { ChildOrNull } from "@Components/utilities/ChildOrNull";
 import { useCarousel } from "./useCarousel";
 import { CarouselContainer } from "./carousel.container";
 import { CarouselProvider } from "./carousel.context";
 import { CarouselControls } from "./carousel.controls";
 import { CarouselPagination } from "./carousel.pagination";
 import { CarouselItem } from "./carousel.item";
-import { concat } from "@Utilities/concat";
-import { Icon, IconProps } from "@Components/icon";
-import { ChildOrNull } from "@Components/utilities/ChildOrNull";
 
 import "./carousel.styles.css";
 

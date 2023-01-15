@@ -7246,10 +7246,10 @@ eslint-config-google@^0.14.0:
   resolved "https://registry.yarnpkg.com/eslint-config-google/-/eslint-config-google-0.14.0.tgz#4f5f8759ba6e11b424294a219dbfa18c508bcc1a"
   integrity sha512-WsbX4WbjuMvTdeVL6+J3rK1RGhCTqjsFjX7UMSMgZiyxxaNLkoJENbrGExzERFeoTpGw3F3FypTiWAP9ZXzkEw==
 
-eslint-config-omlette@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/eslint-config-omlette/-/eslint-config-omlette-1.0.3.tgz#7aa1460e0ef9c7c5609fea1f1935762ae51614a5"
-  integrity sha512-jX9W2BsZI2zhpwE9F+1Zb+U/wCdaiw5u+0zwmGVG8LIRF8zVrkixm+8WeboH65kkCvIPouYzBMrp/lslUEP2pA==
+eslint-config-omlette@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/eslint-config-omlette/-/eslint-config-omlette-1.0.4.tgz#0ff2cf74fc144f614c7cc4f45b0eaeac2d5a20a5"
+  integrity sha512-5+3pYWHOQjRNN3k/kQ3j3sogGjQzGfpIORa88Y8Td3eoHdIN8oD+nc9VyqkfKj8uhZPDMeQxS8qlxNPm+MlNyg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.48.1"
     eslint-config-google "^0.14.0"

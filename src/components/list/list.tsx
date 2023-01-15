@@ -1,6 +1,6 @@
 import { HTMLAttributes, ReactNode } from "react";
-import { ListItem } from "./list.item";
 import { concat } from "@Utilities/concat";
+import { ListItem } from "./list.item";
 
 import "./list.styles.css";
 

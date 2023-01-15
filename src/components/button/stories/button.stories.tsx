@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
+import { ButtonProps } from "@Components/button";
+import { ControlTypes, bindTemplate } from "@Storybook/types";
 import { IconButtonProps } from "../icon-button";
 import { TextButtonStory as Text } from "./story/text-button";
 import { IconButtonStory } from "./story/icon-button";
-import { ButtonProps } from "@Components/button";
-import { ControlTypes, bindTemplate } from "@Storybook/types";
 
 export type ButtonControls = {
   Size: ButtonProps["size"];

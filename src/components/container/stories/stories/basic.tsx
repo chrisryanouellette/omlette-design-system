@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { ContainerControls } from "../container.stories";
 import { Container } from "@Components/container";
 import { bindTemplate } from "@Storybook/types";
+import { ContainerControls } from "../container.stories";
 
 export const BasicContainerStory = bindTemplate<FC<ContainerControls>>(
   ({ Placement: placement }) => (

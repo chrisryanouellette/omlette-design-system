@@ -1,9 +1,9 @@
 import { HTMLAttributes, ReactNode, useEffect, useId, useRef } from "react";
+import { concat } from "@Utilities/concat";
 import {
   useCarouselContainerContext,
   useCarouselContext,
 } from "./carousel.context";
-import { concat } from "@Utilities/concat";
 
 type CarouselItemProps = HTMLAttributes<HTMLDivElement> & {
   children?: ReactNode;

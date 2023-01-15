@@ -1,10 +1,10 @@
 import { HTMLAttributes, ReactNode, useEffect, useRef } from "react";
 import { CSSTransition } from "react-transition-group";
-import { useCollapseContext } from "./context";
 import { useStore } from "@Utilities/store";
 import { concat } from "@Utilities/concat";
 import { useTabTrap } from "@Utilities/tab";
 import { styles } from "@Utilities/styles";
+import { useCollapseContext } from "./context";
 
 export type CollapsePanelProps = HTMLAttributes<HTMLElement> & {
   container?: "div" | "section" | "aside";
