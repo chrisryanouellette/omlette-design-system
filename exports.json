@@ -6,5 +6,17 @@
   "tailwind": {
     "input": "/development/tailwind/index.js",
     "entry": "/build/tailwind.js"
+  },
+  "utilities": {
+    "input": "/development/tailwind/utilities.js",
+    "entry": "/build/utilities.js"
+  },
+  "colors": {
+    "input": "/development/tailwind/colors.js",
+    "entry": "/build/colors.js"
+  },
+  "plugins/list": {
+    "input": "/development/tailwind/plugins/list.js",
+    "entry": "/development/tailwind/plugins/list.js"
   }
 }

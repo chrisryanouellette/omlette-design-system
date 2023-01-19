@@ -7,9 +7,10 @@
   "scripts": {
     "prepare": "husky install",
     "develop": "vite",
-    "build": "yarn build:package && yarn build:types",
+    "build": "yarn build:package && yarn build:types && yarn build:format",
     "build:package": "vite build",
     "build:types": "tsc --project ./tsconfig.prod.json",
+    "build:format": "prettier --loglevel warn --write \"build/**/*.d.ts\"",
     "preview": "vite preview",
     "test": "react-scripts test --watchAll=false",
     "test:watch": "react-scripts test",
