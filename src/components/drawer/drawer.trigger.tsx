@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 import { Button, ButtonProps } from "@Components/button";
 import { isDrawerOpenKey } from "./store";
 
-type DrawerTriggerProps = ButtonProps & {
+export type DrawerTriggerProps = ButtonProps & {
   drawer: string;
   element?: FC;
   children?: ReactNode;

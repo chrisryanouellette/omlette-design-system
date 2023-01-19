@@ -7,7 +7,7 @@ import { concat } from "@Utilities/concat";
 import { styles } from "@Utilities/styles";
 import { drawersKey, isDrawerOpenKey } from "./store";
 
-type DrawerPanelProps = HTMLAttributes<HTMLElement> & {
+export type DrawerPanelProps = HTMLAttributes<HTMLElement> & {
   container?: "div" | "aside" | "section";
   containerProps?: HTMLAttributes<HTMLElement>;
   element?: "div";
