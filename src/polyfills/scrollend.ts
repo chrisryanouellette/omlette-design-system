@@ -1,8 +1,9 @@
 /** Heavily inspired by {@link [scrollyfills](https://github.com/argyleink/scrollyfills/blob/main/src/scrollend.js)}*/
 
-const isSupported = "scrollend" in window;
+const isSupported = "scrollend" in globalThis;
+const isClient = !!globalThis.document;
 
-if (!isSupported) {
+if (!isSupported && isClient) {
   /* The event we will dispatch when the scrolling ends */
   const scrollendEvent = new Event("scrollend");
   /* List of pointer events for tracking touch events */

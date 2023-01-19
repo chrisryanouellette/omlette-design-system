@@ -42,11 +42,6 @@ const InternalFormInputs = ["Input"];
 const FormElements = ["input"];
 const LabelElements = ["Label", "label"];
 const ErrorElements = ["Errors"];
-const HtmlInstances = [
-  HTMLInputElement,
-  HTMLSelectElement,
-  HTMLTextAreaElement,
-];
 
 const FormItem = <T,>({
   children,
@@ -97,7 +92,13 @@ const FormItem = <T,>({
 
   const handleChange = useCallback<(e: ChangeEvent<HTMLElement>) => void>(
     (e) => {
-      if (isInstanceOf(e.target, HtmlInstances)) {
+      if (
+        isInstanceOf(e.target, [
+          HTMLInputElement,
+          HTMLSelectElement,
+          HTMLTextAreaElement,
+        ])
+      ) {
         if (
           isInstanceOf(e.target, [HTMLInputElement]) &&
           e.target.getAttribute("type") === "checkbox"

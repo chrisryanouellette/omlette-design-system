@@ -20,6 +20,7 @@ export default defineConfig({
       entry: entries,
       name: "@ouellettec/design-system",
     },
+    ssr: true,
     rollupOptions: {
       external: ["react"],
       input: inputs,

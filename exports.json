@@ -1,7 +1,7 @@
 {
-  "main": {
+  "index": {
     "input": "/src/index.ts",
-    "entry": "/build/main.js"
+    "entry": "/build/index.js"
   },
   "tailwind": {
     "input": "/development/tailwind/index.js",

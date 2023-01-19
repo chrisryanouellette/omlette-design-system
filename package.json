@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "author": "Christopher Ouellette <chrisryanouellette@gmail.com>",
   "license": "MIT",
-  "files": [
-    "./build"
-  ],
+  "main": "build/index.js",
   "scripts": {
     "develop": "vite",
     "build": "yarn build:package && yarn build:types",
