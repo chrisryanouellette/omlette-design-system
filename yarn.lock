@@ -7637,7 +7637,7 @@ eslint-module-utils@^2.7.3:
 
 eslint-plugin-css-import-order@^1.1.0:
   version "1.1.0"
-  resolved "http://localhost:4873/eslint-plugin-css-import-order/-/eslint-plugin-css-import-order-1.1.0.tgz#bdd73863488da514bf0b1a42f0acc1beeff9ff24"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-css-import-order/-/eslint-plugin-css-import-order-1.1.0.tgz#bdd73863488da514bf0b1a42f0acc1beeff9ff24"
   integrity sha512-43ODxP1sXpmgI4c+NCtXqmhkLsYGe8El1ewOlvsXKchLjWLxJw5zfp4eEg31Eni+is3jGkBL2TrNyUOOnbOMDg==
 
 eslint-plugin-flowtype@^8.0.3:
