@@ -1,0 +1,33 @@
+# More info at https://github.com/marketplace/actions/github-action-for-yarn
+
+name: Node.js and Yarn CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'npm'
+    - name: Run install
+      uses: borales/actions-yarn@v4
+      with:
+        cmd: install # will run `yarn install` command
+    - name: Run CI
+      uses: borales/actions-yarn@v4
+      with:
+        cmd: ci # will run `yarn ci` command
+    - name: Build production bundle
+      uses: borales/actions-yarn@v4
+      with:
+        cmd: build:package # will run `yarn build:package` command
