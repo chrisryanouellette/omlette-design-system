@@ -6,6 +6,7 @@ import {
   FinishFailedEvent,
   FormEvents,
   GenericFields,
+  UpdateEvent,
   UseForm,
   useForm,
 } from "./useForm";
@@ -13,6 +14,7 @@ import {
 export type FormProps<Fields extends GenericFields> =
   HTMLAttributes<HTMLFormElement> & {
     form?: UseForm<Fields>;
+    onUpdate?: UpdateEvent<Fields>;
     onFinish?: FinishEvent<Fields>;
     onFinishFailed?: FinishFailedEvent<Fields>;
     children?: ReactNode;
@@ -23,6 +25,7 @@ const Form = <Fields extends GenericFields>({
   form: controlledForm,
   onFinish,
   onFinishFailed,
+  onUpdate,
   ...rest
 }: FormProps<Fields>): JSX.Element => {
   const internalForm = useForm<Fields>();
@@ -30,6 +33,9 @@ const Form = <Fields extends GenericFields>({
 
   useEffect(() => {
     const unsubscribes: (() => void)[] = [];
+    if (onUpdate) {
+      unsubscribes.push(form.subscribe(FormEvents.update, onUpdate));
+    }
     if (onFinish) {
       unsubscribes.push(form.subscribe(FormEvents.finish, onFinish));
     }
