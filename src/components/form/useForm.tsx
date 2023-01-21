@@ -5,22 +5,30 @@ import { fieldsReducer, FormFieldsActions, ReducerActions } from "./reducers";
 export type GenericFields = { [field: string]: unknown };
 
 export enum FormEvents {
+  update = "update",
   finish = "finish",
   finishFailed = "finishFailed",
 }
 
+export type UpdateEvent<Fields extends GenericFields> = (
+  name: keyof Fields,
+  value: Fields[typeof name],
+  form: FormFields<Fields>
+) => void;
+
 export type FinishEvent<Fields extends GenericFields> = (
   form: FormFields<Fields>,
-  e: FormEvent<HTMLFormElement>
+  e?: FormEvent<HTMLFormElement>
 ) => void;
 
 export type FinishFailedEvent<Fields extends GenericFields> = (
   invalid: Extract<keyof Fields, string>[],
   form: FormFields<Fields>,
-  e: FormEvent<HTMLFormElement>
+  e?: FormEvent<HTMLFormElement>
 ) => void;
 
 type Subscriptions<Fields extends GenericFields> = {
+  [FormEvents.update]: UpdateEvent<Fields>;
   [FormEvents.finish]: FinishEvent<Fields>;
   [FormEvents.finishFailed]: FinishFailedEvent<Fields>;
 };
@@ -73,11 +81,12 @@ export type UseForm<Fields extends GenericFields> = {
    * Validates a form field, throws an error of errors if there where any.
    */
   validate: <K extends keyof Fields>(name: Extract<K, string>) => Promise<void>;
-  submit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+  submit: (e?: FormEvent<HTMLFormElement>) => Promise<void>;
   subscribe: <E extends FormEvents>(
     event: E,
     fn: Subscriptions<Fields>[E]
   ) => () => void;
+  reset: <K extends keyof Fields>(names?: Extract<K, string>[]) => void;
 };
 
 const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
@@ -93,6 +102,7 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
   const subscriptions = useRef<{
     [K in FormEvents]: Set<Subscriptions<Fields>[K]>;
   }>({
+    update: new Set(),
     finish: new Set(),
     finishFailed: new Set(),
   });
@@ -122,6 +132,9 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
           value,
         },
       });
+      subscriptions.current.update.forEach((sub) =>
+        sub(name, value, fields.get())
+      );
     },
     [fields]
   );
@@ -170,7 +183,7 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
 
   const submit = useCallback<UseForm<Fields>["submit"]>(
     async (e) => {
-      e.preventDefault();
+      e?.preventDefault();
       const results = await Promise.allSettled(
         Object.keys(fields.get()).map(async (key) => {
           return validate(key);
@@ -198,9 +211,33 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
     return () => subscriptions.current[event].delete(fn);
   }, []);
 
+  const reset = useCallback<UseForm<Fields>["reset"]>(
+    (names) => {
+      if (names) {
+        return names.forEach((key) =>
+          set(key, undefined as Fields[typeof key])
+        );
+      }
+
+      Object.keys(fields.get()).forEach((key) =>
+        set(key, undefined as Fields[typeof key])
+      );
+    },
+    [fields, set]
+  );
+
   return useMemo(
-    () => ({ fields, register, set, validation, validate, submit, subscribe }),
-    [fields, register, set, submit, validate, validation, subscribe]
+    () => ({
+      fields,
+      register,
+      set,
+      validation,
+      validate,
+      submit,
+      subscribe,
+      reset,
+    }),
+    [fields, register, set, submit, validate, validation, subscribe, reset]
   );
 };
 
