@@ -103,8 +103,12 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
         action: ReducerActions.register,
         value: { name, value: defaultValue, defaultValue },
       });
-      return () =>
-        fields.set({ action: ReducerActions.unregister, value: { name } });
+      return () => {
+        fields.set({
+          action: ReducerActions.unregister,
+          value: { name },
+        });
+      };
     },
     [fields]
   );
