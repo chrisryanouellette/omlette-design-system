@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useMemo } from "react";
 import { ReadOnlyUseCreateStore } from "@Utilities/store";
 import { FormFields, GenericFields, UseForm } from "./useForm";
 
@@ -18,9 +18,18 @@ export type FormProviderProps<Fields extends GenericFields> =
 
 const FormProvider = <Fields extends GenericFields>({
   children,
-  ...rest
+  register,
+  set,
+  store,
+  validation,
 }: FormProviderProps<Fields>): JSX.Element => {
-  return <FormContext.Provider value={rest}>{children}</FormContext.Provider>;
+  const context = useMemo(() => {
+    return { register, set, validation, store };
+  }, [register, set, store, validation]);
+
+  return (
+    <FormContext.Provider value={context}>{children}</FormContext.Provider>
+  );
 };
 
 const useFormContext = <

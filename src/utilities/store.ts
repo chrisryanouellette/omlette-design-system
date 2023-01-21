@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export type GlobalStoreKey<Store> = {
   subscriptions: Set<(value: Store) => void>;
@@ -73,7 +73,7 @@ export const useCreateStore = <Store, Action = Partial<Store>>(
     return () => subscriptions.current.delete(cb);
   }, []);
 
-  return { get, set, subscribe };
+  return useMemo(() => ({ get, set, subscribe }), [get, set, subscribe]);
 };
 
 export type SelectorFn<Store, Selected = Store> = (
