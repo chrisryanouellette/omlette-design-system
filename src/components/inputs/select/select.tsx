@@ -67,6 +67,7 @@ const SelectInput = ({
   );
 };
 
+SelectInput.displayName = "SelectInput";
 SelectInput.Option = SelectOption;
 
 export { SelectInput };

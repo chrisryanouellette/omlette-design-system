@@ -28,4 +28,6 @@ const DateInput = ({
   );
 };
 
+DateInput.displayName = "DateInput";
+
 export { DateInput };
