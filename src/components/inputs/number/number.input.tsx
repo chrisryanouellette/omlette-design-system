@@ -28,4 +28,6 @@ const NumberInput = ({
   );
 };
 
+NumberInput.displayName = "NumberInput";
+
 export { NumberInput };

@@ -46,4 +46,6 @@ const Errors = ({
   );
 };
 
+Errors.displayName = "Errors";
+
 export { Errors };

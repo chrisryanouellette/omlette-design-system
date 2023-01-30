@@ -48,4 +48,6 @@ const Checkbox = ({
   );
 };
 
+Checkbox.displayName = "Checkbox";
+
 export { Checkbox };
