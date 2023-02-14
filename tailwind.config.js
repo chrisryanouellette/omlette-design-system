@@ -1,11 +1,11 @@
 const {
-  omletteTailwindTheme,
   omletteDesignSystemPlugin,
+  omletteTailwindTheme,
 } = require("./development/tailwind");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/components/**/*.{ts,tsx}"],
+  content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: { ...omletteTailwindTheme },
   },
