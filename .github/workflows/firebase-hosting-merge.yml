@@ -24,7 +24,6 @@ jobs:
       uses: borales/actions-yarn@v4
       with:
         cmd: build-storybook # will run `yarn install` command
-    - uses: actions/checkout@v2
     - uses: FirebaseExtended/action-hosting-deploy@v0
       with:
         repoToken: '${{ secrets.GITHUB_TOKEN }}'
