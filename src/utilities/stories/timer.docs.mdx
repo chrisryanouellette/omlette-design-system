@@ -1,0 +1,88 @@
+# Timer
+
+This timer implementation is based off of an [HTTP 203 episode](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95). It aims to update the time as accurately as possible while also running update function as infrequently as possible. The timer will automatically pause when the tab becomes inactive.
+
+## Creating a Timer
+
+The timer does not come with a component but instead only a custom hook. We can begin by calling the hook which will return an timer instance.
+
+```tsx
+import { timer } from "@omlette-design-system/utilities";
+
+function Demo(): JSX.Element {
+  const timer = useTimer();
+}
+```
+
+We then need to subscribe to updates so the UI changes when the timer ticks.
+
+```tsx
+import { useStore } from "@omlette-design-system/utilities";
+
+function Demo(): JSX.Element {
+  const timer = useTimer();
+  // ➕ Add
+  const time = useStore(timer.store, (store) => store.time);
+}
+```
+
+Then finally display the time in to the user.
+
+```tsx
+function Demo(): JSX.Element {
+  const timer = useTimer();
+  const time = useStore(timer.store, (store) => store.time);
+
+  // ➕ Add
+  return <p>{time}</p>;
+}
+```
+
+## Formatting the Time
+
+In most situations we will actually need the timer as a formatted string. Instead of subscribing to the timer, we will instead subscribe to the formatted time. The subscription function will still run each time the store changes but will now return the time in a more user friendly format.
+
+```tsx
+function Demo(): JSX.Element {
+  const timer = useTimer();
+  // 💣 Remove
+  // const time = useStore(timer.store, (store) => store.time);
+  // ➕ Add
+  const time = useStore(timer.store, (store) => store.format());
+
+  return <p>{time}</p>;
+}
+```
+
+## Pause, Play, & Restart
+
+Interacting with the timer is can be done with the `timer` instance.
+
+```tsx
+function Demo(): JSX.Element {
+  const timer = useTimer();
+  const time = useStore(timer.store, (store) => store.format());
+
+  // ➕ Modified
+  return (
+    <div>
+      <p>{time}</p>
+      <button onClick={timer.pause}>Pause</button>
+      <button onClick={timer.play}>Play</button>
+      <button onClick={timer.restart}>Restart</button>
+    </div>
+  );
+}
+```
+
+## Setting the Timer
+
+In the event the timer needs to be set to a particular time, we can use the `timer.set` function and pass it an argument of the time in milliseconds.
+
+```ts
+const timer = useTimer();
+
+useEffect(() => {
+  timer.set(1000); // Sets the timer to 1 second
+}, []);
+```
