@@ -31,3 +31,7 @@ jobs:
       uses: borales/actions-yarn@v4
       with:
         cmd: build:package # will run `yarn build:package` command
+    - name: Build Storybook
+      uses: borales/actions-yarn@v4
+      with:
+        cmd: build-storybook # will run `yarn build:package` command

@@ -12,6 +12,7 @@
     "build:types": "tsc --project ./tsconfig.prod.json",
     "build:format": "prettier --loglevel warn --write \"build/**/*.d.ts\"",
     "preview": "vite preview",
+    "emulate": "firebase emulators:start",
     "ci": "yarn lint",
     "test": "react-scripts test --watchAll=false",
     "test:watch": "react-scripts test",

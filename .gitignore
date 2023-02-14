@@ -1,3 +1,9 @@
+# Packages
 node_modules
+
+# Build Output
 build
+storybook-static
+
+# Logs
 *.log
