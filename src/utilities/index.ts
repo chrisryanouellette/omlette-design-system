@@ -4,3 +4,4 @@ export * from "./set";
 export * from "./react";
 export * from "./store";
 export * from "./storage";
+export * from "./timer";
