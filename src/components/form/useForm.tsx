@@ -68,6 +68,7 @@ export type UseForm<Fields extends GenericFields> = {
     name: Extract<K, string>,
     value: Fields[K]
   ) => void;
+  setMany: (fields: Partial<Fields>) => void;
   /**
    * Adds a validation function to a field.
    * Returns the cleanup function to remove the function so
@@ -135,6 +136,21 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
       subscriptions.current.update.forEach((sub) =>
         sub(name, value, fields.get())
       );
+    },
+    [fields]
+  );
+
+  const setMany = useCallback<UseForm<Fields>["setMany"]>(
+    (values) => {
+      Object.entries(values).forEach(([name, value]) => {
+        fields.set({
+          action: ReducerActions.set,
+          value: { name, value },
+        });
+        subscriptions.current.update.forEach((sub) =>
+          sub(name, value, fields.get())
+        );
+      });
     },
     [fields]
   );
@@ -231,13 +247,24 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
       fields,
       register,
       set,
+      setMany,
       validation,
       validate,
       submit,
       subscribe,
       reset,
     }),
-    [fields, register, set, submit, validate, validation, subscribe, reset]
+    [
+      fields,
+      register,
+      set,
+      setMany,
+      validation,
+      validate,
+      submit,
+      subscribe,
+      reset,
+    ]
   );
 };
 
