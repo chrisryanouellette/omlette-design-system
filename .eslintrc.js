@@ -26,6 +26,7 @@ module.exports = {
       },
     ],
     "require-jsdoc": 0,
+    "valid-jsdoc": 0,
   },
   overrides: [
     {
