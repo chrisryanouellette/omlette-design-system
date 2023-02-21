@@ -6,12 +6,21 @@
     "source.fixAll.eslint": true,
     "source.fixAll": false
   },
-  "jest.autoRun": "off",
   "css.lint.unknownAtRules": "ignore",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["omlette", "scrollend"],
+  "cSpell.words": [
+    "Authed",
+    "omlette",
+    "scrollend",
+    "Unauthed",
+    "unauthenticate"
+  ],
   "cSpell.enableFiletypes": ["mdx"],
   "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[mdx]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   }

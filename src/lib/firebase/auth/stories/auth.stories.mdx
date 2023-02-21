@@ -1,0 +1,113 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Libraries/Firebase/Authentication" />
+
+# Firebase Authentication
+
+The package exposes some functions that can be used to setup and manage user authentication within an application.
+
+## User Consumption
+
+The application has the ability to consume the signed in user via the `useUser` hook. It returns the user as a global store and two methods for signing in and out. The sign in methods direct the application to the Google authentication page and once complete navigate back to the application.
+
+```tsx
+const user = useUser();
+const isLoggedIn = useStore(user.store, (store) => !!store);
+
+return !isLoggedIn ? (
+  <button onClick={user.login}>Login w/ Google</button>
+) : (
+  <button onClick={user.logout}>Logout</button>
+);
+```
+
+When the user returns to the application the page should call `loadUserFromRedirect` to attempt to gather the data from the previous Google authentication page.
+
+```tsx
+if (!isSSR()) {
+  loadUserFromRedirect("/api/login");
+}
+
+export function Login(): JSX.Element {}
+```
+
+If the request returns successfully the function will call the backend api route with the authorization cookie set so the server can begin a session. This is explained in more detail in the Sign In & Sign Out section below.
+
+## Sign In & Sign Out
+
+Our backend will need to define two routes for signing the user in and out. The example below will be for NextJS but will work with Express or any other backend library.
+
+```ts
+import { NextApiRequest, NextApiResponse } from "next";
+import { authenticate } from "@omlette-design-system/lib";
+
+async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
+  try {
+    await authenticate(req, res);
+    return res.status(200).json({ status: true });
+  } catch (e) {
+    // Log to your analytics service provider here
+  }
+  return res.status(500).json({ error: "Unexpected error" });
+}
+
+export default handler;
+```
+
+This endpoint will ensure the token passed two it is valid and set a session cookie in the client which will be used to protect other pages and data.
+
+Logging out is just as simple.
+
+```ts
+import { NextApiRequest, NextApiResponse } from "next";
+import { unauthenticate } from "@omlette-design-system/lib";
+
+async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
+  try {
+    unauthenticate({ req }, res);
+    return res.status(200).json({ status: true });
+  } catch (e) {
+    // Log to your analytics service provider here
+  }
+  return res.status(500).json({ error: "Unexpected error" });
+}
+
+export default handler;
+```
+
+## Protecting Routes
+
+Now that our user has been logged in and a cookie for subsequent requests has been set, we can begin protecting routes. Any route that needs to be protected should have it's `getServerSideProps` wrapped in the `withAuth` hook.
+
+```ts
+import { withAuth } from "@omlette-design-system/lib";
+
+export const getServerSideProps = withAuth<Props>({
+  whenUnauthed: "redirect",
+  unauthedRedirect: "/login", // Optional
+})(async ({ ctx, user }) => {
+  // User has been authenticated and can see the route
+  return {
+    props: {
+      user,
+    },
+  };
+});
+```
+
+To avoid issues with the SSR page and client page's HTML not matching, we will set the user store's `isLoggedIn` property to `true` in the module's scope.
+
+```ts
+import { withAuth } from "@omlette-design-system/lib";
+import { withUser } from "@omlette-design-system/components";
+
+export const getServerSideProps = withAuth<Props>({});
+
+export default withUser<Props>()(Storage);
+```

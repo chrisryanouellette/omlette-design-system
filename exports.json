@@ -3,6 +3,10 @@
     "input": "/src/index.ts",
     "entry": "/build/index.js"
   },
+  "ssr": {
+    "input": "/src/ssr.ts",
+    "entry": "/build/ssr.js"
+  },
   "tailwind": {
     "input": "/development/tailwind/index.js",
     "entry": "/build/tailwind.js"

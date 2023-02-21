@@ -36,6 +36,7 @@ export default defineConfig({
     alias: {
       "@Components": path.resolve(__dirname, "./src/components"),
       "@Utilities": path.resolve(__dirname, "./src/utilities"),
+      "@Lib": path.resolve(__dirname, "./src/lib"),
     },
   },
 });

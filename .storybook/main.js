@@ -31,6 +31,7 @@ const config = {
         alias: {
           ...config.resolve.alias,
           "@Utilities": path.resolve(__dirname, "../src/utilities"),
+          "@Lib": path.resolve(__dirname, "../src/lib"),
           "@Components": path.resolve(__dirname, "../src/components"),
           "@Storybook": path.resolve(__dirname, "../storybook"),
         },
