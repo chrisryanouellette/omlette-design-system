@@ -55,6 +55,7 @@ module.exports = {
         map: [
           ["@Storybook", "./storybook"],
           ["@Utilities", "./src/utilities"],
+          ["@Lib", "./src/lib"],
           ["@Components", "./src/components"],
         ],
         extensions: [".ts", ".tsx", ".js", ".jsx"],
