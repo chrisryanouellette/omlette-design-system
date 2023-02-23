@@ -4,6 +4,14 @@
   "author": "Christopher Ouellette <chrisryanouellette@gmail.com>",
   "license": "MIT",
   "main": "build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "./build",
+    "./index.d.ts",
+    "./index.js",
+    "./ssr.d.ts",
+    "./ssr.js"
+  ],
   "scripts": {
     "prepare": "husky install",
     "develop": "vite",

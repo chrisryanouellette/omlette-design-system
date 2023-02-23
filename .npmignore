@@ -3,6 +3,7 @@
 .storybook
 .vscode
 .eslintrc.js
+.firebaserc
 development
 node_modules
 src
@@ -10,7 +11,11 @@ storybook
 template
 commitlint.config.js
 exports.json
+firestore*
+firebase*
+*.log
 postcss.config.js
+storybook-static/**
 tailwind.config.js
 tsconfig.json
 tsconfig.eslint.json
