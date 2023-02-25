@@ -10,7 +10,7 @@ import {
   getUserFromTokenDecodedAuthenticationToken,
   verifySessionToken,
 } from "./token";
-import { authenticate, unauthenticate } from "./auth";
+import { authenticate } from "./auth";
 
 interface AuthError extends Error {
   code: string;
