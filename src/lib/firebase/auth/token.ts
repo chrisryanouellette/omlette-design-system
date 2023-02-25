@@ -25,8 +25,10 @@ export async function getUserFromTokenDecodedAuthenticationToken(
   return normalizeUser(user);
 }
 
-export function getAuthorizationTokenFromHeaders(req: NextApiRequest): string {
-  const token = req.headers.authorization;
+export function getAuthorizationTokenFromHeaders(
+  ctx: { req: NextApiRequest } | GetServerSidePropsContext
+): string {
+  const token = ctx.req.headers.authorization;
   if (!token) {
     throw new Error("The authorization header was not set.");
   }

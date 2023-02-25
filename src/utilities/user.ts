@@ -5,29 +5,81 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
   signOut,
+  Unsubscribe,
+  User as FirebaseUser,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { createGlobalStore, UseCreateStore } from "./store";
-import { firebaseClient, User, normalizeUser } from "@Lib";
+import { isSSR } from "./ssr";
+import {
+  firebaseClient,
+  User,
+  normalizeUser,
+  subscribeToFirebaseClientInit,
+} from "@Lib";
 
 type UserStore = User | null;
+type AuthStore = { loginApiRoute: string };
 
 const provider = new GoogleAuthProvider();
 export const userStore = createGlobalStore<UserStore>(null);
+export const authStore = createGlobalStore<AuthStore>({
+  loginApiRoute: "/api/login",
+});
 
-export async function loadUserFromRedirect(route: string): Promise<void> {
+let unsubscribeFromAuthChanges: Unsubscribe;
+/**
+ * Handle auth state changes so they won't fire multiple times in
+ * a useEffect.
+ */
+function subscribeToUserStateChanges(): Unsubscribe {
+  unsubscribeFromAuthChanges = getAuth(firebaseClient).onAuthStateChanged(
+    async (user) => {
+      if (user) {
+        try {
+          console.log("user changed");
+          await loginUserFromAuthChange(user);
+          return userStore.set(normalizeUser(user));
+        } catch (error) {
+          // Log to analytics service
+          console.error(error);
+        }
+      }
+      return userStore.set(null);
+    }
+  );
+  return unsubscribeFromAuthChanges;
+}
+if (!isSSR()) {
+  subscribeToFirebaseClientInit(subscribeToUserStateChanges);
+}
+
+async function fetchLoginUser(token: string): Promise<void> {
+  const route = authStore.get().loginApiRoute;
+  await fetch(route, {
+    credentials: "same-origin",
+    headers: new Headers({
+      authorization: token,
+    }),
+  });
+}
+
+export async function loadUserFromRedirect(): Promise<void> {
   const auth = getAuth(firebaseClient);
   const result = await getRedirectResult(auth);
   if (result) {
     const token = await result.user.getIdToken();
-    await fetch(route, {
-      credentials: "same-origin",
-      headers: new Headers({
-        authorization: token,
-      }),
-    });
+    await fetchLoginUser(token);
+    subscribeToUserStateChanges();
     userStore.set(normalizeUser(result.user));
   }
+}
+
+export async function loginUserFromAuthChange(
+  user: FirebaseUser
+): Promise<void> {
+  const token = await user.getIdToken();
+  await fetchLoginUser(token);
 }
 
 export async function login(): Promise<void> {
@@ -39,6 +91,7 @@ export async function logout(): Promise<void> {
   const auth = getAuth();
   signOut(auth);
   await fetch("/api/logout");
+  unsubscribeFromAuthChanges();
   userStore.set(null);
 }
 
@@ -51,7 +104,7 @@ export type UseUser = {
 export function useUser(): UseUser {
   const router = useRouter();
 
-  const logout = useCallback<UseUser["logout"]>(
+  const userLogout = useCallback<UseUser["logout"]>(
     async function (redirect = "/") {
       try {
         await logout();
@@ -63,13 +116,8 @@ export function useUser(): UseUser {
     [router]
   );
 
-  useEffect(() => {
-    const auth = getAuth(firebaseClient);
-    return auth.onAuthStateChanged((user) => {
-      console.log("auth state change");
-      userStore.set(user ? normalizeUser(user) : user);
-    });
-  }, []);
-
-  return useMemo(() => ({ store: userStore, login, logout }), [logout]);
+  return useMemo(
+    () => ({ store: userStore, login, logout: userLogout }),
+    [userLogout]
+  );
 }

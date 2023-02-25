@@ -14,18 +14,19 @@ import { initializeFirebaseAdmin } from "../initialize/ssr";
 const ONE_DAYS_IN_MS = 60 * 60 * 24 * 1000;
 
 /**
- * Takes a token from the authorization header and uses it to authenticate
- * with the firebase server.
+ * Takes a token from the authorization header or options and uses it to
+ * authenticate with the firebase server.
  *
  * A session token is then set in the client which is used to check authorization
  * on protected routes.
  */
 export async function authenticate(
-  req: NextApiRequest,
-  res: NextApiResponse
+  ctx: { req: NextApiRequest } | GetServerSidePropsContext,
+  res: NextApiResponse | GetServerSidePropsContext["res"],
+  opts?: { token: string }
 ): Promise<void> {
   initializeFirebaseAdmin();
-  const token = getAuthorizationTokenFromHeaders(req);
+  const token = opts?.token ?? getAuthorizationTokenFromHeaders(ctx);
   await verifyAuthenticationToken(token);
   const sessionToken = await getSessionToken(token, ONE_DAYS_IN_MS);
   nookies.set({ res }, "auth", sessionToken, {
@@ -40,7 +41,7 @@ export async function authenticate(
 /** Destroys the cookie on the client so they can no longer access protected routes */
 export function unauthenticate(
   ctx: { req: NextApiRequest } | GetServerSidePropsContext,
-  res: NextApiResponse
+  res: NextApiResponse | GetServerSidePropsContext["res"]
 ): void {
   nookies.destroy({ res }, "auth", { path: "/" });
 }

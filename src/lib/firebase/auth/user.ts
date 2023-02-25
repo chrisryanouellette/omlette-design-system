@@ -15,10 +15,10 @@ export function normalizeUser<T extends AdminFirebaseUser | ClientFirebaseUser>(
 ): User {
   return {
     id: user.uid,
-    email: user.email,
+    email: user.email ?? null,
     emailVerified: user.emailVerified,
-    phoneNumber: user.phoneNumber,
-    displayName: user.displayName,
-    photoURL: user.photoURL,
+    phoneNumber: user.phoneNumber ?? null,
+    displayName: user.displayName ?? null,
+    photoURL: user.photoURL ?? null,
   };
 }

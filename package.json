@@ -9,8 +9,12 @@
     "./build",
     "./index.d.ts",
     "./index.js",
+    "./lib.d.ts",
+    "./lib.js",
     "./ssr.d.ts",
-    "./ssr.js"
+    "./ssr.js",
+    "./utils.d.ts",
+    "./utils.js"
   ],
   "scripts": {
     "prepare": "husky install",

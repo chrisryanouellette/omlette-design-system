@@ -10,6 +10,16 @@ import {
   getUserFromTokenDecodedAuthenticationToken,
   verifySessionToken,
 } from "./token";
+import { authenticate, unauthenticate } from "./auth";
+
+interface AuthError extends Error {
+  code: string;
+}
+
+function isAuthError(error: unknown): error is AuthError {
+  if (error && typeof error === "object" && "code" in error) return true;
+  return false;
+}
 
 type WithAuthOptions = {
   whenAuthed?: "redirect";
@@ -68,6 +78,13 @@ function withAuth<T extends { [key: string]: unknown }>(
           };
         }
       } catch (error) {
+        if (isAuthError(error)) {
+          switch (error.code) {
+            case "auth/session-cookie-expired": {
+              await authenticate(ctx, ctx.res);
+            }
+          }
+        }
         console.log(error);
         // There was an error with validating the authentication
         if (options?.whenUnauthed === "redirect") {

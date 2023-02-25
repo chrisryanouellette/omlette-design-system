@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { createGlobalStore, useStore } from "../..";
+import { createGlobalStore, useStore } from "@Utilities";
 
 export const portalStore = createGlobalStore("#root");
 

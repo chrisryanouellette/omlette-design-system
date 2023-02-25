@@ -1,22 +1,12 @@
 import * as admin from "firebase-admin";
 import { App as FirebaseAdminApp, getApps } from "firebase-admin/app";
+import { getFirebaseAdminConfig } from ".";
 import { isSSR } from "@Utilities";
 
-export type FirebaseAdminConfig = {
-  projectId: string;
-  clientEmail: string;
-  privateKey: string;
-  databaseURL: string;
-};
-
-let firebaseAdminConfig: FirebaseAdminConfig;
 export let firebaseAdmin: FirebaseAdminApp;
 
-export function setFirebaseAdminConfig(config: FirebaseAdminConfig): void {
-  firebaseAdminConfig = config;
-}
-
 export function initializeFirebaseAdmin(): FirebaseAdminApp | void {
+  const firebaseAdminConfig = getFirebaseAdminConfig();
   if (isSSR()) {
     if (!getApps().length) {
       if (!firebaseAdminConfig) {

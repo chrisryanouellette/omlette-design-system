@@ -1,26 +1,38 @@
 {
   "index": {
-    "input": "/src/index.ts",
-    "entry": "/build/index.js"
+    "input": "./src/index.ts",
+    "entry": "./build/index.js",
+    "types": "./build/index"
+  },
+  "utils": {
+    "input": "./src/utilities.ts",
+    "entry": "./build/utils.js",
+    "types": "./build/utilities"
+  },
+  "lib": {
+    "input": "./src/lib.ts",
+    "entry": "./build/lib.js",
+    "types": "./build/lib"
   },
   "ssr": {
-    "input": "/src/ssr.ts",
-    "entry": "/build/ssr.js"
+    "input": "./src/ssr.ts",
+    "entry": "./build/ssr.js",
+    "types": "./build/ssr"
   },
   "tailwind": {
-    "input": "/development/tailwind/index.js",
-    "entry": "/build/tailwind.js"
+    "input": "./development/tailwind/index.js",
+    "entry": "./build/tailwind.js"
   },
   "utilities": {
-    "input": "/development/tailwind/utilities.js",
-    "entry": "/build/utilities.js"
+    "input": "./development/tailwind/utilities.js",
+    "entry": "./build/utilities.js"
   },
   "colors": {
-    "input": "/development/tailwind/colors.js",
-    "entry": "/build/colors.js"
+    "input": "./development/tailwind/colors.js",
+    "entry": "./build/colors.js"
   },
   "plugins/list": {
-    "input": "/development/tailwind/plugins/list.js",
-    "entry": "/development/tailwind/plugins/list.js"
+    "input": "./development/tailwind/plugins/list.js",
+    "entry": "./development/tailwind/plugins/list.js"
   }
 }
