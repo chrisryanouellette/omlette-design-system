@@ -81,7 +81,11 @@ export type SelectorFn<Store, Selected = Store> = (
   prev: Selected | null
 ) => Selected;
 
-/* A hook for consuming a store, usually after it is passed down through context */
+/**
+ * A hook for consuming a store, usually after it is passed down through context.
+ *
+ * @see {@link [Storybook](https://design-system.chrisouellette.com/?path=/docs/utilities-store--page)}
+ */
 export const useStore = <Store, Selected = Store, Action = Partial<Store>>(
   store: UseCreateStore<Store, Action> | ReadOnlyUseCreateStore<Store>,
   selector?: SelectorFn<Store, Selected>
