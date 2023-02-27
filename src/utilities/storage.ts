@@ -25,7 +25,7 @@ export function useBrowserStorage<Store, Action = Partial<Store>>({
   }, [key, storage]);
 
   useEffect(() => {
-    const previous = storage?.getItem(key);
+    const previous = storage.getItem(key);
     const value = previous ? JSON.parse(previous) : baseInitial;
     store.set(value);
   }, [baseInitial, key, storage, store]);
