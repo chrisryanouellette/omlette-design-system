@@ -4,6 +4,11 @@ node_modules
 # Build Output
 build
 storybook-static
+*.d.ts
+!src/**/*.d.ts
+*.js
+!development/**/*.js
+!*.config.js
 
 # Logs
 *.log

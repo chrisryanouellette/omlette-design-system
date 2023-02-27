@@ -17,6 +17,7 @@
     "paths": {
       "@Utilities/*": ["./src/utilities/*"],
       "@Utilities": ["./src/utilities/index.ts"],
+      "@Lib": ["./src/lib/index.ts"],
       "@Components/*": ["./src/components/*"],
       "@Storybook/*": ["./storybook/*"]
     }

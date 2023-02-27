@@ -7,4 +7,5 @@ export * from "./form";
 export * from "./icon";
 export * from "./inputs";
 export * from "./list";
+export * from "./user";
 export * from "./utilities";

@@ -26,6 +26,7 @@ module.exports = {
       },
     ],
     "require-jsdoc": 0,
+    "valid-jsdoc": 0,
   },
   overrides: [
     {
@@ -55,6 +56,7 @@ module.exports = {
         map: [
           ["@Storybook", "./storybook"],
           ["@Utilities", "./src/utilities"],
+          ["@Lib", "./src/lib"],
           ["@Components", "./src/components"],
         ],
         extensions: [".ts", ".tsx", ".js", ".jsx"],
