@@ -47,7 +47,7 @@ const Form = <Fields extends GenericFields>({
     return function FormComponentSubscriptionsCleanUp() {
       unsubscribes.forEach((fn) => fn());
     };
-  }, [form, onFinish, onFinishFailed]);
+  }, [form, onFinish, onFinishFailed, onUpdate]);
 
   return (
     <FormProvider
