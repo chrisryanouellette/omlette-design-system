@@ -1,9 +1,6 @@
 {
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  },
   "hosting": {
+    "site": "omlettes-design-system",
     "public": "storybook-static",
     "ignore": [
       "firebase.json",
