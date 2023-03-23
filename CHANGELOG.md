@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0-alpha.4](https://github.com/chrisryanouellette/omlette-design-system/compare/1.0.0-alpha.4...v1.1.0-alpha.4) (2023-03-23)
+## [1.0.0-alpha.5](https://github.com/chrisryanouellette/omlette-design-system/compare/1.0.0-alpha.4...v1.0.0-alpha.5) (2023-03-23)
 
 
 ### Features
