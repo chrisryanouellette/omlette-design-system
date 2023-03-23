@@ -12,6 +12,7 @@ export type CollapsePanelProps = HTMLAttributes<HTMLElement> & {
   element?: "div" | "section" | "aside";
   duration?: number;
   trapFocus?: boolean;
+  unmountChildren?: boolean;
   children?: ReactNode;
 };
 
@@ -23,6 +24,7 @@ const CollapsePanel = ({
   duration = 300,
   element = "div",
   trapFocus,
+  unmountChildren = true,
   ...rest
 }: CollapsePanelProps): JSX.Element => {
   const context = useCollapseContext();
@@ -56,10 +58,10 @@ const CollapsePanel = ({
   return (
     <CSSTransition
       key="collapse"
-      unmountOnExit
       nodeRef={ref}
       in={isOpen}
       timeout={duration}
+      unmountOnExit={unmountChildren}
       classNames="omlette-collapse-panel"
     >
       <Container
