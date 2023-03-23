@@ -25,6 +25,6 @@ jobs:
         with:
           cmd: build # will run `yarn ci` command
       - name: Publish
-        run: yarn publish --access public
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
