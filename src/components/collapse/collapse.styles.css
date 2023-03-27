@@ -7,7 +7,7 @@
 }
 
 :where(.omlette-collapse-panel) {
-  @apply transition-transform overflow-auto shadow-md shadow-slate-100 mb-4;
+  @apply transition-transform overflow-auto shadow-md shadow-slate-100;
   background-color: var(--omlette-drawer-background-color);
   transition-duration: var(--omlette-collapse-duration);
 }
@@ -28,4 +28,18 @@
 
 :where(.omlette-collapse-carrot-enter, .omlette-collapse-carrot-enter-done) {
   transform: rotate(-180deg);
+}
+
+:where(.omlette-collapse-panel-container .omlette-collapse-panel-exit-done) {
+  height: 0;
+}
+
+/* We can remove the @supports once Firefox supports the :has feature */
+@supports selector(:has(*)) {
+  :where(.omlette-collapse-panel-container:has(.omlette-collapse-panel-exit-done)) {
+    visibility: hidden;
+  }
+  :where(.omlette-collapse-panel-container .omlette-collapse-panel-exit-done) {
+    height: initial;
+  }
 }
