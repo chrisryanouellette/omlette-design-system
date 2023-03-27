@@ -33,5 +33,6 @@ const Collapse = ({
 Collapse.Trigger = CollapseTrigger;
 Collapse.Panel = CollapsePanel;
 Collapse.Carrot = CollapseCarrot;
+Collapse.useCollapse = useCollapse;
 
 export { Collapse };
