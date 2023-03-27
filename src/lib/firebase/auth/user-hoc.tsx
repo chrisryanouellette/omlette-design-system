@@ -1,6 +1,5 @@
 import { ComponentType } from "react";
-import { userStore } from "@Utilities/user";
-import { User } from "@Lib";
+import { User, userStore } from "@Lib";
 
 /**
  * A higher order component that handles setting the user from SSR hydrated props.

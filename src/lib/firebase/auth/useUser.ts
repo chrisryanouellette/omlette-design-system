@@ -9,8 +9,7 @@ import {
   User as FirebaseUser,
 } from "firebase/auth";
 import { useRouter } from "next/router";
-import { createGlobalStore, UseCreateStore } from "./store";
-import { isSSR } from "./ssr";
+import { createGlobalStore, UseCreateStore, isSSR } from "@Utilities";
 import {
   firebaseClient,
   User,
