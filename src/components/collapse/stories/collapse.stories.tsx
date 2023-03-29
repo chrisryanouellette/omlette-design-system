@@ -1,7 +1,7 @@
 import { ControlTypes } from "@Storybook/types";
 import { BasicCollapseStory as Basic } from "./story/basic";
 
-export type CollapseControls = { "Unmount Children": boolean };
+export type CollapseControls = { "Unmount Children": string };
 const commonArgs = {
   "Unmount Children": {
     control: { type: ControlTypes.Boolean },

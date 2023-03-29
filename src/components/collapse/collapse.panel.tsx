@@ -68,6 +68,8 @@ const CollapsePanel = ({
         {...containerProps}
         className={concat(
           "omlette-collapse-panel-container",
+          !context.store.get().hasBeenOpened &&
+            "omlette-collapse-panel-container-unopened",
           containerProps?.className
         )}
       >

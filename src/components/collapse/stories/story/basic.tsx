@@ -11,7 +11,7 @@ const BasicCollapseStory = bindTemplate<FC<CollapseControls>>(
           Expand Panel
           <Collapse.Carrot />
         </Collapse.Trigger>
-        <Collapse.Panel unmountChildren={unmountChildren}>
+        <Collapse.Panel unmountChildren={unmountChildren === "true"}>
           <h2>Panel Content</h2>
         </Collapse.Panel>
       </Collapse>
