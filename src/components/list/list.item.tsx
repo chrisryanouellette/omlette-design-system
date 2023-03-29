@@ -2,6 +2,7 @@ import { HTMLAttributes, ReactNode } from "react";
 import { concat } from "@Utilities/concat";
 import { ChildOrNull } from "@Components/utilities/ChildOrNull";
 import { Icon, IconProps } from "@Components/icon";
+import { useListContext } from "./context";
 
 export type ListStyle =
   | "bullet"
@@ -31,10 +32,12 @@ const ListItem = ({
   children,
   className,
   iconProps,
-  listStyle = "none",
+  listStyle: controlledListStyle,
   wrapperProps,
   ...rest
 }: ListItemProps): JSX.Element => {
+  const { listStyle: inheritedListStyle } = useListContext();
+  const listStyle = controlledListStyle ?? inheritedListStyle ?? "none";
   const customMarker = listStyle === "icon";
 
   const classes = concat(

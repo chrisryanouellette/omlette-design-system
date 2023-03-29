@@ -1,10 +1,12 @@
 import { HTMLAttributes, ReactNode } from "react";
 import { concat } from "@Utilities/concat";
-import { ListItem } from "./list.item";
+import { ListItem, ListStyle } from "./list.item";
+import { ListProvider } from "./context";
 
 import "./list.styles.css";
 
 export type ListProps = HTMLAttributes<HTMLUListElement> & {
+  listStyle?: ListStyle;
   ordered?: boolean;
   children?: ReactNode;
 };
@@ -12,6 +14,7 @@ export type ListProps = HTMLAttributes<HTMLUListElement> & {
 const List = ({
   children,
   className,
+  listStyle,
   ordered,
   ...rest
 }: ListProps): JSX.Element => {
@@ -20,9 +23,11 @@ const List = ({
   const classes = concat("omlette-list", className);
 
   return (
-    <Element {...rest} className={classes}>
-      {children}
-    </Element>
+    <ListProvider listStyle={listStyle}>
+      <Element {...rest} className={classes}>
+        {children}
+      </Element>
+    </ListProvider>
   );
 };
 
