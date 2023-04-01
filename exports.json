@@ -34,5 +34,9 @@
   "plugins/list": {
     "input": "./development/tailwind/plugins/list.js",
     "entry": "./development/tailwind/plugins/list.js"
+  },
+  "plugins/link": {
+    "input": "./development/tailwind/plugins/link.js",
+    "entry": "./development/tailwind/plugins/link.js"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@ouellettec/design-system",
-  "version": "1.0.0-alpha.11",
+  "version": "1.0.0-alpha.12",
   "author": "Christopher Ouellette <chrisryanouellette@gmail.com>",
   "license": "MIT",
   "main": "build/index.js",
