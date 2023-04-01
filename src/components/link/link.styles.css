@@ -1,0 +1,39 @@
+:root {
+  --omlette-link-color: var(--tw-color-blue-700);
+  --omlette-link-color--focus: var(--tw-color-blue-900);
+  --omlette-link-color--visited: var(--tw-color-purple-700);
+  --omlette-link-color--visited-focus: var(--tw-color-purple-900);
+  --omlette-link-outline-color: var(--tw-color-blue-900);
+  --omlette-link-outline-color--visited: var(--tw-color-purple-900);
+  --omlette-link-text-decoration-width: 1px;
+}
+
+a:where(.omlette-link) {
+  @apply underline rounded-sm outline-offset-2;
+  color: var(--omlette-link-color);
+  text-decoration-thickness: var(--omlette-link-text-decoration-width);
+  outline-color: var(--omlette-link-outline-color);
+}
+
+a:where(.omlette-link):hover {
+  color: var(--omlette-link-color--focus);
+}
+
+a:where(.omlette-link):focus {
+  @apply outline-1;
+  color: var(--omlette-link-color--focus);
+}
+
+a:where(.omlette-link):visited {
+  color: var(--omlette-link-color--visited);
+}
+
+a:where(.omlette-link):visited:hover {
+  color: var(--omlette-link-color--visited-focus);
+}
+
+a:where(.omlette-link):visited:focus {
+  @apply outline-1;
+  color: var(--omlette-link-outline-color--visited);
+  outline-color: var(--omlette-link-outline-color--visited);
+}
