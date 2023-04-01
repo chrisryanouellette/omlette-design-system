@@ -1,0 +1,13 @@
+a:where(.omlette-icon-link) :where(.omlette-icon) {
+  @apply inline align-text-bottom;
+  width: var(--omlette-link-width-height, 1rem);
+  height: var(--omlette-link-width-height, 1rem);
+}
+
+a:where(.omlette-icon-link.left) :where(.omlette-icon) {
+  @apply mr-1;
+}
+
+a:where(.omlette-icon-link.right) :where(.omlette-icon) {
+  @apply ml-1;
+}
