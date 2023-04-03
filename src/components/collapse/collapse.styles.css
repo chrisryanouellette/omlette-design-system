@@ -7,7 +7,7 @@
 }
 
 :where(.omlette-collapse-panel) {
-  @apply transition-transform overflow-auto shadow-md shadow-slate-100;
+  @apply transition-transform overflow-auto shadow-md shadow-slate-100 z-10;
   background-color: var(--omlette-drawer-background-color);
   transition-duration: var(--omlette-collapse-duration);
 }
