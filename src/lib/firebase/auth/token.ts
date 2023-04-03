@@ -1,26 +1,27 @@
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { parseCookies } from "nookies";
 import { DecodedIdToken, getAuth } from "firebase-admin/auth";
+import { firebaseAdmin } from "../ssr";
 import { normalizeUser, User } from "./user";
 
 export async function verifyAuthenticationToken(
   token: string
 ): Promise<DecodedIdToken> {
-  const firebaseAdminAuth = getAuth();
+  const firebaseAdminAuth = getAuth(firebaseAdmin);
   return await firebaseAdminAuth.verifyIdToken(token, true);
 }
 
 export async function verifySessionToken(
   token: string
 ): Promise<DecodedIdToken> {
-  const firebaseAdminAuth = getAuth();
+  const firebaseAdminAuth = getAuth(firebaseAdmin);
   return await firebaseAdminAuth.verifySessionCookie(token, true);
 }
 
 export async function getUserFromTokenDecodedAuthenticationToken(
   token: DecodedIdToken
 ): Promise<User> {
-  const firebaseAdminAuth = getAuth();
+  const firebaseAdminAuth = getAuth(firebaseAdmin);
   const user = await firebaseAdminAuth.getUser(token.uid);
   return normalizeUser(user);
 }

@@ -37,16 +37,19 @@ If the request returns successfully the function will call the backend api route
 
 Our backend will need to define two routes for signing the user in and out. The example below will be for NextJS but will work with Express or any other backend library.
 
+If you are using NextJS create a file called `login.ts` in the `pages/api/` directory.
+
 ```ts
+// pages/api/login.ts
 import { NextApiRequest, NextApiResponse } from "next";
-import { authenticate } from "@omlette-design-system/lib";
+import { unauthenticate } from "@ouellettec/design-system/ssr";
 
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
   try {
-    await authenticate(req, res);
+    await authenticate({ req }, res);
     return res.status(200).json({ status: true });
   } catch (e) {
     // Log to your analytics service provider here
@@ -62,8 +65,9 @@ This endpoint will ensure the token passed two it is valid and set a session coo
 Logging out is just as simple.
 
 ```ts
+// pages/api/logout.ts
 import { NextApiRequest, NextApiResponse } from "next";
-import { unauthenticate } from "@omlette-design-system/lib";
+import { unauthenticate } from "@ouellettec/design-system/ssr";
 
 async function handler(
   req: NextApiRequest,
@@ -90,7 +94,7 @@ import { withAuth } from "@omlette-design-system/lib";
 
 export const getServerSideProps = withAuth<Props>({
   whenUnauthed: "redirect",
-  unauthedRedirect: "/login", // Optional
+  unauthedRedirectRoute: "/login", // Optional
 })(async ({ ctx, user }) => {
   // User has been authenticated and can see the route
   return {
