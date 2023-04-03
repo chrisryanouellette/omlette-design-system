@@ -2,22 +2,22 @@
   "index": {
     "input": "./src/index.ts",
     "entry": "./build/index.js",
-    "types": "./build/index"
+    "types": "./build/src/index"
   },
   "utils": {
     "input": "./src/utilities.ts",
     "entry": "./build/utils.js",
-    "types": "./build/utilities"
+    "types": "./build/src/utilities"
   },
   "lib": {
     "input": "./src/lib.ts",
     "entry": "./build/lib.js",
-    "types": "./build/lib"
+    "types": "./build/src/lib"
   },
   "ssr": {
     "input": "./src/ssr.ts",
     "entry": "./build/ssr.js",
-    "types": "./build/ssr"
+    "types": "./build/src/ssr"
   },
   "tailwind": {
     "input": "./development/tailwind/index.js",

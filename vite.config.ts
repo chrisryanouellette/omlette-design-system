@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import dts from "vite-plugin-dts";
 import exported from "./exports.json";
 
 const entries = Object.values(exported).map(({ entry }) =>
@@ -43,7 +44,7 @@ export default defineConfig({
       },
     },
   },
-  plugins: [react()],
+  plugins: [react(), dts()],
   resolve: {
     alias: {
       "@Components": path.resolve(__dirname, "./src/components"),
