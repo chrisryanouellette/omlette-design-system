@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
+import { isSSR } from "./ssr";
 import { ReadOnlyUseCreateStore, useCreateStore } from "./store";
 
 function getStartTime(): number {
-  return document.timeline
-    ? document.timeline.currentTime || performance.now()
-    : performance.now();
+  if (!isSSR()) {
+    return document.timeline?.currentTime || performance.now();
+  }
+  return 0;
 }
 
 /** Schedules the next update to the store.
