@@ -14,15 +14,17 @@ export type InitializeFirebaseClientArgs = {
 };
 
 export function initializeFirebaseClient(
-  args: InitializeFirebaseClientArgs
-): FirebaseApp | void {
+  args: InitializeFirebaseClientArgs,
+  init: typeof initializeApp = initializeApp
+): FirebaseApp {
   if (!isSSR()) {
     if (!getApps().length) {
-      firebaseClient = initializeApp(args);
+      firebaseClient = init(args);
       subs.forEach((sub) => sub());
       return firebaseClient;
     }
   }
+  return firebaseClient;
 }
 
 /**

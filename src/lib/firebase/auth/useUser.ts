@@ -82,12 +82,12 @@ export async function loginUserFromAuthChange(
 }
 
 export async function login(): Promise<void> {
-  const auth = getAuth();
+  const auth = getAuth(firebaseClient);
   await signInWithRedirect(auth, provider);
 }
 
 export async function logout(): Promise<void> {
-  const auth = getAuth();
+  const auth = getAuth(firebaseClient);
   signOut(auth);
   await fetch("/api/logout");
   unsubscribeFromAuthChanges();
