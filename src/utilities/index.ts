@@ -1,5 +1,6 @@
 export * from "./concat";
 export * from "./classNames";
+export * from "./development";
 export * from "./set";
 export * from "./react";
 export * from "./ssr";

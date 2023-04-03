@@ -1,0 +1,64 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Libraries/Firebase/Emulators" />
+
+# Firebase Emulators
+
+This package exposes some methods that assist in setting up local development emulators. They do not run or enable them selves automatically.
+
+## Usage - Client Emulators
+
+For the client emulators, navigate to a component that is used on each page. In NextJS this would be the `_app.tsx` file. Add the following lines,
+
+```ts
+import { isClient, isDevelopment } from "@ouellettec/design-system/utils";
+import { initClientEmulators } from "@ouellettec/design-system/lib";
+
+if (isClient() && isDevelopment()) {
+  initClientEmulators();
+}
+```
+
+To enable the emulators, add a configuration object. If `true` is passed as the value to a key then the default host and port will be used.
+
+```ts
+initClientEmulators({
+  enableAuth: true,
+  enableFirestore: true,
+});
+```
+
+To customize these host and port pass another object with the desired values.
+
+```ts
+initClientEmulators({
+  enableAuth: {
+    host: "somehostname",
+    port: 8080,
+  },
+});
+```
+
+## Usage - Server Emulators
+
+For the server emulators, create a new navigate to the file where you initialize the Firebase Admin instance and add the following code.
+
+```ts
+import { isDevelopment } from "@ouellettec/design-system/utils";
+import { initServerEmulators } from "@ouellettec/design-system/ssr";
+
+if (isDevelopment()) {
+  initServerEmulators();
+}
+```
+
+Like the client emulator, you can either pass `true` or a configuration object as the argument.
+
+```ts
+initServerEmulators({
+  enableAuth: true,
+  enableFirestore: {
+    port: 8080,
+  },
+});
+```
