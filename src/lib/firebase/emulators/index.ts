@@ -7,6 +7,12 @@ export function initClientEmulators({
   enableAuth,
   enableFirestore,
 }: InitEmulatorsArgs): void {
+  if (window.location.hostname !== "localhost") {
+    console.warn(
+      "Firebase client emulators are being initialized in a non-development environment."
+    );
+  }
+
   if (enableAuth) {
     const { host = "localhost", port = 9099 } =
       typeof enableAuth === "object" ? enableAuth : {};
