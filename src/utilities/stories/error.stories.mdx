@@ -1,0 +1,96 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Utilities/Error" />
+
+# Error Handling & Error Utilities
+
+Error handling in JS is known for being cumbersome and difficult to maintain. These utilities aim to help a developer maintain the control flow of a process and normalize third party errors that are thrown.
+
+## Creating Errors
+
+In a typical application flow when we encounter an issue, let's say with user input, we would throw an error and let the calling function handle displaying a error notification. Let's create that example,
+
+```ts
+function validatePassword(password: string): void {
+  if (!password) {
+    throw new Error("a value for password is required.");
+  }
+  // Other validation...
+}
+```
+
+We can then use this function in a handler.
+
+```ts
+function handleSubmit({ password }: FormValues): Promise<void> {
+  validatePassword(password);
+}
+```
+
+Spot the bug? We did not wrap the `validatePassword` in a `try/catch` block so if the password is invalid the application will blow up! 💣
+
+Without inspecting the `validatePassword` function how would we know it was going to throw? Sadly, we wouldn't. So instead of throwing an error, what if we return one. That will force our application to handle the error before they can get to the value.
+
+Let's implement that improved password validation functions.
+
+```ts
+function validatePassword(password: string): Throwable<void> {
+  if (!password) {
+    return {
+      isError: true,
+      error: new Error("a value for password is required."),
+    };
+  }
+  // Other validation...
+}
+```
+
+The `Throwable` return type is the game changer in he refactor. Instead of breaking the control flow and exploding until someone has caught the error, the developer will need to handle the returned object before they can use the data.
+
+```ts
+const maybeValidPassword = validatePassword(password);
+if (maybeValidPassword.isError) {
+  // Handle the error
+}
+// Keep going
+```
+
+Additionally, Typescript will inform the developer that this function can fail so there is no need to dig deeper into the function to know if it can throw or not.
+
+## Third Party Error Handling
+
+There are some situations where the developer is not in control of how the errors are handled. Third party libraries are a great example. For these situations we have a `handleError` function which converts a throw error into a returned one. Let's look at an example.
+
+```ts
+const result = await thirdPartyRequest();
+```
+
+With the code above, we do not know if it throws or not but let's assume the return type is a data type and the only other evidence this could throw is the name which calls out it makes a network request.
+
+We could wrap this in a try catch but if it lives alongside other code, maybe some functions to process the data, then the catch block maybe handling more than just the thrown `thirdPartyRequest` function.
+
+```ts
+try {
+  const result = await thirdPartyRequest();
+  const processedData = processData(result);
+} catch (error) {
+  // What threw the error?
+  // How do we handle it to give the user the best information?
+}
+```
+
+Instead let's wrap out function in a `handleError` function to get a `Throwable` type back.
+
+```ts
+const maybeResult = await handleError(thirdPartyRequest());
+```
+
+Now the control flow of the function will not be broken and we can handle the error before continuing to use our data.
+
+```ts
+const maybeResult = await handleError(thirdPartyRequest());
+if (maybeResult.isError) {
+  // Inform the user
+}
+const processedData = processData(result.value);
+```

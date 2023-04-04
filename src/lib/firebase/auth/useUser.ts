@@ -9,7 +9,15 @@ import {
   User as FirebaseUser,
 } from "firebase/auth";
 import { useRouter } from "next/router";
-import { createGlobalStore, UseCreateStore, isSSR } from "@Utilities";
+import {
+  createGlobalStore,
+  UseCreateStore,
+  isSSR,
+  Throwable,
+  getErrorCode,
+  selectError,
+  getErrorMessage,
+} from "@Utilities";
 import {
   firebaseClient,
   User,
@@ -63,14 +71,20 @@ async function fetchLoginUser(token: string): Promise<void> {
   });
 }
 
-export async function loadUserFromRedirect(): Promise<void> {
-  const auth = getAuth(firebaseClient);
-  const result = await getRedirectResult(auth);
-  if (result) {
-    const token = await result.user.getIdToken();
-    await fetchLoginUser(token);
-    subscribeToUserStateChanges();
-    userStore.set(normalizeUser(result.user));
+export async function loadUserFromRedirect(): Promise<Throwable<void>> {
+  try {
+    const auth = getAuth(firebaseClient);
+    const result = await selectError(getRedirectResult(auth), getErrorCode);
+    if (result.isError) return result;
+    if (result.value) {
+      const token = await result.value.user.getIdToken();
+      await fetchLoginUser(token);
+      subscribeToUserStateChanges();
+      userStore.set(normalizeUser(result.value.user));
+    }
+  } catch (error) {
+    const message = getErrorMessage(error);
+    return { isError: true, error: new Error(message) };
   }
 }
 
