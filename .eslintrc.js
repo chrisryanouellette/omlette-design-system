@@ -7,7 +7,7 @@ module.exports = {
   globals: {
     JSX: "readonly",
   },
-  extends: ["eslint-config-omlette"],
+  extends: ["eslint-config-omlette", "plugin:storybook/recommended"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: "latest",

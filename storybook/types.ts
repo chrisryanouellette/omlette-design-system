@@ -10,7 +10,7 @@ export enum ControlTypes {
   Select = "select",
 }
 
-/* Wrapper for binding templates */
+/** @deprecated  Wrapper for binding templates */
 export const bindTemplate = <T extends ElementType>(
   template: ComponentStory<T>
-): ComponentStory<T> => template.bind({});
+): ComponentStory<T> => template.bind({}) as ComponentStory<T>;
