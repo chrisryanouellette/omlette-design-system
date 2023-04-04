@@ -1,3 +1,5 @@
+import {  Preview } from "@storybook/react";
+
 import "./tailwind.css";
 import "../template/vars.css";
 
@@ -39,13 +41,17 @@ const viewports = {
   },
 };
 
-export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
-  controls: {
-    matchers: {
-      color: /(background|color)$/i,
-      date: /Date$/,
+const parameters: Preview = {
+  parameters: {
+    actions: { argTypesRegex: "^on[A-Z].*" },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/,
+      },
     },
+    viewport: { viewports },
   },
-  viewport: { viewports },
 };
+
+export default parameters;

@@ -1,7 +1,9 @@
-const path = require("path");
-const { mergeConfig } = require("vite");
+import path from "path";
+import { mergeConfig } from "vite";
+import { StorybookConfig } from "@storybook/react-vite";
+import remarkGfm from 'remark-gfm';
 
-const config = {
+const config: StorybookConfig = {
   stories: [
     "../src/**/*.stories.mdx",
     "../src/**/*.stories.@(js|jsx|ts|tsx)",
@@ -13,16 +15,25 @@ const config = {
     "@storybook/addon-interactions",
     "@storybook/preset-create-react-app",
     "@storybook/addon-a11y",
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    },
   ],
-  framework: "@storybook/react",
-  core: {
-    builder: "@storybook/builder-vite",
+  framework: {
+    name: "@storybook/react-vite",
+    options: {
+      strictMode: true,
+    },
   },
   features: {
     storyStoreV7: true,
-  },
-  reactOptions: {
-    strictMode: true,
   },
   async viteFinal(config) {
     return mergeConfig(config, {
@@ -32,7 +43,7 @@ const config = {
       },
       resolve: {
         alias: {
-          ...config.resolve.alias,
+          ...config?.resolve?.alias,
           "@Utilities": path.resolve(__dirname, "../src/utilities"),
           "@Lib": path.resolve(__dirname, "../src/lib"),
           "@Components": path.resolve(__dirname, "../src/components"),
@@ -41,6 +52,9 @@ const config = {
       },
     });
   },
+  docs: {
+    autodocs: true,
+  },
 };
 
-module.exports = config;
+export default config

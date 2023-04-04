@@ -1,96 +1,21 @@
-import { ReactNode } from "react";
-import { ButtonProps } from "@Components/button";
-import { ControlTypes, bindTemplate } from "@Storybook/types";
-import { IconButtonProps } from "../icon-button";
-import { TextButtonStory as Text } from "./story/text-button";
-import { IconButtonStory } from "./story/icon-button";
+import { Meta, StoryObj } from "@storybook/react";
+import { Button } from "@Components/button";
 
-export type ButtonControls = {
-  Size: ButtonProps["size"];
-  Variant: ButtonProps["variant"];
-  Theme: "light" | "dark";
-  Title: IconButtonProps["title"];
-  Position: IconButtonProps["position"];
-  Children: ReactNode;
-  onClick: ButtonProps["onClick"];
-};
-
-export type IconButtonControls = ButtonControls & {
-  Name: string;
-};
-
-export default {
+const meta = {
   title: "Components/Button",
+  component: Button,
   parameters: { controls: { sort: "alpha" } },
-};
+} satisfies Meta<typeof Button>;
 
-const baseArgTypes = {
-  Size: {
-    control: { type: ControlTypes.Select },
-    options: ["sm", "md", "lg"],
-  },
-  Variant: {
-    control: { type: ControlTypes.Select },
-    options: ["primary", "secondary"],
-  },
-  Theme: {
-    control: { type: ControlTypes.Select },
-    options: ["light", "dark"],
-  },
-  onClick: { action: "onClick", table: { disable: true } },
-};
+export default meta;
 
-Text.argTypes = baseArgTypes;
-Text.args = {
-  Children: "Click Me",
-  Size: "lg",
-  Variant: "secondary",
-  Theme: "light",
-};
+type Story = StoryObj<typeof meta>;
 
-export { Text };
-
-const TextWithIcon = bindTemplate(IconButtonStory);
-TextWithIcon.argTypes = {
-  ...baseArgTypes,
-  Name: {
-    control: { type: ControlTypes.String },
-  },
-  Position: {
-    control: { type: ControlTypes.Select },
-    options: ["left", "right"],
+export const Text: Story = {
+  args: {
+    children: "Click Me",
+    size: "lg",
+    variant: "secondary",
+    className: "light",
   },
 };
-
-TextWithIcon.args = {
-  Children: "Click Me",
-  Size: "lg",
-  Variant: "secondary",
-  Name: "ri-star-line",
-  Position: "left",
-  Theme: "light",
-};
-
-export { TextWithIcon };
-
-const Icon = bindTemplate(IconButtonStory);
-Icon.argTypes = {
-  ...baseArgTypes,
-  Name: {
-    control: { type: ControlTypes.String },
-  },
-  Title: {
-    control: { type: ControlTypes.String },
-  },
-  Children: { table: { disable: true } },
-};
-
-Icon.args = {
-  Size: "lg",
-  Variant: "secondary",
-  Name: "ri-star-line",
-  Theme: "light",
-  Title: "Star this product",
-};
-
-export { Icon };
