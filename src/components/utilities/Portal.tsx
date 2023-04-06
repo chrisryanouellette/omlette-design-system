@@ -21,7 +21,7 @@ const Portal = ({
 
   if (!element) {
     throw new Error(
-      `Element withing <Portal> component is not valid or could not be found`
+      `Element within <Portal> component is not valid or could not be found`
     );
   }
   return createPortal(children, element);
