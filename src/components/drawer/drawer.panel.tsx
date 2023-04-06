@@ -15,6 +15,7 @@ export type DrawerPanelProps = HTMLAttributes<HTMLElement> & {
   position?: "top" | "bottom" | "left" | "right";
   duration?: number;
   size?: number | "full";
+  unmountChildren?: boolean;
   children?: ReactNode;
 };
 
@@ -28,6 +29,7 @@ const DrawerPanel = ({
   trapFocus = true,
   position = "bottom",
   duration,
+  unmountChildren = true,
   children,
   ...rest
 }: DrawerPanelProps): JSX.Element => {
@@ -75,7 +77,7 @@ const DrawerPanel = ({
   return (
     <Portal>
       <CSSTransition
-        unmountOnExit
+        unmountOnExit={unmountChildren}
         key="drawer"
         in={isOpen}
         nodeRef={ref}
