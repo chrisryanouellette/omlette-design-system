@@ -5,7 +5,10 @@ import { State } from "..";
 import "./input.styles.css";
 import "./input.number.styles.css";
 
-export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+export type InputProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "value"
+> & {
   state?: State | State[];
 };
 

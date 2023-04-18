@@ -1,4 +1,6 @@
+import { Meta } from "@storybook/react";
 import { FinishEvent, FinishFailedEvent, GenericFields } from "../useForm";
+import { Form } from "../form";
 import { BasicFormStory as Basic } from "./story/basic";
 
 export type FormControls<Fields extends GenericFields> = {
@@ -14,7 +16,7 @@ const commonArgs = {
 export default {
   title: "Components/Form",
   parameters: { controls: { sort: "alpha" } },
-};
+} satisfies Meta<typeof Form>;
 
 Basic.parameters = {
   layout: "fullscreen",
