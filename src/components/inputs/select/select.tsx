@@ -7,14 +7,17 @@ import { SelectOption } from "./select.option";
 
 import "./select.styles.css";
 
-export type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
+export type SelectInputProps = Omit<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  "value"
+> & {
   emptyOption?: boolean;
   emptyOptionText?: ReactNode;
   emptyOptionProps?: OptionHTMLAttributes<HTMLOptionElement>;
   label?: ReactNode;
   helper?: LabelProps["helper"];
   labelProps?: LabelProps;
-  inputProps?: SelectHTMLAttributes<HTMLSelectElement> & {
+  inputProps?: Omit<SelectHTMLAttributes<HTMLSelectElement>, "value"> & {
     state?: State | State[];
   };
   errorProps?: ErrorsProps;
@@ -33,11 +36,8 @@ const SelectInput = ({
   label,
   labelProps,
   multiple,
-  value,
   ...rest
 }: SelectInputProps): JSX.Element => {
-  const selected = value ?? inputProps?.value;
-
   return (
     <>
       <Label {...labelProps} helper={helper}>
@@ -47,7 +47,6 @@ const SelectInput = ({
         {...inputProps}
         {...rest}
         multiple={multiple}
-        value={selected ? selected : multiple ? [] : ""}
         className={concat(
           "omlette-select-input",
           inputProps?.state,

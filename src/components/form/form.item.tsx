@@ -60,17 +60,6 @@ const FormItem = <T,>({
   const errorsId = controlledErrorsId ?? internalErrorsId;
 
   const formContext = useFormContext();
-  const valueSelector = useCallback<
-    SelectorFn<FormFields<GenericFields>, unknown>
-  >(
-    (store) => {
-      if (name in store) {
-        return store[name].value ?? "";
-      }
-      return "";
-    },
-    [name]
-  );
   const errorsSelector = useCallback<
     SelectorFn<FormFields<GenericFields>, Set<string>>
   >(
@@ -87,7 +76,7 @@ const FormItem = <T,>({
     },
     [name]
   );
-  const value = useStore(formContext.store, valueSelector);
+
   const errors = useStore(formContext.store, errorsSelector);
 
   const handleChange = useCallback<(e: ChangeEvent<HTMLElement>) => void>(
@@ -142,8 +131,6 @@ const FormItem = <T,>({
         if (isValidElement(child)) {
           const inputProps = {
             id,
-            value: value || "",
-            checked: value || false,
             state: errors.size ? "error" : "",
             "aria-invalid": !!errors.size,
             "aria-describedby": errorsId,

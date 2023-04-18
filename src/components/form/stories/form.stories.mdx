@@ -1,0 +1,172 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Components/Form" />
+
+# Form Component & Form Inputs
+
+The form component works as a wrapper for all of your form inputs. It handles managing state for the form and attempts to reduce the amount of re-rendering when interacting with each form item. It accomplishes this via the `store` utility and using uncontrolled inputs.
+
+## Creating a Form
+
+Let's begin with an example login form.
+
+```tsx
+import { Form, TextInput, Button } from "@ouellettec/design-system";
+
+function LoginForm(): JSX.Element {
+  return (
+    <main>
+      <Form>
+        <Form.Item name="username" required>
+          <TextInput label="Username" />
+        </Form.Item>
+        <Form.Item name="password" required>
+          <TextInput label="Password" type="password" />
+        </Form.Item>
+        <Button type="submit">Login</Button>
+      </Form>
+    </main>
+  );
+}
+```
+
+If you have used a form library before this should look pretty familiar. We first render a `<Form>` component which will wrap all of the other form inputs. Anywhere within the form we can then define `<Form.Item>` components which act as a consumer of the form's state. Directly below the `<Form.Item>` we then define each form element we want to render. The only required property on the `<Form.Item>` is the `name` prop which defines how the form item's value will be accessed in the form's state.
+
+### Typing the Form
+
+Now that we have a form created, we want to define types of data we expect the form to return to us. Above the component let's create a type called `LoginForm`.
+
+```tsx
+type LoginForm = {
+  username: string;
+  password: string;
+};
+```
+
+We can then optionally pass this type to the form directly but this is not required.
+
+```tsx
+<Form<LoginForm>>{/* Form Items */}</Form>
+```
+
+## Validating the Form
+
+Form validation can become quiet a extensive task if it is handled during the submission process. Instead this form implementation aims to handle validating each input independently with the goal that each validation function will be small. Let's add some password validation.
+
+```tsx
+import {
+  Form,
+  TextInput,
+  Button,
+  ValidationAddError,
+  FormFields,
+} from "@ouellettec/design-system";
+
+type LoginForm = {
+  username: string;
+  password: string;
+};
+
+function validatePassword(
+  value: string,
+  addError: ValidationAddError,
+  form: FormFields<LoginForm>
+): void {
+  if (!value || value.length < 10) {
+    addError("Your password must be at least 10 characters.");
+  }
+}
+
+function LoginForm(): JSX.Element {
+  return (
+    <main>
+      <Form>
+        <Form.Item name="username">
+          <TextInput label="Username" />
+        </Form.Item>
+        <Form.Item name="password" required validation={validatePassword}>
+          <TextInput label="Password" type="password" />
+        </Form.Item>
+        <Button type="submit">Login</Button>
+      </Form>
+    </main>
+  );
+}
+```
+
+We define the validation function outside of the component so it is only created once. If we need to access variables within the component scope then those validations should be handled within the `onFinish` event.
+
+## Submitting the Form
+
+Now that we have a basic example, let's look at how we can use the form values when the user submits the form.
+
+```tsx
+function LoginForm(): JSX.Element {
+  async function handleSubmit(values: FinishEvent<LoginForm>): void {
+    console.log(
+      "Submitted Fields",
+      values.username.value,
+      values.password.value
+    );
+  }
+
+  function handleFailedSubmit(
+    invalidFields: keyof LoginForm,
+    values: FormFields<LoginForm>
+  ): void {
+    console.log("Failed Fields", invalidFields);
+  }
+
+  return (
+    <main>
+      <Form onFinish={handleSubmit} onFinishFailed={handleFailedSubmit}>
+        {/* Form Items */}
+      </Form>
+    </main>
+  );
+}
+```
+
+Above we defined two callback functions, `handleSubmit` and `handleFailedSubmit`. The `handleSubmit` function will only be ran if all the validation functions ran without adding any errors. While `handleFailedSubmit` is only going to be ran if some of the fields did have an error. There is no need for the `handleFailedSubmit` to react to the errors unless there is some additional update you would like to trigger. The form inputs will display the error messages below the form items.
+
+## Controlling Forms
+
+So far we haven't had to interact with out form at other than providing callbacks for form events. But, there are many situations where we may want to set a form field's value based off of some other logic. Or maybe auto fill some fields based of off a network request. To accomplish this we can create a form instance using the `useForm` hook.
+
+```tsx
+import { Form, TextInput, Button } from "@ouellettec/design-system";
+
+type LoginForm = {
+  username: string;
+  password: string;
+};
+
+function LoginForm(): JSX.Element {
+  const form = form.useForm<LoginForm>();
+
+  return (
+    <main>
+      <Form form={form}>
+        <Form.Item name="username">
+          <TextInput label="Username" />
+        </Form.Item>
+        <Form.Item name="password" required>
+          <TextInput label="Password" type="password" />
+        </Form.Item>
+        <Button type="submit">Login</Button>
+      </Form>
+    </main>
+  );
+}
+```
+
+With the `form` variable we can call a handful of methods to manipulate the form. For example, let's update the username field based on some local storage.
+
+```tsx
+useEffect(() => {
+  const username = localStorage.get("username");
+  username && form.set("username", username);
+}, [form]);
+```
+
+We can also programmatically call submit using the `form.submit` method.

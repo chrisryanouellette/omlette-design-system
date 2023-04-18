@@ -44,12 +44,20 @@ export type FormFields<Values extends GenericFields> = {
   [K in keyof Values]: FormField<Values[K]>;
 };
 
-export type ValidationFn<Value, Return = void> = (
+export type ValidationAddError = (error: string) => void;
+
+export type ValidationFn<Value, Fields extends GenericFields, Return = void> = (
   field: FormField<Value>,
-  add: (error: string) => void
+  add: ValidationAddError,
+  form: FormFields<Fields>
 ) => Return;
-export type AsyncValidationFn<Value> = ValidationFn<Value, Promise<void>>;
-export type Validation<Value> = ValidationFn<Value> | AsyncValidationFn<Value>;
+export type AsyncValidationFn<
+  Value,
+  Fields extends GenericFields
+> = ValidationFn<Value, Fields, Promise<void>>;
+export type Validation<Value, Fields extends GenericFields = GenericFields> =
+  | ValidationFn<Value, Fields>
+  | AsyncValidationFn<Value, Fields>;
 
 export type UseForm<Fields extends GenericFields> = {
   fields: ReadOnlyUseCreateStore<FormFields<Fields>>;
@@ -76,7 +84,7 @@ export type UseForm<Fields extends GenericFields> = {
    */
   validation: <K extends keyof Fields>(
     name: Extract<K, string>,
-    fns: Validation<unknown>
+    fns: Validation<unknown, Fields>
   ) => () => void;
   /**
    * Validates a form field, throws an error of errors if there where any.
@@ -178,9 +186,13 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
         set.forEach((fn) =>
           promises.push(
             Promise.resolve(
-              fn(field, (error: string): void => {
-                errors.add(error);
-              })
+              fn(
+                field,
+                (error: string): void => {
+                  errors.add(error);
+                },
+                fields.get()
+              )
             )
           )
         );
