@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, forwardRef } from "react";
 import { concat } from "@Utilities/concat";
 import { State } from "..";
 
@@ -12,12 +12,10 @@ export type InputProps = Omit<
   state?: State | State[];
 };
 
-const Input = ({
-  className,
-  state,
-  type,
-  ...rest
-}: InputProps): JSX.Element => {
+const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  { className, state, type, ...rest },
+  ref
+): JSX.Element {
   const classes = concat(
     "omlette-standard-input",
     type && `omlette-${type}-input`,
@@ -25,7 +23,7 @@ const Input = ({
     className
   );
 
-  return <input {...rest} type={type} className={classes} />;
-};
+  return <input {...rest} ref={ref} type={type} className={classes} />;
+});
 
 export { Input };

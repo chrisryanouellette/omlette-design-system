@@ -6,6 +6,7 @@ import {
   TextInput,
   NumberInput,
   SelectInput,
+  FileInput,
 } from "@Components/inputs";
 import { Button } from "@Components/button";
 import { Container } from "@Components/container";
@@ -94,6 +95,9 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
             <SelectInput.Option value="dotnet">DotNet</SelectInput.Option>
             <SelectInput.Option value="groovy">Groovy</SelectInput.Option>
           </SelectInput>
+        </Form.Item>
+        <Form.Item name="file">
+          <FileInput label="File Upload" disableClear />
         </Form.Item>
         <Form.Item
           required

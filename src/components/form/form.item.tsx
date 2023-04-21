@@ -37,6 +37,7 @@ const ComposedInputs = [
   "DateInput",
   "Checkbox",
   "SelectInput",
+  "FileInput",
 ];
 const InternalFormInputs = ["Input"];
 const FormElements = ["input"];
@@ -93,6 +94,11 @@ const FormItem = <T,>({
           e.target.getAttribute("type") === "checkbox"
         ) {
           formContext.set(name, e.target.checked);
+        } else if (
+          isInstanceOf(e.target, [HTMLInputElement]) &&
+          e.target.getAttribute("type") === "file"
+        ) {
+          formContext.set(name, e.target.files);
         } else if (isInstanceOf(e.target, [HTMLSelectElement])) {
           const selected = Array.from(e.target.selectedOptions).map(
             (elem) => elem.value
