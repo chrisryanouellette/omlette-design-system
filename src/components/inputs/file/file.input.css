@@ -1,0 +1,51 @@
+:root {
+  --omlette-file-input-before-bkg-color: var(--tw-color-blue-800);
+  --omlette-file-input-before-color: var(--tw-color-gray-100);
+}
+
+:where(.omlette-file-input-container) {
+  position: relative;
+}
+
+:where(.omlette-file-input-name) {
+  position: absolute;
+  top: 50%;
+  left: 9rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+:where(.omlette-file-input-button-clear) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  border-radius: 0 var(--omlette-standard-input-border-radius)
+    var(--omlette-standard-input-border-radius) 0;
+}
+
+input:where(.omlette-file-input) {
+  color: transparent;
+  position: relative;
+}
+
+:where(.omlette-file-input)::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+:where(.omlette-file-input)::before {
+  content: "Browse Files";
+  color: var(--omlette-file-input-before-color);
+  background-color: var(--omlette-file-input-before-bkg-color);
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 1rem;
+}
+
+:where(.omlette-file-input):hover::before {
+  background-color: var(--omlette-input-color--active);
+}
