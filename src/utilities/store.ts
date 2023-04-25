@@ -33,7 +33,8 @@ export const createGlobalStore = <T>(value: T): UseCreateStore<T> => {
 
   const get: UseCreateStore<T>["get"] = () => globalStore.get(key);
   const set: UseCreateStore<T>["set"] = (value) => {
-    globalStore.set(key, value);
+    const prev = globalStore.get(key);
+    globalStore.set(key, { ...prev, ...value });
     key.subscriptions.forEach((sub) => sub(get()));
   };
   const subscribe: UseCreateStore<T>["subscribe"] = (cb) => {
