@@ -11,7 +11,7 @@ export type IconButtonProps = ButtonProps & {
   name: string;
   position?: "left" | "right";
   title?: IconProps["title"];
-  iconProps?: IconProps;
+  iconProps?: Omit<IconProps, "name">;
 };
 
 const IconButton: FC<IconButtonProps> = ({
