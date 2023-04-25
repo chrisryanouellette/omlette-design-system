@@ -25,19 +25,23 @@ const globalStore = new Map<GlobalStoreKey<any>, any>();
  * This is useful when you want multiple components without a common parent
  * to be able to communicate.
  */
-export const createGlobalStore = <T>(value: T): UseCreateStore<T> => {
-  const key: GlobalStoreKey<T> = {
+export const createGlobalStore = <Store, Action = Partial<Store>>(
+  value: Store,
+  reducer?: (current: Store, action: Action) => Store
+): UseCreateStore<Store, Action> => {
+  const key: GlobalStoreKey<Store> = {
     subscriptions: new Set(),
   };
   globalStore.set(key, value);
 
-  const get: UseCreateStore<T>["get"] = () => globalStore.get(key);
-  const set: UseCreateStore<T>["set"] = (value) => {
+  const get: UseCreateStore<Store>["get"] = () => globalStore.get(key);
+  const set: UseCreateStore<Store, Action>["set"] = (value) => {
     const prev = globalStore.get(key);
-    globalStore.set(key, { ...prev, ...value });
+    const update = reducer ? reducer(prev, value) : { ...prev, ...value };
+    globalStore.set(key, update);
     key.subscriptions.forEach((sub) => sub(get()));
   };
-  const subscribe: UseCreateStore<T>["subscribe"] = (cb) => {
+  const subscribe: UseCreateStore<Store>["subscribe"] = (cb) => {
     key.subscriptions.add(cb);
     return () => key.subscriptions.delete(cb);
   };
