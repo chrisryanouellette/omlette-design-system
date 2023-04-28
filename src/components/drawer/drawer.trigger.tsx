@@ -4,7 +4,9 @@ import { drawerStore } from "./store";
 
 export type DrawerTriggerProps = ButtonProps & {
   drawer: string;
-  element?: FC;
+  // Allow any functional component to be passed as the drawer trigger
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  element?: FC<any>;
   children?: ReactNode;
   onBeforeClose?: (e: MouseEvent<HTMLElement>) => void;
   onAfterClose?: (e: MouseEvent<HTMLElement>) => void;
