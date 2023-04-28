@@ -1,4 +1,11 @@
 import { createGlobalStore } from "@Utilities";
 
-export const isDrawerOpenKey = createGlobalStore<string | null>(null);
-export const drawersKey = createGlobalStore<Set<string>>(new Set());
+export type DrawerState = {
+  open: string | null;
+  keys: Set<string>;
+};
+
+export const drawerStore = createGlobalStore<DrawerState>({
+  open: null,
+  keys: new Set(),
+});

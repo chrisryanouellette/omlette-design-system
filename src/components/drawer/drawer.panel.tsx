@@ -5,7 +5,7 @@ import { useStore } from "@Utilities/store";
 import { Portal } from "@Components/utilities/Portal";
 import { concat } from "@Utilities/concat";
 import { styles } from "@Utilities/styles";
-import { drawersKey, isDrawerOpenKey } from "./store";
+import { drawerStore } from "./store";
 
 export type DrawerPanelProps = HTMLAttributes<HTMLElement> & {
   container?: "div" | "aside" | "section";
@@ -36,7 +36,7 @@ const DrawerPanel = ({
   const internalId = useId();
   const id = controlledId ?? internalId;
   const ref = useRef<HTMLDivElement>(null);
-  const isOpen = useStore(isDrawerOpenKey, (s) => s === id);
+  const isOpen = useStore(drawerStore, (state) => state.open === id);
   const { beginTrap, initialize, releaseTrap, subscribe } = useTabTrap(ref);
   const Element = element;
   const Container = container;
@@ -47,11 +47,11 @@ const DrawerPanel = ({
   });
 
   useEffect(() => {
-    drawersKey.set(drawersKey.get().add(id));
+    drawerStore.set({ keys: drawerStore.get().keys.add(id) });
     return function removeDrawerFromGlobalStoreCleanup() {
-      const ids = drawersKey.get();
-      ids.delete(id);
-      drawersKey.set(ids);
+      const keys = drawerStore.get().keys;
+      keys.delete(id);
+      drawerStore.set({ keys });
     };
   }, [id]);
 
@@ -69,7 +69,7 @@ const DrawerPanel = ({
   useEffect(() => {
     return subscribe((event) => {
       if (event === "releaseTrap" && isOpen) {
-        isDrawerOpenKey.set(null);
+        drawerStore.set({ open: null });
       }
     });
   }, [isOpen, subscribe]);

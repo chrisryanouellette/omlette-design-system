@@ -1,6 +1,6 @@
 import { FC, MouseEvent, ReactNode } from "react";
 import { Button, ButtonProps } from "@Components/button";
-import { isDrawerOpenKey } from "./store";
+import { drawerStore } from "./store";
 
 export type DrawerTriggerProps = ButtonProps & {
   drawer: string;
@@ -22,12 +22,12 @@ const DrawerTrigger = ({
   const Element = element ?? Button;
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>): void => {
-    const openId = isDrawerOpenKey.get();
+    const openId = drawerStore.get().open;
     onBeforeClose?.(e);
     if (openId !== drawer) {
-      isDrawerOpenKey.set(drawer);
+      drawerStore.set({ open: drawer });
     } else {
-      isDrawerOpenKey.set(null);
+      drawerStore.set({ open: null });
     }
     onClick?.(e);
     onAfterClose?.(e);
