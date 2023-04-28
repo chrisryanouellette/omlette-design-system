@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, HTMLAttributes } from "react";
 import { concat } from "@Utilities/concat";
 import { Icon, IconProps } from "@Components/icon";
 import { ChildOrNull } from "@Components/utilities/ChildOrNull";
@@ -12,10 +12,12 @@ export type IconButtonProps = ButtonProps & {
   position?: "left" | "right";
   title?: IconProps["title"];
   iconProps?: Omit<IconProps, "name">;
+  childrenContainerProps?: HTMLAttributes<HTMLSpanElement>;
 };
 
 const IconButton: FC<IconButtonProps> = ({
   children,
+  childrenContainerProps,
   className,
   iconProps,
   name = "ri-star-line",
@@ -33,7 +35,7 @@ const IconButton: FC<IconButtonProps> = ({
       <ChildOrNull condition={position === "left"}>
         <Icon name={name} title={title} {...iconProps} />
       </ChildOrNull>
-      <span>{children}</span>
+      {children ? <span {...childrenContainerProps}>{children}</span> : null}
       <ChildOrNull condition={position === "right"}>
         <Icon name={name} title={title} {...iconProps} />
       </ChildOrNull>
