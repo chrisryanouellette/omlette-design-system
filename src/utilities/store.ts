@@ -43,6 +43,13 @@ export const createGlobalStore = <Store, Action = Partial<Store>>(
   };
   const subscribe: UseCreateStore<Store>["subscribe"] = (cb) => {
     key.subscriptions.add(cb);
+    /*
+    Call the sub function once the useStore subscribes to a global store
+    This ensure that if an update comes in after the lazy initializer useState
+    function runs but before the useEffect runs to subscribe to the changes that
+    the update is still dispatched to the subscriber.
+    */
+    cb(get());
     return () => key.subscriptions.delete(cb);
   };
   return { get, set, subscribe };
