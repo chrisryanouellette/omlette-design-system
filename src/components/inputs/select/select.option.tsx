@@ -12,4 +12,6 @@ const SelectOption = ({
   return <option {...rest}>{children}</option>;
 };
 
+SelectOption.displayName = "SelectOption";
+
 export { SelectOption };

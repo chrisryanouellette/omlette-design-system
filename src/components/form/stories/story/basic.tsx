@@ -16,11 +16,12 @@ import { FormControls } from "../form.stories";
 type BasicForm = {
   firstName: string;
   password: string;
-  amount: string;
+  amount: number;
   date: string;
   select: string;
   multi: string[];
   termsAndConditions: boolean;
+  file: FileList;
 };
 
 const firstNameValidation: Validation<BasicForm["firstName"]> = (
@@ -64,7 +65,12 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
   return (
     <Container placement="center">
       <Form {...props} form={form} className="light w-72">
-        <Form.Item required name="firstName" validation={firstNameValidation}>
+        <Form.Item
+          required
+          name="firstName"
+          defaultValue="Omlette"
+          validation={firstNameValidation}
+        >
           <TextInput label="First Name" />
         </Form.Item>
         <Form.Item required name="password" validation={passwordValidation}>
@@ -90,7 +96,7 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
           </SelectInput>
         </Form.Item>
         <Form.Item name="multi">
-          <SelectInput multiple label="Fun Programing Languages">
+          <SelectInput multiple label="Fun Programming Languages">
             <SelectInput.Option value="js">JS</SelectInput.Option>
             <SelectInput.Option value="dotnet">DotNet</SelectInput.Option>
             <SelectInput.Option value="groovy">Groovy</SelectInput.Option>

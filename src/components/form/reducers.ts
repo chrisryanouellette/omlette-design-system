@@ -4,6 +4,7 @@ export enum ReducerActions {
   register = "register",
   unregister = "unregister",
   set = "set",
+  setDefault = "setDefault",
   validate = "validate",
 }
 
@@ -80,6 +81,34 @@ const set = (
   };
 };
 
+type SetDefaultFieldAction = {
+  action: ReducerActions.setDefault;
+  value: {
+    name: string;
+    default: unknown;
+  };
+};
+
+const setDefault = (
+  fields: FormFields<GenericFields>,
+  action: SetDefaultFieldAction
+): FormFields<GenericFields> => {
+  const field = fields[action.value.name];
+
+  if (!field) {
+    throw new Error(
+      `Field "${action.value.name}" set it's default value but the field does not exist.`
+    );
+  }
+
+  field.defaultValue = action.value.default;
+
+  return {
+    ...fields,
+    [action.value.name]: field,
+  };
+};
+
 type ValidateFieldAction = {
   action: ReducerActions.validate;
   value: {
@@ -111,6 +140,7 @@ const validate = (
 export type FormFieldsActions =
   | RegisterFieldAction
   | SetFieldAction
+  | SetDefaultFieldAction
   | UnRegisterFieldAction
   | ValidateFieldAction;
 
@@ -123,6 +153,7 @@ const reducers: {
   [ReducerActions.register]: register,
   [ReducerActions.unregister]: unregister,
   [ReducerActions.set]: set,
+  [ReducerActions.setDefault]: setDefault,
   [ReducerActions.validate]: validate,
 };
 

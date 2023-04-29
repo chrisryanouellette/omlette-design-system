@@ -71,12 +71,35 @@ export type UseForm<Fields extends GenericFields> = {
   ) => () => void;
   /**
    * Set's the field value in the store and marks it as touched.
+   *
+   * Note: This will NOT cause the form field to update.
+   * If a field needs to display the value use `setDefault` instead.
    */
   set: <K extends keyof Fields>(
     name: Extract<K, string>,
     value: Fields[K]
   ) => void;
+  /**
+   * Sets the default value for a form field and updates the form state.
+   * This will not call the subscribers to the from state.
+   */
+  setDefault: <K extends keyof Fields>(
+    name: Extract<K, string>,
+    value: Fields[K]
+  ) => void;
+  /**
+   * Sets the values for multiple fields. Each field will trigger a call to the form
+   * subscribers.
+   *
+   * Note: This will NOT cause the form field to update.
+   * If a field needs to display the value use `setManyDefault` instead.
+   */
   setMany: (fields: Partial<Fields>) => void;
+  /**
+   * Sets the default values for multiple form fields and updates the form state.
+   * This will not call the subscribers to the from state.
+   */
+  setManyDefault: (fields: Partial<Fields>) => void;
   /**
    * Adds a validation function to a field.
    * Returns the cleanup function to remove the function so
@@ -148,6 +171,19 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
     [fields]
   );
 
+  const setDefault = useCallback<UseForm<Fields>["setDefault"]>(
+    (name, value) => {
+      fields.set({
+        action: ReducerActions.setDefault,
+        value: {
+          name,
+          default: value,
+        },
+      });
+    },
+    [fields]
+  );
+
   const setMany = useCallback<UseForm<Fields>["setMany"]>(
     (values) => {
       Object.entries(values).forEach(([name, value]) => {
@@ -158,6 +194,18 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
         subscriptions.current.update.forEach((sub) =>
           sub(name, value, fields.get())
         );
+      });
+    },
+    [fields]
+  );
+
+  const setManyDefault = useCallback<UseForm<Fields>["setManyDefault"]>(
+    (values) => {
+      Object.entries(values).forEach(([name, value]) => {
+        fields.set({
+          action: ReducerActions.setDefault,
+          value: { name, default: value },
+        });
       });
     },
     [fields]
@@ -259,7 +307,9 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
       fields,
       register,
       set,
+      setDefault,
       setMany,
+      setManyDefault,
       validation,
       validate,
       submit,
@@ -270,7 +320,9 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
       fields,
       register,
       set,
+      setDefault,
       setMany,
+      setManyDefault,
       validation,
       validate,
       submit,

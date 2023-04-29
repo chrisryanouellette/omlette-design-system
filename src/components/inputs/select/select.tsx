@@ -1,6 +1,14 @@
-import { OptionHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
+import {
+  Children,
+  OptionHTMLAttributes,
+  ReactNode,
+  SelectHTMLAttributes,
+  cloneElement,
+  isValidElement,
+} from "react";
 import { concat } from "@Utilities/concat";
 import { ChildOrNull } from "@Components/utilities/ChildOrNull";
+import { isElement } from "@Utilities/react";
 import { State } from "..";
 import { Errors, ErrorsProps, Label, LabelProps } from "../utilities";
 import { SelectOption } from "./select.option";
@@ -55,11 +63,27 @@ const SelectInput = ({
         )}
       >
         <ChildOrNull condition={!multiple && !!emptyOption}>
-          <SelectOption {...emptyOptionProps} value="">
+          <SelectOption
+            {...emptyOptionProps}
+            value=""
+            selected={!inputProps?.defaultValue}
+            disabled
+            hidden
+          >
             {emptyOptionText}
           </SelectOption>
         </ChildOrNull>
-        {children}
+        {Children.map(children, function (child) {
+          if (isValidElement(child)) {
+            if (isElement(child, ["SelectOption"])) {
+              return cloneElement(child, {
+                ...child.props,
+                selected: inputProps?.defaultValue === child.props.value,
+              });
+            }
+          }
+          return child;
+        })}
       </select>
       <Errors {...errorProps} />
     </>

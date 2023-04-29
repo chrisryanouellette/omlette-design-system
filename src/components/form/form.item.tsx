@@ -22,6 +22,7 @@ import "./form.item.styles.css";
 type FormItemProps<T> = {
   name: string;
   children?: ReactNode;
+  defaultValue?: T;
   id?: string;
   errorsId?: string;
   required?: boolean;
@@ -46,6 +47,7 @@ const ErrorElements = ["Errors"];
 
 const FormItem = <T,>({
   children,
+  defaultValue: controlledDefaultValue,
   errorsId: controlledErrorsId,
   id: controlledId,
   inline,
@@ -61,6 +63,22 @@ const FormItem = <T,>({
   const errorsId = controlledErrorsId ?? internalErrorsId;
 
   const formContext = useFormContext();
+  const defaultValue =
+    controlledDefaultValue ??
+    formContext.store.get()?.[name]?.defaultValue ??
+    null;
+
+  /*
+  Triggers a state update if the input has gone from no default value
+  to having a default value.
+  This occurs when some asynchronous action updates the form's state,
+  or when the first change is made.
+   */
+  useStore(formContext.store, function (state) {
+    const defaultValue = state[name]?.defaultValue ?? null;
+    return defaultValue !== null;
+  });
+
   const errorsSelector = useCallback<
     SelectorFn<FormFields<GenericFields>, Set<string>>
   >(
@@ -114,8 +132,8 @@ const FormItem = <T,>({
   );
 
   useEffect(() => {
-    return formContext.register(name);
-  }, [formContext, name]);
+    return formContext.register(name, defaultValue);
+  }, [defaultValue, formContext, name]);
 
   useEffect(() => {
     if (validationFn) {
@@ -140,6 +158,7 @@ const FormItem = <T,>({
             state: errors.size ? "error" : "",
             "aria-invalid": !!errors.size,
             "aria-describedby": errorsId,
+            defaultValue,
             onChange: handleChange,
           };
           const labelProps = {
