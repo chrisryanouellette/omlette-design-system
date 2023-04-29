@@ -165,7 +165,7 @@ With the `form` variable we can call a handful of methods to manipulate the form
 ```tsx
 useEffect(() => {
   const username = localStorage.get("username");
-  username && form.set("username", username);
+  username && form.setDefault("username", username);
 }, [form]);
 ```
 
