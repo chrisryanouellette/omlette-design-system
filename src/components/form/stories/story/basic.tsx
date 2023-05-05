@@ -7,8 +7,9 @@ import {
   NumberInput,
   SelectInput,
   FileInput,
+  Label,
 } from "@Components/inputs";
-import { Button } from "@Components/button";
+import { Button, IconButton } from "@Components/button";
 import { Container } from "@Components/container";
 import { DateInput } from "@Components/inputs/date";
 import { FormControls } from "../form.stories";
@@ -20,9 +21,12 @@ type BasicForm = {
   date: string;
   select: string;
   multi: string[];
+  group: [number, number];
   termsAndConditions: boolean;
   file: FileList;
 };
+
+const defaultGroup: BasicForm["group"] = [0, 160];
 
 const firstNameValidation: Validation<BasicForm["firstName"]> = (
   field,
@@ -51,6 +55,15 @@ const selectValidation: Validation<BasicForm["select"]> = (field, addError) => {
   }
 };
 
+const groupValidation: Validation<BasicForm["group"]> = (field, addError) => {
+  if (!field.value.length || !field.value.some(Boolean)) {
+    addError("All fields in BPM group are required.");
+  }
+  if (field.value.some((value) => isNaN(Number(value)))) {
+    addError("All fields in BPM group must be a number.");
+  }
+};
+
 const termsAndConditionsValidation: Validation<
   BasicForm["termsAndConditions"]
 > = (field, addError) => {
@@ -64,15 +77,17 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
 
   return (
     <Container placement="center">
-      <Form {...props} form={form} className="light w-72">
-        <Form.Item
-          required
-          name="firstName"
-          defaultValue="Omlette"
-          validation={firstNameValidation}
-        >
-          <TextInput label="First Name" />
-        </Form.Item>
+      <Form {...props} form={form} className="light w-96">
+        <div>
+          <Form.Item
+            required
+            name="firstName"
+            defaultValue="Omlette"
+            validation={firstNameValidation}
+          >
+            <TextInput label="First Name" />
+          </Form.Item>
+        </div>
         <Form.Item required name="password" validation={passwordValidation}>
           <TextInput
             label="Password"
@@ -113,7 +128,35 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
         >
           <Checkbox label="Terms and conditions" />
         </Form.Item>
-        <Button type="submit" variant="secondary" size="md">
+        <div className="grid grid-cols-2 items-end gap-x-4">
+          <Label>BPM Start</Label>
+          <Label>BPM Value</Label>
+          <Form.Group
+            name="bpm"
+            defaultValue={defaultGroup}
+            validation={groupValidation}
+            errorProps={{ wrapperProps: { className: "col-span-full" } }}
+          >
+            <Form.Item name="bpm" wrapperProps={{ className: "h-full" }}>
+              <NumberInput
+                labelProps={{ className: "hidden" }}
+                inputProps={{ className: "h-full" }}
+              />
+            </Form.Item>
+            <Form.Item name="bpm" wrapperProps={{ className: "flex gap-x-1" }}>
+              <NumberInput
+                labelProps={{ wrapperProps: { className: "hidden" } }}
+              />
+              <IconButton type="button" name="ri-close-line" size="sm" />
+            </Form.Item>
+          </Form.Group>
+        </div>
+        <Button
+          type="submit"
+          variant="secondary"
+          size="md"
+          className="w-full mt-8"
+        >
           Submit
         </Button>
       </Form>

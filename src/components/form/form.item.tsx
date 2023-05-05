@@ -65,7 +65,7 @@ const FormItem = <T,>({
   const formContext = useFormContext();
   const defaultValue =
     controlledDefaultValue ??
-    formContext.store.get()?.[name]?.defaultValue ??
+    formContext.fields.get()?.[name]?.defaultValue ??
     null;
 
   /*
@@ -74,7 +74,7 @@ const FormItem = <T,>({
   This occurs when some asynchronous action updates the form's state,
   or when the first change is made.
    */
-  useStore(formContext.store, function (state) {
+  useStore(formContext.fields, function (state) {
     const defaultValue = state[name]?.defaultValue ?? null;
     return defaultValue !== null;
   });
@@ -96,7 +96,7 @@ const FormItem = <T,>({
     [name]
   );
 
-  const errors = useStore(formContext.store, errorsSelector);
+  const errors = useStore(formContext.fields, errorsSelector);
 
   const handleChange = useCallback<(e: ChangeEvent<HTMLElement>) => void>(
     (e) => {

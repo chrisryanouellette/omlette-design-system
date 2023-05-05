@@ -8,22 +8,22 @@ export type ErrorsProps = ListProps & {
   errors?: string[];
   children?: ReactNode;
   listItemProps?: ListItemProps;
-  wrapperClassName?: HTMLAttributes<HTMLDivElement>;
+  wrapperProps?: HTMLAttributes<HTMLDivElement>;
 };
 
 const Errors = ({
   children,
   errors,
   listItemProps,
-  wrapperClassName,
+  wrapperProps,
   ...rest
 }: ErrorsProps): JSX.Element => {
   return (
     <div
-      {...wrapperClassName}
+      {...wrapperProps}
       className={concat(
         "omlette-input-errors-wrapper",
-        wrapperClassName?.className
+        wrapperProps?.className
       )}
     >
       {errors ? (
