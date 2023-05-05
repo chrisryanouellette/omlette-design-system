@@ -8,9 +8,11 @@ export type LabelProps = HTMLAttributes<HTMLLabelElement> & {
   helper?: ReactNode | ReactNode[];
   required?: boolean;
   wrapperProps?: HTMLAttributes<HTMLDivElement>;
+  afterLabel?: ReactNode;
 };
 
 const Label = ({
+  afterLabel,
   children,
   helper,
   required,
@@ -23,7 +25,10 @@ const Label = ({
       className={concat("omlette-input-label-wrapper", wrapperProps?.className)}
     >
       <label {...rest}>
-        {children} {required ? "( Required )" : ""}
+        <span>
+          {children} {required ? "( Required )" : ""}
+          {afterLabel}
+        </span>
         <span>
           {Array.isArray(helper)
             ? helper.map((node, i) => <span key={i}>{node}</span>)
