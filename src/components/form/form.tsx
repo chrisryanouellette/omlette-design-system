@@ -10,6 +10,7 @@ import {
   UseForm,
   useForm,
 } from "./useForm";
+import { FormGroup } from "./form.group";
 
 export type FormProps<Fields extends GenericFields> =
   HTMLAttributes<HTMLFormElement> & {
@@ -50,12 +51,7 @@ const Form = <Fields extends GenericFields>({
   }, [form, onFinish, onFinishFailed, onUpdate]);
 
   return (
-    <FormProvider
-      register={form.register}
-      set={form.set}
-      validation={form.validation}
-      store={form.fields}
-    >
+    <FormProvider value={form}>
       <form {...rest} onSubmit={form.submit}>
         {children}
       </form>
@@ -64,5 +60,7 @@ const Form = <Fields extends GenericFields>({
 };
 
 Form.Item = FormItem;
+Form.Group = FormGroup;
+Form.useForm = useForm;
 
 export { Form };

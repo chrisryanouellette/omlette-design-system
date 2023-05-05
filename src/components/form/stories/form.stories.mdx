@@ -49,6 +49,36 @@ We can then optionally pass this type to the form directly but this is not requi
 <Form<LoginForm>>{/* Form Items */}</Form>
 ```
 
+### Form Groups
+
+For some fields it would be better if we could have one key to reference a group of fields similar to a multi select. An example maybe a time off request field where the first field is the date the client wants off and the second input is the number of hours the client wants to take off.
+
+```tsx
+import { Form, TextInput, Button } from "@ouellettec/design-system";
+
+function TimeOffForm(): JSX.Element {
+  return (
+    <main>
+      <Form>
+        <div className="grid grid-cols-2 gap-4">
+          <Form.Group name="timeOff">
+            <Form.Item name="timeOff" required>
+              <DateInput label="Date" />
+            </Form.Item>
+            <Form.Item name="timeOff" required>
+              <NumberInput label="Hours" />
+            </Form.Item>
+          </Form.Group>
+        </div>
+        <Button type="submit">Login</Button>
+      </div>
+    </main>
+  );
+}
+```
+
+When we access the `timeOff` field out value will be an array of strings and numbers where the `0` index is the date and the `1` index is the number of hours.
+
 ## Validating the Form
 
 Form validation can become quiet a extensive task if it is handled during the submission process. Instead this form implementation aims to handle validating each input independently with the goal that each validation function will be small. Let's add some password validation.
