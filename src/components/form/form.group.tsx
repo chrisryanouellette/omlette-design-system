@@ -19,6 +19,7 @@ import {
 
 type FormGroupProps<T> = {
   name: string;
+  defaultValue?: T extends unknown[] ? T : T[];
   errorProps?: ErrorsProps;
   validation?: Validation<T>;
   children?: ReactNode;
@@ -26,6 +27,7 @@ type FormGroupProps<T> = {
 
 export function FormGroup<T>({
   children,
+  defaultValue,
   errorProps,
   name,
   validation,
@@ -71,10 +73,9 @@ export function FormGroup<T>({
 
   useEffect(
     function registerFormGroup() {
-      console.log("running");
-      return context.register(name, []);
+      return context.register(name, defaultValue ?? []);
     },
-    [context, name]
+    [context, defaultValue, name]
   );
 
   useEffect(
@@ -93,6 +94,7 @@ export function FormGroup<T>({
           if (isElement(child, ["FormItem"])) {
             return cloneElement(child, {
               ...child.props,
+              defaultValue: defaultValue?.[index] ?? undefined,
               name: `${child.props.name}|${index}`,
             });
           }

@@ -26,6 +26,8 @@ type BasicForm = {
   file: FileList;
 };
 
+const defaultGroup: BasicForm["group"] = [0, 160];
+
 const firstNameValidation: Validation<BasicForm["firstName"]> = (
   field,
   addError
@@ -131,6 +133,7 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
           <Label>BPM Value</Label>
           <Form.Group
             name="bpm"
+            defaultValue={defaultGroup}
             validation={groupValidation}
             errorProps={{ wrapperProps: { className: "col-span-full" } }}
           >
