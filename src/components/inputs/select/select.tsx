@@ -1,14 +1,6 @@
-import {
-  Children,
-  OptionHTMLAttributes,
-  ReactNode,
-  SelectHTMLAttributes,
-  cloneElement,
-  isValidElement,
-} from "react";
+import { OptionHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
 import { concat } from "@Utilities/concat";
 import { ChildOrNull } from "@Components/utilities/ChildOrNull";
-import { isElement } from "@Utilities/react";
 import { State } from "..";
 import { Errors, ErrorsProps, Label, LabelProps } from "../utilities";
 import { SelectOption } from "./select.option";
@@ -35,6 +27,7 @@ export type SelectInputProps = Omit<
 const SelectInput = ({
   children,
   className,
+  defaultValue,
   emptyOption = true,
   emptyOptionProps,
   emptyOptionText = "Please select a value",
@@ -54,6 +47,7 @@ const SelectInput = ({
       <select
         {...inputProps}
         {...rest}
+        defaultValue={defaultValue ? defaultValue : multiple ? [] : ""}
         multiple={multiple}
         className={concat(
           "omlette-select-input",
@@ -63,27 +57,11 @@ const SelectInput = ({
         )}
       >
         <ChildOrNull condition={!multiple && !!emptyOption}>
-          <SelectOption
-            {...emptyOptionProps}
-            value=""
-            selected={!inputProps?.defaultValue}
-            disabled
-            hidden
-          >
+          <SelectOption {...emptyOptionProps} value="" disabled hidden>
             {emptyOptionText}
           </SelectOption>
         </ChildOrNull>
-        {Children.map(children, function (child) {
-          if (isValidElement(child)) {
-            if (isElement(child, ["SelectOption"])) {
-              return cloneElement(child, {
-                ...child.props,
-                selected: inputProps?.defaultValue === child.props.value,
-              });
-            }
-          }
-          return child;
-        })}
+        {children}
       </select>
       <Errors {...errorProps} />
     </>
