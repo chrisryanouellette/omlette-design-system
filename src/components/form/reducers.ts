@@ -25,7 +25,7 @@ const register = (
     ...fields,
     [action.value.name]: {
       value: action.value.value,
-      defaultValue: action.value.defaultValue || null,
+      defaultValue: action.value.defaultValue ?? null,
       touched: false,
       errors: new Set<string>(),
     },
@@ -102,6 +102,7 @@ const setDefault = (
   }
 
   field.defaultValue = action.value.default;
+  field.value = field.value ?? action.value.default;
 
   return {
     ...fields,
