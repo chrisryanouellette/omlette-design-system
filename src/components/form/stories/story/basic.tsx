@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, Fragment, useState } from "react";
 import { bindTemplate } from "@Storybook/types";
 import { Form, useForm, Validation } from "@Components/form";
 import {
@@ -56,7 +56,7 @@ const selectValidation: Validation<BasicForm["select"]> = (field, addError) => {
 };
 
 const groupValidation: Validation<BasicForm["group"]> = (field, addError) => {
-  if (!field.value.length || !field.value.some(Boolean)) {
+  if (!field.value.length || field.value.some((val) => val === null)) {
     addError("All fields in BPM group are required.");
   }
   if (field.value.some((value) => isNaN(Number(value)))) {
@@ -74,6 +74,7 @@ const termsAndConditionsValidation: Validation<
 
 const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
   const form = useForm<BasicForm>();
+  const [groupItems, setGroupItems] = useState<number>(2);
 
   return (
     <Container placement="center">
@@ -91,6 +92,7 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
         <Form.Item required name="password" validation={passwordValidation}>
           <TextInput
             label="Password"
+            inputProps={{ type: "password" }}
             helper={[
               "Must be at least 5 characters.",
               "Must contain a special character",
@@ -129,27 +131,40 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
           <Checkbox label="Terms and conditions" />
         </Form.Item>
         <div className="grid grid-cols-2 items-end gap-x-4">
-          <Label>BPM Start</Label>
-          <Label>BPM Value</Label>
           <Form.Group
             name="bpm"
             defaultValue={defaultGroup}
             validation={groupValidation}
             errorProps={{ wrapperProps: { className: "col-span-full" } }}
           >
-            <Form.Item name="bpm" wrapperProps={{ className: "h-full" }}>
-              <NumberInput
-                labelProps={{ className: "hidden" }}
-                inputProps={{ className: "h-full" }}
-              />
-            </Form.Item>
-            <Form.Item name="bpm" wrapperProps={{ className: "flex gap-x-1" }}>
-              <NumberInput
-                labelProps={{ wrapperProps: { className: "hidden" } }}
-              />
-              <IconButton type="button" name="ri-close-line" size="sm" />
-            </Form.Item>
+            {new Array(groupItems).fill(null).map((item, index) => (
+              <Fragment key={index}>
+                <Form.Item name="bpm">
+                  <NumberInput label="BPM Start" />
+                </Form.Item>
+                <div className="flex gap-x-1 items-end">
+                  <Form.Item name="bpm">
+                    <NumberInput label="BPM Value" />
+                  </Form.Item>
+                  <IconButton
+                    type="button"
+                    name="ri-close-line"
+                    size="sm"
+                    className="mb-1 h-9 w-9"
+                    onClick={(): void => setGroupItems(groupItems - 1)}
+                  />
+                </div>
+              </Fragment>
+            ))}
           </Form.Group>
+          <Button
+            type="button"
+            size="lg"
+            className="col-span-full mt-2"
+            onClick={(): void => setGroupItems(groupItems + 1)}
+          >
+            Add BPM
+          </Button>
         </div>
         <Button
           type="submit"

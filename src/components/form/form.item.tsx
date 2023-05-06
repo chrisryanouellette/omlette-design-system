@@ -15,6 +15,7 @@ import { concat } from "@Utilities/concat";
 import { isUniqueSet } from "@Utilities/set";
 import { FormFields, GenericFields, Validation } from "./useForm";
 import { useFormContext } from "./context";
+import { useFormGroupContext } from "./form.group.context";
 import { isElement } from "@Utilities";
 
 import "./form.item.styles.css";
@@ -57,15 +58,17 @@ const FormItem = <T,>({
   validation: validationFn,
   wrapperProps,
 }: FormItemProps<T>): JSX.Element => {
+  const formContext = useFormContext();
+  const formGroupContext = useFormGroupContext();
   const internalId = useId();
   const internalErrorsId = useId();
   const id = controlledId ?? internalId;
+  const selector = formGroupContext ? id : name;
   const errorsId = controlledErrorsId ?? internalErrorsId;
 
-  const formContext = useFormContext();
-  const defaultValue =
+  const defaultValue: unknown =
     controlledDefaultValue ??
-    formContext.fields.get()?.[name]?.defaultValue ??
+    formContext.fields.get()?.[selector]?.defaultValue ??
     null;
 
   /*
@@ -75,7 +78,7 @@ const FormItem = <T,>({
   or when the first change is made.
    */
   useStore(formContext.fields, function (state) {
-    const defaultValue = state[name]?.defaultValue ?? null;
+    const defaultValue = state[selector]?.defaultValue ?? null;
     return defaultValue !== null;
   });
 
@@ -111,29 +114,40 @@ const FormItem = <T,>({
           isInstanceOf(e.target, [HTMLInputElement]) &&
           e.target.getAttribute("type") === "checkbox"
         ) {
-          formContext.set(name, e.target.checked);
+          formContext.set(selector, e.target.checked);
         } else if (
           isInstanceOf(e.target, [HTMLInputElement]) &&
           e.target.getAttribute("type") === "file"
         ) {
-          formContext.set(name, e.target.files);
+          formContext.set(selector, e.target.files);
         } else if (isInstanceOf(e.target, [HTMLSelectElement])) {
           const selected = Array.from(e.target.selectedOptions).map(
             (elem) => elem.value
           );
-          formContext.set(name, e.target.multiple ? selected : selected[0]);
+          formContext.set(selector, e.target.multiple ? selected : selected[0]);
+        } else if (e.target.getAttribute("type") === "number") {
+          formContext.set(selector, Number(e.target.value));
         } else {
-          formContext.set(name, e.target.value);
+          formContext.set(selector, e.target.value);
         }
       }
       onChange?.(e);
     },
-    [formContext, name, onChange]
+    [formContext, onChange, selector]
   );
 
   useEffect(() => {
-    return formContext.register(name, defaultValue);
-  }, [defaultValue, formContext, name]);
+    if (formGroupContext) {
+      return formGroupContext.register(selector);
+    }
+    return formContext.register(selector);
+  }, [formContext, formGroupContext, selector]);
+
+  useEffect(() => {
+    if (defaultValue !== null && defaultValue !== undefined) {
+      formContext.setDefault(selector, defaultValue);
+    }
+  }, [defaultValue, formContext, selector]);
 
   useEffect(() => {
     if (validationFn) {

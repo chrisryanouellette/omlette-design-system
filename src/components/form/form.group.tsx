@@ -1,12 +1,5 @@
-import {
-  Children,
-  ReactNode,
-  cloneElement,
-  isValidElement,
-  useCallback,
-  useEffect,
-} from "react";
-import { SelectorFn, isElement, isUniqueSet, useStore } from "@Utilities/index";
+import { ReactNode, useCallback, useEffect, useMemo } from "react";
+import { SelectorFn, isUniqueSet, useStore } from "@Utilities/index";
 import { Errors, ErrorsProps } from "..";
 import { FormProvider, useFormContext } from "./context";
 import {
@@ -16,6 +9,21 @@ import {
   Validation,
   useForm,
 } from "./useForm";
+import { FormGroupContextType, FormGroupProvider } from "./form.group.context";
+
+function createFormValue(
+  fields: FormFields<GenericFields>,
+  defaultValue?: unknown[]
+): unknown[] {
+  const length = Object.keys(fields).length;
+  return new Array(length)
+    .fill(null)
+    .map((item, index) => defaultValue?.[index] ?? null);
+}
+
+export type FormGroupStore = {
+  [id: string]: unknown;
+};
 
 type FormGroupProps<T> = {
   name: string;
@@ -54,14 +62,37 @@ export function FormGroup<T>({
 
   const errors = useStore(context.fields, errorsSelector);
 
+  const register = useCallback<FormGroupContextType["register"]>(
+    (id, controlledDefault) => {
+      const items = Object.keys(wrapped.fields.get());
+      const value = controlledDefault ?? defaultValue?.[items.length] ?? null;
+      const unsubscribe = wrapped.register(id, value);
+      const update = createFormValue(wrapped.fields.get(), defaultValue);
+      if (context.fields.get()[name]) {
+        context.set(name, update);
+      }
+      return function groupItemUnregister(): void {
+        unsubscribe();
+        const update = createFormValue(wrapped.fields.get(), defaultValue);
+        if (context.fields.get()[name]) {
+          context.set(name, update);
+        }
+      };
+    },
+    [context, defaultValue, name, wrapped]
+  );
+
+  const groupContextValue = useMemo(() => ({ register }), [register]);
+
   useEffect(
     function nestedFormSubscription() {
       return wrapped.subscribe(
         FormEvents.update,
         function (field, value, form) {
           const update: unknown[] = [];
-          Object.entries(form).forEach(([key, field]) => {
-            const index = Number(key.toString().split("|")[1]);
+          const keys = Object.keys(form);
+          Object.entries(form).forEach(([name, field]) => {
+            const index = keys.indexOf(name);
             update[index] = field.value;
           });
           context.set(name, update);
@@ -73,9 +104,12 @@ export function FormGroup<T>({
 
   useEffect(
     function registerFormGroup() {
-      return context.register(name, defaultValue ?? []);
+      const initial = createFormValue(wrapped.fields.get(), defaultValue);
+      const unsubscribe = context.register(name, defaultValue);
+      context.set(name, initial);
+      return unsubscribe;
     },
-    [context, defaultValue, name]
+    [context, defaultValue, name, wrapped]
   );
 
   useEffect(
@@ -89,21 +123,12 @@ export function FormGroup<T>({
 
   return (
     <FormProvider value={wrapped}>
-      {Children.map(children, function renderGroupChild(child, index) {
-        if (isValidElement(child)) {
-          if (isElement(child, ["FormItem"])) {
-            return cloneElement(child, {
-              ...child.props,
-              defaultValue: defaultValue?.[index] ?? undefined,
-              name: `${child.props.name}|${index}`,
-            });
-          }
-        }
-        return child;
-      })}
-      {errors.size ? (
-        <Errors {...errorProps} errors={Array.from(errors)} />
-      ) : null}
+      <FormGroupProvider value={groupContextValue}>
+        {children}
+        {errors.size ? (
+          <Errors {...errorProps} errors={Array.from(errors)} />
+        ) : null}
+      </FormGroupProvider>
     </FormProvider>
   );
 }
