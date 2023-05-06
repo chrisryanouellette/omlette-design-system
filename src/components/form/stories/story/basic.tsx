@@ -139,28 +139,21 @@ const BasicFormStory = bindTemplate<FC<FormControls<BasicForm>>>((props) => {
           >
             {new Array(groupItems).fill(null).map((item, index) => (
               <Fragment key={index}>
-                <Label>BPM Start</Label>
-                <Label>BPM Value</Label>
-                <Form.Item name="bpm" wrapperProps={{ className: "h-full" }}>
-                  <NumberInput
-                    labelProps={{ className: "hidden" }}
-                    inputProps={{ className: "h-full" }}
-                  />
+                <Form.Item name="bpm">
+                  <NumberInput label="BPM Start" />
                 </Form.Item>
-                <Form.Item
-                  name="bpm"
-                  wrapperProps={{ className: "flex gap-x-1" }}
-                >
-                  <NumberInput
-                    labelProps={{ wrapperProps: { className: "hidden" } }}
-                  />
+                <div className="flex gap-x-1 items-end">
+                  <Form.Item name="bpm">
+                    <NumberInput label="BPM Value" />
+                  </Form.Item>
                   <IconButton
                     type="button"
                     name="ri-close-line"
                     size="sm"
+                    className="mb-1 h-9 w-9"
                     onClick={(): void => setGroupItems(groupItems - 1)}
                   />
-                </Form.Item>
+                </div>
               </Fragment>
             ))}
           </Form.Group>
