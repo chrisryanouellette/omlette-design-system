@@ -15,10 +15,9 @@ function createFormValue(
   fields: FormFields<GenericFields>,
   defaultValue?: unknown[]
 ): unknown[] {
-  const length = Object.keys(fields).length;
-  return new Array(length)
-    .fill(null)
-    .map((item, index) => defaultValue?.[index] ?? null);
+  return Object.entries(fields).map(
+    ([, field], index) => field.value ?? defaultValue?.[index] ?? null
+  );
 }
 
 export type FormGroupStore = {

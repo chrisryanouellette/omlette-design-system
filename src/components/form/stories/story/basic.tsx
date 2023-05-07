@@ -7,7 +7,6 @@ import {
   NumberInput,
   SelectInput,
   FileInput,
-  Label,
 } from "@Components/inputs";
 import { Button, IconButton } from "@Components/button";
 import { Container } from "@Components/container";
@@ -56,7 +55,10 @@ const selectValidation: Validation<BasicForm["select"]> = (field, addError) => {
 };
 
 const groupValidation: Validation<BasicForm["group"]> = (field, addError) => {
-  if (!field.value.length || field.value.some((val) => val === null)) {
+  if (!field.value.length) {
+    return addError("At least one BPM group is required.");
+  }
+  if (field.value.some((val) => val === null)) {
     addError("All fields in BPM group are required.");
   }
   if (field.value.some((value) => isNaN(Number(value)))) {
