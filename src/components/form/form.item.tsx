@@ -67,8 +67,8 @@ const FormItem = <T,>({
   const errorsId = controlledErrorsId ?? internalErrorsId;
 
   const defaultValue: unknown =
-    controlledDefaultValue ??
     formContext.fields.get()?.[selector]?.defaultValue ??
+    controlledDefaultValue ??
     null;
 
   /*

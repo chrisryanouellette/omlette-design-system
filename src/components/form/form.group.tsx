@@ -26,6 +26,7 @@ export type FormGroupStore = {
 
 type FormGroupProps<T> = {
   name: string;
+  /** A memoized value that is used to initialize the nested inputs. */
   defaultValue?: T extends unknown[] ? T : T[];
   errorProps?: ErrorsProps;
   validation?: Validation<T>;
@@ -34,13 +35,20 @@ type FormGroupProps<T> = {
 
 export function FormGroup<T>({
   children,
-  defaultValue,
+  defaultValue: controlledDefaultValue,
   errorProps,
   name,
   validation,
 }: FormGroupProps<T>): JSX.Element {
   const context = useFormContext();
   const wrapped = useForm();
+  const defaultValue: unknown[] = useMemo(() => {
+    const contextDefault = context.fields.get()?.[name]?.defaultValue;
+    if (contextDefault && Array.isArray(contextDefault)) {
+      return contextDefault;
+    }
+    return controlledDefaultValue ?? [];
+  }, [context, controlledDefaultValue, name]);
 
   const errorsSelector = useCallback<
     SelectorFn<FormFields<GenericFields>, Set<string>>
