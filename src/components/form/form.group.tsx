@@ -26,21 +26,45 @@ export type FormGroupStore = {
 
 type FormGroupProps<T> = {
   name: string;
+  /** A memoized value that is used to initialize the nested inputs. */
   defaultValue?: T extends unknown[] ? T : T[];
   errorProps?: ErrorsProps;
   validation?: Validation<T>;
   children?: ReactNode;
 };
 
+/**
+ * Used to group for fields together within a form.
+ *
+ * @example
+ * <Form onFinish={handleFinish}>
+ *  <Form.Group name="bmp">
+ *    <Form.Item name='bpm'>
+ *      <TextInput label="BPM Start" />
+ *    </Form.Item>
+ *    <Form.Item name='bpm'>
+ *      <TextInput label="BPM Value" />
+ *    </Form.Item>
+ *  </Form.Group>
+ *  <Button>Submit</Button>
+ * </Form>
+ */
 export function FormGroup<T>({
   children,
-  defaultValue,
+  defaultValue: controlledDefaultValue,
   errorProps,
   name,
   validation,
 }: FormGroupProps<T>): JSX.Element {
   const context = useFormContext();
   const wrapped = useForm();
+  const defaultValue: unknown[] = useMemo(() => {
+    const contextDefault = context.fields.get()?.[name]?.defaultValue;
+    if (contextDefault && Array.isArray(contextDefault)) {
+      return contextDefault;
+    }
+    return controlledDefaultValue ?? [];
+  }, [context, controlledDefaultValue, name]);
 
   const errorsSelector = useCallback<
     SelectorFn<FormFields<GenericFields>, Set<string>>
@@ -61,6 +85,7 @@ export function FormGroup<T>({
 
   const errors = useStore(context.fields, errorsSelector);
 
+  /** Register the group fields within the wrapped form with default values */
   const register = useCallback<FormGroupContextType["register"]>(
     (id, controlledDefault) => {
       const items = Object.keys(wrapped.fields.get());
@@ -83,15 +108,14 @@ export function FormGroup<T>({
 
   const groupContextValue = useMemo(() => ({ register }), [register]);
 
+  /** Handles setting the value from the group into the parent form */
   useEffect(
     function nestedFormSubscription() {
       return wrapped.subscribe(
         FormEvents.update,
         function (field, value, form) {
           const update: unknown[] = [];
-          const keys = Object.keys(form);
-          Object.entries(form).forEach(([name, field]) => {
-            const index = keys.indexOf(name);
+          Object.values(form).forEach((field, index) => {
             update[index] = field.value;
           });
           context.set(name, update);
@@ -101,6 +125,7 @@ export function FormGroup<T>({
     [context, name, wrapped]
   );
 
+  /** Registers the form group in the parent form context */
   useEffect(
     function registerFormGroup() {
       const initial = createFormValue(wrapped.fields.get(), defaultValue);
@@ -111,13 +136,33 @@ export function FormGroup<T>({
     [context, defaultValue, name, wrapped]
   );
 
+  /** Handles setting the validation function */
   useEffect(
-    function validationFunction() {
+    function setValidationFunction() {
       if (validation) {
         return context.validation(name, validation as Validation<unknown>);
       }
     },
     [context, name, validation]
+  );
+
+  /* Handles setting the default when the parent form has a default */
+  useEffect(
+    function setDefaultValueFromParent() {
+      return context.fields.subscribe(function (state) {
+        const defaultValue = state[name]?.defaultValue;
+        if (defaultValue && Array.isArray(defaultValue)) {
+          const keys = Object.keys(wrapped.fields.get());
+          defaultValue.forEach((value, index) => {
+            const key = keys[index];
+            if (key !== undefined) {
+              wrapped.setDefault(key, value);
+            }
+          });
+        }
+      });
+    },
+    [context, name, wrapped]
   );
 
   return (
