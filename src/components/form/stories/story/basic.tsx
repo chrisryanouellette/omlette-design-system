@@ -23,6 +23,7 @@ type BasicForm = {
   group: [number, number];
   termsAndConditions: boolean;
   file: FileList;
+  bpm: number[];
 };
 
 const defaultGroup: BasicForm["group"] = [0, 160];
