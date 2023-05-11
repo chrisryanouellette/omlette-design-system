@@ -1,9 +1,9 @@
-import { HTMLAttributes, ReactNode } from "react";
+import { HTMLAttributes, LabelHTMLAttributes, ReactNode } from "react";
 import { concat } from "@Utilities/concat";
 
 import "./label.styles.css";
 
-export type LabelProps = HTMLAttributes<HTMLLabelElement> & {
+export type LabelProps = LabelHTMLAttributes<HTMLLabelElement> & {
   children?: ReactNode;
   helper?: ReactNode | ReactNode[];
   required?: boolean;
