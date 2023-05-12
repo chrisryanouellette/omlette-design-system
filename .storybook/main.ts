@@ -1,7 +1,7 @@
 import path from "path";
 import { mergeConfig } from "vite";
 import { StorybookConfig } from "@storybook/react-vite";
-import remarkGfm from 'remark-gfm';
+import remarkGfm from "remark-gfm";
 
 const config: StorybookConfig = {
   stories: [
@@ -16,7 +16,7 @@ const config: StorybookConfig = {
     "@storybook/preset-create-react-app",
     "@storybook/addon-a11y",
     {
-      name: '@storybook/addon-docs',
+      name: "@storybook/addon-docs",
       options: {
         mdxPluginOptions: {
           mdxCompileOptions: {
@@ -39,7 +39,14 @@ const config: StorybookConfig = {
     return mergeConfig(config, {
       publicDir: path.resolve(__dirname, "./public"),
       define: {
-        "process.env": {},
+        "process.env": {
+          PUBLIC_FIREBASE_API_KEY: "AIzaSyDv3bX5YYCx2d8gHiSvfXW4hswi4OOq1Ao",
+          PUBLIC_FIREBASE_APP_ID: "1:380554724126:web:a3168211a3de1bbb16ff0f",
+          PUBLIC_FIREBASE_PROJECT_ID: "project-omlette",
+          PUBLIC_FIREBASE_AUTH_DOMAIN: "project-omlette.firebaseapp.com",
+          PUBLIC_FIREBASE_DATABASE_URL: "https://project-omlette.firebaseio.com",
+          PUBLIC_FIREBASE_MEASUREMENT_ID: "G-TQ9GSLH53N",
+        },
       },
       resolve: {
         alias: {
@@ -57,4 +64,4 @@ const config: StorybookConfig = {
   },
 };
 
-export default config
+export default config;

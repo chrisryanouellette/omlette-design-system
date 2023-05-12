@@ -1,0 +1,103 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Libraries/Firebase/Firestore" />
+
+# Firebase Firestore
+
+This package exposes some function for interacting with Firebase's Firestore database.
+
+## Setting up a collection
+
+To begin, we want to create a new file we can export a collection object from. This will hold the name of all the collections we have in the application.
+
+```ts
+// collections.ts
+export const collections = {
+  users: "users",
+} as const;
+```
+
+Next we can setup a user's collection which will allow us to interact with the database.
+
+```ts
+// collections.ts
+import { collection } from "@ouellettec/design-system/lib";
+
+export const userCollection = collection<User>("users");
+```
+
+Next we want to know when any of the documents in the collection are updated. We can manage out event listeners in a `useEffect`.
+
+```tsx
+// App.tsx
+import { userCollection } from "./collections";
+
+export function App(): JSX.Element {
+  useEffect(function handleSubscribeToUsersCollection() {
+    return usersCollection.subscribe();
+  }, []);
+
+  return <main></main>;
+}
+```
+
+## Use all documents in a collection
+
+Now that we have subscribed to all the documents in a collection, we probably want to display them so the user can edit an individual document. Let's first get all the ids for the documents so we can map over them.
+
+```tsx
+// App.tsx
+import { useFirestoreCollection } from "@ouellettec/design-system/lib";
+import { collections, userCollection } from "./collections";
+
+/** Selector to get the ids of each document in a set */
+function collectionSelector(
+  state: FirestoreDocument<User>,
+  prev: Set<string> | null
+): Set<string> {
+  const ids = new Set(Object.keys(state));
+  if (!prev || isUniqueSet(ids, prev)) {
+    return new Set(ids);
+  }
+  return prev;
+}
+
+export function App(): JSX.Element {
+  /** Listen and update anytime a document is added or removed from the collection */
+  const ids = useFirestoreCollection(collections.users, collectionSelector);
+
+  useEffect(function handleSubscribeToUsersCollection() {
+    return usersCollection.subscribe();
+  }, []);
+
+  return <main></main>;
+}
+```
+
+The `useFirestoreCollection` hook will listen to all changes on a collection and re-run the selector anytime any collection changes. We can use this to keep the ids set up to date with the documents in our database.
+
+## Use a document
+
+We can not pass down the document id to each of our children to show the data for an individual users.
+
+```tsx
+// User.tsx
+import { useFirestoreDoc } from "@ouellettec/design-system/lib";
+import { collections } from "./collections";
+
+type UserDisplayProps = {
+  id: string;
+};
+
+function UserDisplay({ id }: UserDisplayProps): JSX.Element {
+  const doc = useFirestoreDoc<User>(collections.users, id);
+
+  return (
+    <div>
+      <p>{doc.name}</p>
+    </div>
+  );
+}
+```
+
+Now anytime one of the documents in the user's collection changes our individual components will be updates.
