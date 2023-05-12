@@ -44,7 +44,6 @@ function subscribeToUserStateChanges(): Unsubscribe {
     async (user) => {
       if (user) {
         try {
-          console.log("user changed");
           await loginUserFromAuthChange(user);
           return userStore.set(normalizeUser(user));
         } catch (error) {

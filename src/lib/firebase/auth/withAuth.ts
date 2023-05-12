@@ -85,7 +85,6 @@ function withAuth<T extends { [key: string]: unknown }>(
             }
           }
         }
-        console.log(error);
         // There was an error with validating the authentication
         if (options?.whenUnauthed === "redirect") {
           return {

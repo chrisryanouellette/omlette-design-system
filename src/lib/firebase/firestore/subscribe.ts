@@ -24,7 +24,6 @@ export function subscribeToCollection(
       const collection = getStoredFirestoreCollection(name);
       collection.status = "success";
       updates.docChanges().forEach((update) => {
-        console.log(update.doc.id, update.type);
         if (update.type === "added") {
           collection.data[update.doc.id] = update.doc.data();
         } else if (update.type === "modified") {
