@@ -1,7 +1,9 @@
 import { ReactNode, createContext, useContext } from "react";
+import { GenericFields, Validation } from "./useForm";
 
 export type FormGroupContextType = {
   register: (id: string, defaultValue?: unknown) => () => void;
+  validation: (name: string, cb: Validation<unknown, GenericFields>) => void;
 };
 
 const FormGroupContext = createContext<FormGroupContextType | null>(null);

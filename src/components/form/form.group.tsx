@@ -1,35 +1,15 @@
-import { ReactNode, useCallback, useEffect, useMemo } from "react";
-import { SelectorFn, isUniqueSet, useStore } from "@Utilities/index";
-import { Errors, ErrorsProps } from "..";
+import { ReactNode, useCallback, useEffect, useId, useMemo } from "react";
 import { FormProvider, useFormContext } from "./context";
-import {
-  FormEvents,
-  FormFields,
-  GenericFields,
-  Validation,
-  useForm,
-} from "./useForm";
+import { useForm } from "./useForm";
 import { FormGroupContextType, FormGroupProvider } from "./form.group.context";
-
-function createFormValue(
-  fields: FormFields<GenericFields>,
-  defaultValue?: unknown[]
-): unknown[] {
-  return Object.entries(fields).map(
-    ([, field], index) => field.value ?? defaultValue?.[index] ?? null
-  );
-}
+import { useFormItemContext } from "./form.item.context";
 
 export type FormGroupStore = {
   [id: string]: unknown;
 };
 
-type FormGroupProps<T> = {
-  name: string;
-  /** A memoized value that is used to initialize the nested inputs. */
-  defaultValue?: T extends unknown[] ? T : T[];
-  errorProps?: ErrorsProps;
-  validation?: Validation<T>;
+export type FormGroupProps = {
+  id?: string;
   children?: ReactNode;
 };
 
@@ -38,140 +18,113 @@ type FormGroupProps<T> = {
  *
  * @example
  * <Form onFinish={handleFinish}>
- *  <Form.Group name="bmp">
- *    <Form.Item name='bpm'>
- *      <TextInput label="BPM Start" />
- *    </Form.Item>
- *    <Form.Item name='bpm'>
- *      <TextInput label="BPM Value" />
- *    </Form.Item>
- *  </Form.Group>
+ *  <Form.Item name="experience">
+ *    <Form.Group>
+ *      <Form.Item name="jobTitle">
+ *        <TextInput label="Job Title" />
+ *      </Form.Item>
+ *      <Form.Item name="startDate">
+ *        <TextInput label="Start Date" />
+ *      </Form.Item>
+ *    </Form.Group>
+ *  </Form.Item>
  *  <Button>Submit</Button>
  * </Form>
  */
-export function FormGroup<T>({
+export function FormGroup({
   children,
-  defaultValue: controlledDefaultValue,
-  errorProps,
-  name,
-  validation,
-}: FormGroupProps<T>): JSX.Element {
+  id: controlledId,
+}: FormGroupProps): JSX.Element {
+  const formItemContext = useFormItemContext();
   const context = useFormContext();
   const wrapped = useForm();
-  const defaultValue: unknown[] = useMemo(() => {
-    const contextDefault = context.fields.get()?.[name]?.defaultValue;
-    if (contextDefault && Array.isArray(contextDefault)) {
-      return contextDefault;
-    }
-    return controlledDefaultValue ?? [];
-  }, [context, controlledDefaultValue, name]);
-
-  const errorsSelector = useCallback<
-    SelectorFn<FormFields<GenericFields>, Set<string>>
-  >(
-    (store, prev) => {
-      if (name in store) {
-        const current = store[name].errors;
-        if (!prev) {
-          return current;
-        } else if (isUniqueSet(prev, current)) {
-          return new Set(current);
-        }
-      }
-      return prev ?? new Set();
-    },
-    [name]
-  );
-
-  const errors = useStore(context.fields, errorsSelector);
+  const internalId = useId();
+  const id = controlledId ?? internalId;
 
   /** Register the group fields within the wrapped form with default values */
   const register = useCallback<FormGroupContextType["register"]>(
-    (id, controlledDefault) => {
-      const items = Object.keys(wrapped.fields.get());
-      const value = controlledDefault ?? defaultValue?.[items.length] ?? null;
-      const unsubscribe = wrapped.register(id, value);
-      const update = createFormValue(wrapped.fields.get(), defaultValue);
-      if (context.fields.get()[name]) {
-        context.set(name, update);
-      }
-      return function groupItemUnregister(): void {
-        unsubscribe();
-        const update = createFormValue(wrapped.fields.get(), defaultValue);
-        if (context.fields.get()[name]) {
-          context.set(name, update);
-        }
-      };
+    (id) => {
+      return wrapped.register(id, null);
     },
-    [context, defaultValue, name, wrapped]
-  );
-
-  const groupContextValue = useMemo(() => ({ register }), [register]);
-
-  /** Handles setting the value from the group into the parent form */
-  useEffect(
-    function nestedFormSubscription() {
-      return wrapped.subscribe(
-        FormEvents.update,
-        function (field, value, form) {
-          const update: unknown[] = [];
-          Object.values(form).forEach((field, index) => {
-            update[index] = field.value;
-          });
-          context.set(name, update);
-        }
-      );
-    },
-    [context, name, wrapped]
-  );
-
-  /** Registers the form group in the parent form context */
-  useEffect(
-    function registerFormGroup() {
-      const initial = createFormValue(wrapped.fields.get(), defaultValue);
-      const unsubscribe = context.register(name, defaultValue);
-      context.set(name, initial);
-      return unsubscribe;
-    },
-    [context, defaultValue, name, wrapped]
+    [wrapped]
   );
 
   /** Handles setting the validation function */
-  useEffect(
-    function setValidationFunction() {
-      if (validation) {
-        return context.validation(name, validation as Validation<unknown>);
-      }
+  const validation = useCallback<FormGroupContextType["validation"]>(
+    function (name, cb) {
+      const wrappedFormFieldName = formItemContext.name;
+      const field = wrapped.fields.get()[name];
+      const unSubs = [
+        context.validation(
+          wrappedFormFieldName,
+          function formGroupWrappedValidation(parentField, addError) {
+            cb(field, addError, wrapped.fields.get());
+          }
+        ),
+        wrapped.validation(name, cb),
+      ];
+      return function formGroupValidationSubscriptionCleanup() {
+        unSubs.forEach((unSub) => unSub());
+      };
     },
-    [context, name, validation]
+    [context, formItemContext, wrapped]
   );
 
-  /* Handles setting the default when the parent form has a default */
+  const groupContextValue = useMemo(
+    () => ({ register, validation }),
+    [register, validation]
+  );
+
   useEffect(
-    function setDefaultValueFromParent() {
-      return context.fields.subscribe(function (state) {
-        const defaultValue = state[name]?.defaultValue;
-        if (defaultValue && Array.isArray(defaultValue)) {
-          const keys = Object.keys(wrapped.fields.get());
-          defaultValue.forEach((value, index) => {
-            const key = keys[index];
-            if (key !== undefined) {
-              wrapped.setDefault(key, value);
-            }
-          });
+    function syncWrappedFormStateValue() {
+      setTimeout(function nextTick() {
+        const wrappedFormFieldName = formItemContext.name;
+        const wrappedField = context.fields.get()[wrappedFormFieldName];
+        if (wrappedField) {
+          if (!wrappedField.value) {
+            context.set(wrappedFormFieldName, {
+              [id]: wrapped.fields.get(),
+            });
+          } else {
+            context.set(wrappedFormFieldName, {
+              ...wrappedField.value,
+              [id]: wrapped.fields.get(),
+            });
+          }
         }
       });
+      return function syncWrappedFormStateValueCleanup() {
+        const wrappedFormFieldName = formItemContext.name;
+        const wrappedField = context.fields.get()[wrappedFormFieldName];
+        console.log(wrappedField);
+        if (wrappedField?.value) {
+          delete (wrappedField.value as Record<string, unknown>)[id];
+          const hasRemainingGroups = !!Object.keys(wrappedField.value).length;
+          context.set(
+            wrappedFormFieldName,
+            hasRemainingGroups ? wrappedField.value : undefined
+          );
+        }
+      };
     },
-    [context, name, wrapped]
+    [formItemContext, id, context, wrapped]
+  );
+
+  useEffect(
+    function subscribeToParentFormValidation() {
+      setTimeout(function nextTick() {
+        context.validation(formItemContext.name, () => {
+          wrapped.submit();
+        });
+      });
+    },
+    [context, formItemContext.name, wrapped]
   );
 
   return (
     <FormProvider value={wrapped}>
       <FormGroupProvider value={groupContextValue}>
         {children}
-        {errors.size ? (
-          <Errors {...errorProps} errors={Array.from(errors)} />
-        ) : null}
       </FormGroupProvider>
     </FormProvider>
   );

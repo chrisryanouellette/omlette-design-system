@@ -1,5 +1,5 @@
 import { HTMLAttributes, ReactNode, useEffect } from "react";
-import { FormProvider } from "./context";
+import { FormProvider, useFormContext } from "./context";
 import { FormItem } from "./form.item";
 import {
   FinishEvent,
@@ -62,5 +62,6 @@ const Form = <Fields extends GenericFields>({
 Form.Item = FormItem;
 Form.Group = FormGroup;
 Form.useForm = useForm;
+Form.useFormContext = useFormContext;
 
 export { Form };

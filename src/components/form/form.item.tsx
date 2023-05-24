@@ -8,14 +8,17 @@ import {
   useCallback,
   useEffect,
   useId,
+  useMemo,
 } from "react";
 import { SelectorFn, useStore } from "@Utilities/store";
 import { isInstanceOf } from "@Utilities/element";
 import { concat } from "@Utilities/concat";
 import { isUniqueSet } from "@Utilities/set";
+import { ComposedInputProps } from "..";
 import { FormFields, GenericFields, Validation } from "./useForm";
 import { useFormContext } from "./context";
 import { useFormGroupContext } from "./form.group.context";
+import { FormItemProvider } from "./form.item.context";
 import { isElement } from "@Utilities";
 
 import "./form.item.styles.css";
@@ -63,11 +66,10 @@ const FormItem = <T,>({
   const internalId = useId();
   const internalErrorsId = useId();
   const id = controlledId ?? internalId;
-  const selector = formGroupContext ? id : name;
   const errorsId = controlledErrorsId ?? internalErrorsId;
 
   const defaultValue: unknown =
-    formContext.fields.get()?.[selector]?.defaultValue ??
+    formContext.fields.get()?.[name]?.defaultValue ??
     controlledDefaultValue ??
     null;
 
@@ -78,7 +80,7 @@ const FormItem = <T,>({
   or when the first change is made.
    */
   useStore(formContext.fields, function (state) {
-    const defaultValue = state[selector]?.defaultValue ?? null;
+    const defaultValue = state[name]?.defaultValue ?? null;
     return defaultValue !== null;
   });
 
@@ -101,6 +103,8 @@ const FormItem = <T,>({
 
   const errors = useStore(formContext.fields, errorsSelector);
 
+  const formItemContextValue = useMemo(() => ({ name }), [name]);
+
   const handleChange = useCallback<(e: ChangeEvent<HTMLElement>) => void>(
     (e) => {
       if (
@@ -114,105 +118,114 @@ const FormItem = <T,>({
           isInstanceOf(e.target, [HTMLInputElement]) &&
           e.target.getAttribute("type") === "checkbox"
         ) {
-          formContext.set(selector, e.target.checked);
+          formContext.set(name, e.target.checked);
         } else if (
           isInstanceOf(e.target, [HTMLInputElement]) &&
           e.target.getAttribute("type") === "file"
         ) {
-          formContext.set(selector, e.target.files);
+          formContext.set(name, e.target.files);
         } else if (isInstanceOf(e.target, [HTMLSelectElement])) {
           const selected = Array.from(e.target.selectedOptions).map(
             (elem) => elem.value
           );
-          formContext.set(selector, e.target.multiple ? selected : selected[0]);
+          formContext.set(name, e.target.multiple ? selected : selected[0]);
         } else if (e.target.getAttribute("type") === "number") {
-          formContext.set(selector, Number(e.target.value));
+          formContext.set(name, Number(e.target.value));
         } else {
-          formContext.set(selector, e.target.value);
+          formContext.set(name, e.target.value);
         }
       }
       onChange?.(e);
     },
-    [formContext, onChange, selector]
+    [formContext, onChange, name]
   );
 
   useEffect(() => {
     if (formGroupContext) {
-      return formGroupContext.register(selector);
+      return formGroupContext.register(name);
     }
-    return formContext.register(selector);
-  }, [formContext, formGroupContext, selector]);
+    return formContext.register(name);
+  }, [formContext, formGroupContext, name]);
 
   useEffect(() => {
     if (defaultValue !== null && defaultValue !== undefined) {
-      formContext.setDefault(selector, defaultValue);
+      formContext.setDefault(name, defaultValue);
     }
-  }, [defaultValue, formContext, selector]);
+  }, [defaultValue, formContext, name]);
 
   useEffect(() => {
     if (validationFn) {
+      if (formGroupContext?.validation) {
+        return formGroupContext.validation(
+          name,
+          validationFn as Validation<unknown>
+        );
+      }
       return formContext.validation(name, validationFn as Validation<unknown>);
     }
-  }, [formContext, name, validationFn]);
+  }, [formContext, formGroupContext, name, validationFn]);
 
   return (
-    <div
-      {...wrapperProps}
-      className={concat(
-        "omlette-form-item-wrapper",
-        inline && "omlette-form-item-inline",
-        wrapperProps?.className
-      )}
-    >
-      {Children.map(children, (child) => {
-        /* If the child is a known form item, forward the props along */
-        if (isValidElement(child)) {
-          const inputProps = {
-            id,
-            state: errors.size ? "error" : "",
-            "aria-invalid": !!errors.size,
-            "aria-describedby": errorsId,
-            defaultValue,
-            onChange: handleChange,
-          };
-          const labelProps = {
-            required,
-            htmlFor: id,
-          };
-          const errorProps = {
-            id: errorsId,
-            errors: Array.from(errors),
-          };
-          if (isElement(child, ComposedInputs)) {
-            return cloneElement(child, {
-              ...child.props,
-              inputProps: {
-                ...child.props.inputProps,
-                ...inputProps,
-              },
-              labelProps: {
-                ...child.props.labelProps,
-                ...labelProps,
-              },
-              errorProps: {
-                ...child.props.errorProps,
-                ...errorProps,
-              },
-            });
+    <FormItemProvider value={formItemContextValue}>
+      <div
+        {...wrapperProps}
+        className={concat(
+          "omlette-form-item-wrapper",
+          inline && "omlette-form-item-inline",
+          wrapperProps?.className
+        )}
+      >
+        {Children.map(children, (child) => {
+          /* If the child is a known form item, forward the props along */
+          if (isValidElement(child)) {
+            const inputProps = {
+              id,
+              state: errors.size ? "error" : "",
+              "aria-invalid": !!errors.size,
+              "aria-describedby": errorsId,
+              defaultValue,
+              onChange: handleChange,
+            };
+            const labelProps = {
+              required,
+              htmlFor: id,
+            };
+            const errorProps = {
+              id: errorsId,
+              errors: Array.from(errors),
+            };
+            if (isElement(child, ComposedInputs)) {
+              const props: ComposedInputProps = {
+                ...(child.props as unknown[]),
+                inputProps: {
+                  ...child.props.inputProps,
+                  ...inputProps,
+                },
+                labelProps: {
+                  ...child.props.labelProps,
+                  ...labelProps,
+                },
+                errorProps: {
+                  ...child.props.errorProps,
+                  ...errorProps,
+                },
+              };
+              return cloneElement(child, props);
+            }
+            if (isElement(child, [...InternalFormInputs, ...FormElements])) {
+              return cloneElement(child, { ...child.props, ...inputProps });
+            }
+            if (isElement(child, LabelElements)) {
+              return cloneElement(child, { ...child.props, ...labelProps });
+            }
+            if (isElement(child, ErrorElements)) {
+              return cloneElement(child, { ...child.props, ...errorProps });
+            }
           }
-          if (isElement(child, [...InternalFormInputs, ...FormElements])) {
-            return cloneElement(child, { ...child.props, ...inputProps });
-          }
-          if (isElement(child, LabelElements)) {
-            return cloneElement(child, { ...child.props, ...labelProps });
-          }
-          if (isElement(child, ErrorElements)) {
-            return cloneElement(child, { ...child.props, ...errorProps });
-          }
-        }
-        return child;
-      })}
-    </div>
+          return child;
+        })}
+      </div>
+    </FormItemProvider>
   );
 };
 

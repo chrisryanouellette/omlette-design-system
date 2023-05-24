@@ -44,6 +44,10 @@ export type FormFields<Values extends GenericFields> = {
   [K in keyof Values]: FormField<Values[K]>;
 };
 
+export type FormGroup<Values extends GenericFields> = {
+  [id: string]: FormFields<Values>;
+};
+
 export type ValidationAddError = (error: string) => void;
 
 export type ValidationFn<Value, Fields extends GenericFields, Return = void> = (
@@ -121,9 +125,11 @@ export type UseForm<Fields extends GenericFields> = {
   reset: <K extends keyof Fields>(names?: Extract<K, string>[]) => void;
 };
 
+const initial = {};
+
 const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
   const fields = useCreateStore<FormFields<Fields>, FormFieldsActions>(
-    {} as FormFields<Fields>,
+    initial as FormFields<Fields>,
     fieldsReducer
   );
   const validations = useRef<
