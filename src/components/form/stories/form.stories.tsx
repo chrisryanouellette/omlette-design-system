@@ -2,6 +2,7 @@ import { Meta } from "@storybook/react";
 import { FinishEvent, FinishFailedEvent, GenericFields } from "../useForm";
 import { Form } from "../form";
 import { BasicFormStory as Basic } from "./story/basic";
+import { GroupFormStory as Group } from "./story/group";
 
 export type FormControls<Fields extends GenericFields> = {
   onFinish: FinishEvent<Fields>;
@@ -25,3 +26,11 @@ Basic.argTypes = {
   ...commonArgs,
 };
 export { Basic };
+
+Group.parameters = {
+  layout: "fullscreen",
+};
+Group.argTypes = {
+  ...commonArgs,
+};
+export { Group };

@@ -51,33 +51,47 @@ We can then optionally pass this type to the form directly but this is not requi
 
 ### Form Groups
 
-For some fields it would be better if we could have one key to reference a group of fields similar to a multi select. An example maybe a time off request field where the first field is the date the client wants off and the second input is the number of hours the client wants to take off.
+There maybe instances where there is a need to create an list of form items that can be combined into a group. An example maybe an experience section within a resume form. There can multiple experience sections all of which have their own mini forms within them.
 
 ```tsx
 import { Form, TextInput, Button } from "@ouellettec/design-system";
 
-function TimeOffForm(): JSX.Element {
+function LoginForm(): JSX.Element {
   return (
     <main>
       <Form>
-        <div className="grid grid-cols-2 gap-4">
-          <Form.Group name="timeOff">
-            <Form.Item name="timeOff" required>
-              <DateInput label="Date" />
+        <Form.Item name="experiences">
+          <Form.Group>
+            <Form.Item name="jobTitle">
+              <TextInput label="Job Title" />
             </Form.Item>
-            <Form.Item name="timeOff" required>
-              <NumberInput label="Hours" />
+            <Form.Item name="startDate">
+              <TextInput label="Start Date" />
             </Form.Item>
           </Form.Group>
-        </div>
+        </Form.Item>
         <Button type="submit">Login</Button>
-      </div>
+      </Form>
     </main>
   );
 }
 ```
 
-When we access the `timeOff` field out value will be an array of strings and numbers where the `0` index is the date and the `1` index is the number of hours.
+The `experience` will be an object with the nested form item fields as the key and type.
+
+```ts
+type Experience = {
+  jobTitle: string;
+  startData: string;
+};
+
+type ExperienceForm = {
+  experiences: FormFields<FormGroup<Experience>>;
+  /*
+  experiences: { [id: string]: FormFields<Experience> }
+  */
+};
+```
 
 ## Validating the Form
 

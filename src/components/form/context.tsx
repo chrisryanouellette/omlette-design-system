@@ -3,6 +3,7 @@ import { GenericFields, UseForm } from "./useForm";
 
 type FormContextType<Fields extends GenericFields> = UseForm<Fields>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const FormContext = createContext<FormContextType<any> | null>(null);
 
 export type FormProviderProps<Fields extends GenericFields> = {
