@@ -96,7 +96,6 @@ export function FormGroup({
       return function syncWrappedFormStateValueCleanup() {
         const wrappedFormFieldName = formItemContext.name;
         const wrappedField = context.fields.get()[wrappedFormFieldName];
-        console.log(wrappedField);
         if (wrappedField?.value) {
           delete (wrappedField.value as Record<string, unknown>)[id];
           const hasRemainingGroups = !!Object.keys(wrappedField.value).length;
