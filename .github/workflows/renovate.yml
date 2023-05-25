@@ -1,6 +1,6 @@
 on:
-  schedule:
-    - cron: "0 13 * * 1"
+    pull_request:
+      branches: [ "main", "develop" ]
 name: release-please
 jobs:
   renovate:
