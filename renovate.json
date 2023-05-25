@@ -5,9 +5,7 @@
     "onboarding": true,
     "platform": "github",
     "repositories": [
-      "renovatebot/github-action",
-      "renovate-tests/cocoapods1",
-      "renovate-tests/gomod1"
+      "chrisryanouellette/omlette-design-system"
     ],
     "packageRules": [
       {
