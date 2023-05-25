@@ -1,7 +1,7 @@
 on:
     pull_request:
       branches: [ "main", "develop" ]
-name: release-please
+name: renovate dependency check
 jobs:
   renovate:
     runs-on: ubuntu-latest
