@@ -40,14 +40,6 @@ export function FormGroup({
   const internalId = useId();
   const id = controlledId ?? internalId;
 
-  /** Register the group fields within the wrapped form with default values */
-  const register = useCallback<UseForm<GenericFields>["register"]>(
-    (id) => {
-      return wrapped.register(id, null);
-    },
-    [wrapped]
-  );
-
   /** Handles setting the validation function */
   const validation = useCallback<UseForm<GenericFields>["validation"]>(
     function (name, cb) {
@@ -115,8 +107,8 @@ export function FormGroup({
   );
 
   const groupContext = useMemo(
-    () => ({ ...wrapped, register, validation }),
-    [register, validation, wrapped]
+    () => ({ ...wrapped, validation }),
+    [validation, wrapped]
   );
 
   return <FormProvider value={groupContext}>{children}</FormProvider>;
