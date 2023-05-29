@@ -4,6 +4,7 @@ import { InputProps } from "./standard";
 
 import "./inputs.styles.css";
 export * from "./standard";
+export * from "./date";
 export * from "./checkbox";
 export * from "./text";
 export * from "./number";

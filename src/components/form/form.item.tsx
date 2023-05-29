@@ -17,7 +17,6 @@ import { isUniqueSet } from "@Utilities/set";
 import { ComposedInputProps } from "..";
 import { FormFields, GenericFields, Validation } from "./useForm";
 import { useFormContext } from "./context";
-import { useFormGroupContext } from "./form.group.context";
 import { FormItemProvider } from "./form.item.context";
 import { isElement } from "@Utilities";
 
@@ -62,7 +61,6 @@ const FormItem = <T,>({
   wrapperProps,
 }: FormItemProps<T>): JSX.Element => {
   const formContext = useFormContext();
-  const formGroupContext = useFormGroupContext();
   const internalId = useId();
   const internalErrorsId = useId();
   const id = controlledId ?? internalId;
@@ -141,11 +139,8 @@ const FormItem = <T,>({
   );
 
   useEffect(() => {
-    if (formGroupContext) {
-      return formGroupContext.register(name);
-    }
     return formContext.register(name);
-  }, [formContext, formGroupContext, name]);
+  }, [formContext, name]);
 
   useEffect(() => {
     if (defaultValue !== null && defaultValue !== undefined) {
@@ -155,15 +150,9 @@ const FormItem = <T,>({
 
   useEffect(() => {
     if (validationFn) {
-      if (formGroupContext?.validation) {
-        return formGroupContext.validation(
-          name,
-          validationFn as Validation<unknown>
-        );
-      }
       return formContext.validation(name, validationFn as Validation<unknown>);
     }
-  }, [formContext, formGroupContext, name, validationFn]);
+  }, [formContext, name, validationFn]);
 
   return (
     <FormItemProvider value={formItemContextValue}>
