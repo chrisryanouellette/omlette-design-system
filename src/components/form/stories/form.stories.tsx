@@ -3,6 +3,7 @@ import { FinishEvent, FinishFailedEvent, GenericFields } from "../useForm";
 import { Form } from "../form";
 import { BasicFormStory as Basic } from "./story/basic";
 import { GroupFormStory as Group } from "./story/group";
+import { ListFormStory as List } from "./story/list";
 
 export type FormControls<Fields extends GenericFields> = {
   onFinish: FinishEvent<Fields>;
@@ -26,6 +27,14 @@ Basic.argTypes = {
   ...commonArgs,
 };
 export { Basic };
+
+List.parameters = {
+  layout: "fullscreen",
+};
+List.argTypes = {
+  ...commonArgs,
+};
+export { List };
 
 Group.parameters = {
   layout: "fullscreen",
