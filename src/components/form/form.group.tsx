@@ -1,7 +1,6 @@
 import { ReactNode, useCallback, useEffect, useId, useMemo } from "react";
 import { FormProvider, useFormContext } from "./context";
-import { useForm } from "./useForm";
-import { FormGroupContextType, FormGroupProvider } from "./form.group.context";
+import { GenericFields, UseForm, useForm } from "./useForm";
 import { useFormItemContext } from "./form.item.context";
 
 export type FormGroupStore = {
@@ -41,16 +40,8 @@ export function FormGroup({
   const internalId = useId();
   const id = controlledId ?? internalId;
 
-  /** Register the group fields within the wrapped form with default values */
-  const register = useCallback<FormGroupContextType["register"]>(
-    (id) => {
-      return wrapped.register(id, null);
-    },
-    [wrapped]
-  );
-
   /** Handles setting the validation function */
-  const validation = useCallback<FormGroupContextType["validation"]>(
+  const validation = useCallback<UseForm<GenericFields>["validation"]>(
     function (name, cb) {
       const wrappedFormFieldName = formItemContext.name;
       const field = wrapped.fields.get()[name];
@@ -68,11 +59,6 @@ export function FormGroup({
       };
     },
     [context, formItemContext, wrapped]
-  );
-
-  const groupContextValue = useMemo(
-    () => ({ register, validation }),
-    [register, validation]
   );
 
   useEffect(
@@ -120,13 +106,12 @@ export function FormGroup({
     [context, formItemContext.name, wrapped]
   );
 
-  return (
-    <FormProvider value={wrapped}>
-      <FormGroupProvider value={groupContextValue}>
-        {children}
-      </FormGroupProvider>
-    </FormProvider>
+  const groupContext = useMemo(
+    () => ({ ...wrapped, validation }),
+    [validation, wrapped]
   );
+
+  return <FormProvider value={groupContext}>{children}</FormProvider>;
 }
 
 FormGroup.displayName = "FromGroup";
