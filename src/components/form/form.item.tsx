@@ -22,7 +22,7 @@ import { isElement } from "@Utilities";
 
 import "./form.item.styles.css";
 
-type FormItemProps<T> = {
+export type FormItemProps<T> = {
   name: string;
   children?: ReactNode;
   defaultValue?: T;
@@ -116,7 +116,7 @@ const FormItem = <T,>({
           isInstanceOf(e.target, [HTMLInputElement]) &&
           e.target.getAttribute("type") === "checkbox"
         ) {
-          formContext.set(name, e.target.checked);
+          formContext.set(name, e.target.checked ?? false);
         } else if (
           isInstanceOf(e.target, [HTMLInputElement]) &&
           e.target.getAttribute("type") === "file"
@@ -173,6 +173,9 @@ const FormItem = <T,>({
               "aria-invalid": !!errors.size,
               "aria-describedby": errorsId,
               defaultValue,
+              defaultChecked: defaultValue
+                ? defaultValue
+                : defaultValue ?? undefined,
               onChange: handleChange,
             };
             const labelProps = {
