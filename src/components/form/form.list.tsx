@@ -1,11 +1,15 @@
 import { ReactNode, useCallback, useEffect, useMemo } from "react";
-import { useStore } from "../../utilities";
 import { Form } from "./form";
 import { FormProvider, useFormContext } from "./context";
 import { FormFields, GenericFields, UseForm, Validation } from "./useForm";
 
-function buildFormListValue(form: FormFields<GenericFields>): unknown[] {
-  return Object.values(form).map((item) => item.value);
+function buildFormListValue(
+  form: FormFields<GenericFields>,
+  defaultValue?: unknown[]
+): unknown[] {
+  return Object.values(form).map(
+    (item, index) => item.value ?? defaultValue?.[index] ?? null
+  );
 }
 
 type FormListProps = {
@@ -32,36 +36,25 @@ export function FormList({
   const context = useFormContext<{ [field: string]: unknown[] }>();
   const wrapped = Form.useForm();
 
-  /*
-  Triggers a state update if the input has gone from no default value
-  to having a default value.
-  This occurs when some asynchronous action updates the form's state,
-  or when the first change is made.
-   */
-  useStore(context.fields, function (state) {
-    const defaultValue = state[name]?.defaultValue ?? null;
-    return defaultValue !== null;
-  });
-
   const defaultValue =
     controlledDefaultValue ?? context.fields.get()[name]?.defaultValue;
 
   const register = useCallback<UseForm<GenericFields>["register"]>(
-    function (id, defaultValue) {
-      const unsubscribe = wrapped.register(id, defaultValue ?? null);
+    function (id, childDefaultValue) {
+      const unsubscribe = wrapped.register(id, childDefaultValue ?? null);
       if (context.fields.get()[name]) {
-        const update = buildFormListValue(wrapped.fields.get());
+        const update = buildFormListValue(wrapped.fields.get(), defaultValue);
         context.set(name, update);
       }
       return function formGroupItemUnregister(): void {
         unsubscribe();
         if (context.fields.get()[name]) {
-          const update = buildFormListValue(wrapped.fields.get());
+          const update = buildFormListValue(wrapped.fields.get(), defaultValue);
           context.set(name, update);
         }
       };
     },
-    [context, name, wrapped]
+    [context, defaultValue, name, wrapped]
   );
 
   const validation = useCallback<UseForm<GenericFields>["validation"]>(
@@ -87,10 +80,10 @@ export function FormList({
   const set = useCallback<UseForm<GenericFields>["set"]>(
     function (itemName, value) {
       wrapped.set(itemName, value);
-      const update = buildFormListValue(wrapped.fields.get());
+      const update = buildFormListValue(wrapped.fields.get(), defaultValue);
       context.set(name, update);
     },
-    [context, name, wrapped]
+    [context, defaultValue, name, wrapped]
   );
 
   const wrappedFormProvider = useMemo(
@@ -135,6 +128,25 @@ export function FormList({
       };
     },
     [context, formListValidation, name, wrapped]
+  );
+
+  /* Handles setting the default when the parent form has a default */
+  useEffect(
+    function setDefaultValueFromParent() {
+      return context.fields.subscribe(function (state) {
+        const defaultValue = state[name]?.defaultValue;
+        if (defaultValue && Array.isArray(defaultValue)) {
+          const keys = Object.keys(wrapped.fields.get());
+          defaultValue.forEach((value, index) => {
+            const key = keys[index];
+            if (key !== undefined) {
+              wrapped.setDefault(key, value);
+            }
+          });
+        }
+      });
+    },
+    [context, name, wrapped]
   );
 
   return <FormProvider value={wrappedFormProvider}>{children}</FormProvider>;

@@ -1,20 +1,20 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { bindTemplate } from "@Storybook/types";
 import {
   Button,
-  Checkbox,
   Container,
   FinishEvent,
   FinishFailedEvent,
   Form,
   FormField,
   IconButton,
+  TextInput,
   ValidationAddError,
 } from "@Components/index";
 import { FormControls } from "../form.stories";
 
 type ListForm = {
-  items: boolean[];
+  items: string[];
 };
 
 function validation(
@@ -52,6 +52,14 @@ export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
       onFinishFailed(...rest);
     }
 
+    useEffect(() => {
+      if (form.fields.get().items) {
+        form.setDefault("items", ["Hello", "From", "Lists"]);
+        const ids = [true, true].map(() => Math.round(Math.random() * 10000));
+        setItemCount(new Set(ids));
+      }
+    }, [form]);
+
     return (
       <Container className="mt-4 md:mx-auto">
         <h1 className="text-2xl">Checklist</h1>
@@ -62,14 +70,17 @@ export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
           onFinishFailed={handleFinishFailed}
         >
           <Form.List name="items">
-            <Form.ListItem inline validation={validation}>
-              <Checkbox label="Item 1" />
+            <Form.ListItem validation={validation}>
+              <TextInput label="Item 1" />
             </Form.ListItem>
             {Array.from(itemCount).map(function renderItem(id, index) {
               return (
-                <div key={id} className="flex items-center gap-x-4">
-                  <Form.ListItem inline validation={validation}>
-                    <Checkbox label={`Item ${index + 2}`} />
+                <div key={id} className="flex w-full items gap-x-4">
+                  <Form.ListItem
+                    validation={validation}
+                    wrapperProps={{ className: "flex-1" }}
+                  >
+                    <TextInput label={`Item ${index + 2}`} />
                   </Form.ListItem>
                   <IconButton
                     name="ri-close-circle-line"
