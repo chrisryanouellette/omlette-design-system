@@ -13,6 +13,7 @@ import {
 import { FormGroup } from "./form.group";
 import { FormListItem } from "./form.list.item";
 import { FormList } from "./form.list";
+import { useFormErrors } from "./useFormErrors";
 
 export type FormProps<Fields extends GenericFields> =
   HTMLAttributes<HTMLFormElement> & {
@@ -67,5 +68,6 @@ Form.List = FormList;
 Form.ListItem = FormListItem;
 Form.useForm = useForm;
 Form.useFormContext = useFormContext;
+Form.useFormErrors = useFormErrors;
 
 export { Form };

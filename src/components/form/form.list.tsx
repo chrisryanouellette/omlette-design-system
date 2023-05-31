@@ -12,11 +12,11 @@ function buildFormListValue(
   );
 }
 
-type FormListProps = {
+type FormListProps<T> = {
   name: string;
   defaultValue?: unknown[];
   children?: ReactNode;
-  validation?: Validation<unknown>;
+  validation?: Validation<T>;
 };
 
 /**
@@ -27,12 +27,12 @@ type FormListProps = {
  *  </Form.ListItem>
  * </Form.List>
  */
-export function FormList({
+export function FormList<T>({
   children,
   defaultValue: controlledDefaultValue,
   name,
   validation: formListValidation,
-}: FormListProps): JSX.Element {
+}: FormListProps<T>): JSX.Element {
   const context = useFormContext<{ [field: string]: unknown[] }>();
   const wrapped = Form.useForm();
 
@@ -121,7 +121,12 @@ export function FormList({
         }),
       ];
       if (formListValidation) {
-        subscriptions.push(context.validation(name, formListValidation));
+        subscriptions.push(
+          context.validation(
+            name,
+            formListValidation as Validation<unknown, GenericFields>
+          )
+        );
       }
       return function formItemValidationCleanup() {
         subscriptions.forEach((cb) => cb());
@@ -151,3 +156,5 @@ export function FormList({
 
   return <FormProvider value={wrappedFormProvider}>{children}</FormProvider>;
 }
+
+FormList.displayName = "FormList";
