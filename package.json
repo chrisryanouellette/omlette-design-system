@@ -30,7 +30,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "yarn test --coverage",
     "test:coverage:view": "yarn test:coverage --watchAll=false && yarn opener ./coverage/lcov-report/index.html",
-    "test:debug": "jest --inspect-brk test --runInBand",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --watch",
     "lint": "yarn tsc && yarn eslint",
     "tsc": "tsc --noemit",
     "eslint": "yarn eslint:base .",
