@@ -39,6 +39,7 @@
     "eslint:fix": "yarn eslint --fix .",
     "format": "prettier --ignore-path='./.gitignore' './**'",
     "format:fix": "prettier --ignore-path='./.gitignore' --write './**'",
+    "analyze": "vite-bundle-visualizer",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -98,6 +99,7 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3",
     "vite": "^3.2.2",
+    "vite-bundle-visualizer": "^0.7.0",
     "vite-plugin-dts": "^2.2.0",
     "webpack-bundle-analyzer": "^4.7.0"
   },
