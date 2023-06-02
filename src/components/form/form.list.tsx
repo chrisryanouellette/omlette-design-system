@@ -7,9 +7,9 @@ function buildFormListValue(
   form: FormFields<GenericFields>,
   defaultValue?: unknown[]
 ): unknown[] {
-  return Object.values(form).map(
-    (item, index) => item.value ?? defaultValue?.[index] ?? null
-  );
+  return Object.values(form).map((item, index) => {
+    return item.value ?? defaultValue?.[index] ?? null;
+  });
 }
 
 type FormListProps<T> = {
@@ -37,7 +37,7 @@ export function FormList<T>({
   const wrapped = Form.useForm();
 
   const defaultValue =
-    controlledDefaultValue ?? context.fields.get()[name]?.defaultValue;
+    controlledDefaultValue ?? context.fields.get()[name]?.defaultValue ?? null;
 
   const register = useCallback<UseForm<GenericFields>["register"]>(
     function (id, childDefaultValue) {

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, MouseEvent } from "react";
 import { bindTemplate } from "@Storybook/types";
 import {
   Button,
@@ -27,10 +27,16 @@ function validation(
   }
 }
 
+const initial = ["wow", "cool"];
+
 export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
   ({ onFinish, onFinishFailed }): JSX.Element => {
     const form = Form.useForm<ListForm>();
     const list = Form.useFormList(form, "items");
+
+    function handleRemove(e: MouseEvent<HTMLButtonElement>): void {
+      list.remove(e.currentTarget.id);
+    }
 
     function handleFinish(...rest: Parameters<FinishEvent<ListForm>>): void {
       console.log(...rest);
@@ -49,22 +55,23 @@ export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
         <h1 className="text-2xl">Checklist</h1>
         <Form
           form={form}
-          className="flex flex-col gap-y-4"
+          className="flex flex-col gap-y-2"
           onFinish={handleFinish}
           onFinishFailed={handleFinishFailed}
         >
-          <Form.List name="items" defaultValue={[""]}>
+          <Form.List name="items" defaultValue={initial}>
             {list.map((item: string) => (
-              <div key={item} className="flex w-full items gap-x-4 items-end">
+              <div key={item} className="flex w-full items gap-x-4 items-start">
                 <Form.ListItem validation={validation}>
                   <TextInput label="Item" />
                 </Form.ListItem>
                 <ChildOrNull condition={list.items.size > 1}>
                   <IconButton
+                    id={item}
                     name="ri-close-circle-line"
                     size="sm"
-                    className="mb-1"
-                    onClick={(): void => list.remove(item)}
+                    className="mt-6"
+                    onClick={handleRemove}
                   />
                 </ChildOrNull>
               </div>
