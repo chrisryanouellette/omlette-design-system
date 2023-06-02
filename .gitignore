@@ -12,3 +12,6 @@ storybook-static
 
 # Logs
 *.log
+
+# Jest
+coverage
