@@ -12,6 +12,8 @@ function buildFormListValue(
   });
 }
 
+const fallbackDefaultValue: unknown[] = [];
+
 type FormListProps<T> = {
   name: string;
   defaultValue?: unknown[];
@@ -21,11 +23,20 @@ type FormListProps<T> = {
 
 /**
  * @example
- * <Form.List name="items">
- *  <Form.ListItem validation={validation}>
- *    <TextInput label="Item 1" />
- *  </Form.ListItem>
- * </Form.List>
+ * const form = Form.useForm();
+ * const list = Form.useFormList(form, "items");
+ *
+ * return (
+ *  <Form form={form}>
+ *    <Form.List name="items">
+ *      {list.map((id) => (
+ *        <Form.ListItem>
+ *          <TextInput label="Item" />
+ *        </Form.ListItem>
+ *      ))}
+ *    </Form.List>
+ *  </Form>
+ * )
  */
 export function FormList<T>({
   children,
@@ -37,7 +48,9 @@ export function FormList<T>({
   const wrapped = Form.useForm();
 
   const defaultValue =
-    controlledDefaultValue ?? context.fields.get()[name]?.defaultValue ?? null;
+    controlledDefaultValue ??
+    context.fields.get()[name]?.defaultValue ??
+    fallbackDefaultValue;
 
   const register = useCallback<UseForm<GenericFields>["register"]>(
     function (id, childDefaultValue) {
