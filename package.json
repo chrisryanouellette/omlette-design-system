@@ -25,7 +25,7 @@
     "preview": "vite preview",
     "emulate": "firebase emulators:start",
     "ci": "yarn lint && yarn test",
-    "pre-commit": "yarn lint",
+    "pre-commit": "yarn ci",
     "test": "jest --watchAll=false",
     "test:watch": "jest --watch",
     "test:coverage": "yarn test --coverage",
