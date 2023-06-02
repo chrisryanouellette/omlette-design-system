@@ -8,9 +8,12 @@ export type FormListItemProps<T> = Omit<FormItemProps<T>, "name"> & {
 
 export function FormListItem<T>({
   children,
+  id: controlledId,
   ...rest
 }: FormListItemProps<T>): JSX.Element {
-  const id = useId();
+  const internalId = useId();
+  const id = controlledId ?? internalId;
+
   return (
     <Form.Item<T> {...rest} name={id}>
       {children}
