@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { bindTemplate } from "@Storybook/types";
 import {
   Button,
+  ChildOrNull,
   Container,
   FinishEvent,
   FinishFailedEvent,
@@ -29,16 +30,7 @@ function validation(
 export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
   ({ onFinish, onFinishFailed }): JSX.Element => {
     const form = Form.useForm<ListForm>();
-    const [itemCount, setItemCount] = useState<Set<number>>(new Set());
-
-    function handleAdd(): void {
-      setItemCount(new Set(itemCount.add(Math.round(Math.random() * 10000))));
-    }
-
-    function handleRemove(id: number): void {
-      itemCount.delete(id);
-      setItemCount(new Set(itemCount));
-    }
+    const list = Form.useFormList(form, "items");
 
     function handleFinish(...rest: Parameters<FinishEvent<ListForm>>): void {
       console.log(...rest);
@@ -52,14 +44,6 @@ export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
       onFinishFailed(...rest);
     }
 
-    useEffect(() => {
-      if (form.fields.get().items) {
-        form.setDefault("items", ["Hello", "From", "Lists"]);
-        const ids = [true, true].map(() => Math.round(Math.random() * 10000));
-        setItemCount(new Set(ids));
-      }
-    }, [form]);
-
     return (
       <Container className="mt-4 md:mx-auto">
         <h1 className="text-2xl">Checklist</h1>
@@ -69,31 +53,26 @@ export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
           onFinish={handleFinish}
           onFinishFailed={handleFinishFailed}
         >
-          <Form.List name="items">
-            <Form.ListItem validation={validation}>
-              <TextInput label="Item 1" />
-            </Form.ListItem>
-            {Array.from(itemCount).map(function renderItem(id, index) {
-              return (
-                <div key={id} className="flex w-full items gap-x-4">
-                  <Form.ListItem
-                    validation={validation}
-                    wrapperProps={{ className: "flex-1" }}
-                  >
-                    <TextInput label={`Item ${index + 2}`} />
-                  </Form.ListItem>
+          <Form.List name="items" defaultValue={[""]}>
+            {list.map((item: string) => (
+              <div key={item} className="flex w-full items gap-x-4 items-end">
+                <Form.ListItem validation={validation}>
+                  <TextInput label="Item" />
+                </Form.ListItem>
+                <ChildOrNull condition={list.items.size > 1}>
                   <IconButton
                     name="ri-close-circle-line"
                     size="sm"
-                    onClick={(): void => handleRemove(id)}
+                    className="mb-1"
+                    onClick={(): void => list.remove(item)}
                   />
-                </div>
-              );
-            })}
-            <Button size="lg" type="button" onClick={handleAdd}>
-              Add Item
-            </Button>
+                </ChildOrNull>
+              </div>
+            ))}
           </Form.List>
+          <Button size="lg" type="button" onClick={list.add}>
+            Add Item
+          </Button>
           <Button size="lg">Submit</Button>
         </Form>
       </Container>
