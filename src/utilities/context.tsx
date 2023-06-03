@@ -10,7 +10,7 @@ export type ContextFactory<T> = [
  * const [Context, useContext] = contextFactory<MyType>()
  *
  * function MyApp(): JSX.Element {
- *  const contextValue = useMemo(() => {}, [])
+ *  const contextValue = useMemo<MyType>(() => {}, [])
  *
  *  return (
  *    <Context.Provider value={contextValue}>
