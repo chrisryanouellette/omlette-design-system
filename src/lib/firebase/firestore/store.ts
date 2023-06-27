@@ -13,11 +13,11 @@ export type FirestoreCollection<T extends DocumentData> = {
   status: Status;
 };
 
-type FirestoreData<T extends DocumentData> = {
-  [index: string]: FirestoreCollection<T>;
+type FirestoreData = {
+  [index: string]: FirestoreCollection<any>;
 };
 
-export const firestoreStore = createGlobalStore<FirestoreData<any>>({});
+export const firestoreStore = createGlobalStore<FirestoreData>({});
 
 export function initializeFirestoreCollection(
   name: string,
@@ -45,20 +45,19 @@ export function getStoredFirestoreCollection<T extends DocumentData>(
 /** Listens to changes on an entire collection of documents */
 export function useFirestoreCollection<
   State extends DocumentData,
-  Selected = FirestoreDocument<State>
+  Selected = FirestoreCollection<State>
 >(
   name: string,
   selector: SelectorFn<FirestoreDocument<State>, Selected>
 ): Selected {
   initializeFirestoreCollection(name);
-  return useStore<FirestoreData<State>, Selected>(
+  return useStore<FirestoreData, Selected>(
     firestoreStore,
-    function selectFirebaseCollection(
-      state: FirestoreData<State>,
-      prev
-    ): Selected {
+    function selectFirebaseCollection(state: FirestoreData, prev): Selected {
       const collection = state[name];
-      return selector ? selector(collection.data, prev) : (state as Selected);
+      return selector
+        ? selector(collection.data, prev)
+        : (collection as Selected);
     }
   );
 }
