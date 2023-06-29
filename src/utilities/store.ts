@@ -92,10 +92,14 @@ export const useCreateStore = <Store, Action = Partial<Store>>(
     subscriptions.current.forEach((sub) => sub(store.current));
   }, [initial]);
 
-  const subscribe = useCallback<SubscribeToStore<Store>>((cb) => {
-    subscriptions.current.add(cb);
-    return () => subscriptions.current.delete(cb);
-  }, []);
+  const subscribe = useCallback<SubscribeToStore<Store>>(
+    (cb) => {
+      subscriptions.current.add(cb);
+      cb(get());
+      return () => subscriptions.current.delete(cb);
+    },
+    [get]
+  );
 
   return useMemo(
     () => ({ get, set, reset, subscribe }),

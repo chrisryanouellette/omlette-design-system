@@ -10,7 +10,7 @@ type UseFormList = {
   map: Array<string>["map"];
 };
 
-const original = new Set([uuid()]);
+const original = new Set<string>();
 
 export function useFormList<Fields extends GenericFields>(
   form: UseForm<Fields>,

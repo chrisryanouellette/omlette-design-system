@@ -44,7 +44,7 @@ describe("Form list component", () => {
     expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
       {
         "test": {
-          "defaultValue": [],
+          "defaultValue": null,
           "errors": Set {},
           "touched": true,
           "value": [
@@ -107,7 +107,7 @@ describe("Form list component", () => {
     expect(finishFailedMock.mock.calls[0][1]).toMatchInlineSnapshot(`
       {
         "test": {
-          "defaultValue": [],
+          "defaultValue": null,
           "errors": Set {
             "Error Message",
           },
@@ -141,7 +141,7 @@ describe("Form list component", () => {
     expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
       {
         "outer": {
-          "defaultValue": [],
+          "defaultValue": null,
           "errors": Set {},
           "touched": true,
           "value": [
@@ -154,6 +154,61 @@ describe("Form list component", () => {
     `);
   });
 
-  //   test("can have default value", () => {});
-  //   test("can have nested default value", () => {});
+  test("can have default value", async () => {
+    render(
+      <Form onFinish={finishMock}>
+        <Form.List name="outer" defaultValue={["DEFAULT"]}>
+          <Form.ListItem>
+            <TextInput label="Test" />
+          </Form.ListItem>
+        </Form.List>
+        <Button>Submit</Button>
+      </Form>
+    );
+
+    await userEvent.click(screen.getByRole("button"));
+    expect(screen.getByLabelText("Test")).toHaveValue("DEFAULT");
+    expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "outer": {
+          "defaultValue": [
+            "DEFAULT",
+          ],
+          "errors": Set {},
+          "touched": false,
+          "value": [
+            "DEFAULT",
+          ],
+        },
+      }
+    `);
+  });
+
+  // test("can have nested default value", async () => {
+  //   render(
+  //     <Form onFinish={finishMock}>
+  //       <Form.List name="outer" defaultValue={[["DEFAULT"]]}>
+  //         <Form.List name="inner">
+  //           <Form.ListItem>
+  //             <TextInput label="Test" />
+  //           </Form.ListItem>
+  //         </Form.List>
+  //       </Form.List>
+  //       <Button>Submit</Button>
+  //     </Form>
+  //   );
+
+  //   await userEvent.click(screen.getByRole("button"));
+  //   expect(screen.getByLabelText("Test")).toHaveValue("DEFAULT");
+  //   expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+  //     {
+  //       "outer": {
+  //         "defaultValue": null,
+  //         "errors": Set {},
+  //         "touched": false,
+  //         "value": undefined,
+  //       },
+  //     }
+  //   `);
+  // });
 });

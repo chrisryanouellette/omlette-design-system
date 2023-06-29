@@ -27,27 +27,26 @@ function validation(
   }
 }
 
-const initial = ["wow", "cool"];
+const initial = ["A", "B"];
 
 export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
   ({ onFinish, onFinishFailed }): JSX.Element => {
     const form = Form.useForm<ListForm>();
-    const list = Form.useFormList(form, "items");
 
     function handleRemove(e: MouseEvent<HTMLButtonElement>): void {
-      list.remove(e.currentTarget.id);
+      // list.remove(e.currentTarget.id);
     }
 
     function handleFinish(...rest: Parameters<FinishEvent<ListForm>>): void {
       console.log(...rest);
-      onFinish(...rest);
+      onFinish?.(...rest);
     }
 
     function handleFinishFailed(
       ...rest: Parameters<FinishFailedEvent<ListForm>>
     ): void {
       console.log(...rest);
-      onFinishFailed(...rest);
+      onFinishFailed?.(...rest);
     }
 
     return (
@@ -60,14 +59,14 @@ export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
           onFinishFailed={handleFinishFailed}
         >
           <Form.List name="items" defaultValue={initial}>
-            {list.map((item: string) => (
-              <div key={item} className="flex w-full items gap-x-4 items-start">
+            {({ fields, id }): JSX.Element => (
+              <div key={id} className="flex w-full items gap-x-4 items-start">
                 <Form.ListItem validation={validation}>
                   <TextInput label="Item" />
                 </Form.ListItem>
-                <ChildOrNull condition={list.items.size > 1}>
+                <ChildOrNull condition={Object.values(fields).length > 1}>
                   <IconButton
-                    id={item}
+                    id={id}
                     name="ri-close-circle-line"
                     size="sm"
                     className="mt-6"
@@ -75,11 +74,12 @@ export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
                   />
                 </ChildOrNull>
               </div>
-            ))}
-          </Form.List>
-          <Button size="lg" type="button" onClick={list.add}>
+            )}
+            {/* <Button size="lg" type="button" onClick={list.add}>
             Add Item
-          </Button>
+          </Button> */}
+          </Form.List>
+
           <Button size="lg">Submit</Button>
         </Form>
       </Container>

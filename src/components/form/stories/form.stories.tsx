@@ -1,13 +1,14 @@
-import { Meta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { FinishEvent, FinishFailedEvent, GenericFields } from "../useForm";
 import { Form } from "../form";
-import { BasicFormStory as Basic } from "./story/basic";
-import { GroupFormStory as Group } from "./story/group";
-import { ListFormStory as List } from "./story/list";
+import { BasicFormStory } from "./story/basic";
+import { GroupFormStory } from "./story/group";
+import { ListFormStory } from "./story/list";
+import { NestedListFormStory } from "./story/nested-list";
 
 export type FormControls<Fields extends GenericFields> = {
-  onFinish: FinishEvent<Fields>;
-  onFinishFailed: FinishFailedEvent<Fields>;
+  onFinish?: FinishEvent<Fields>;
+  onFinishFailed?: FinishFailedEvent<Fields>;
 };
 
 const commonArgs = {
@@ -19,27 +20,36 @@ export default {
   title: "Components/Form",
   parameters: { controls: { sort: "alpha" } },
 } satisfies Meta<typeof Form>;
+type Story = StoryObj<typeof Form>;
 
-Basic.parameters = {
-  layout: "fullscreen",
+export const Basic: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
+  argTypes: { ...commonArgs },
+  render: (props) => <BasicFormStory {...props} />,
 };
-Basic.argTypes = {
-  ...commonArgs,
-};
-export { Basic };
 
-List.parameters = {
-  layout: "fullscreen",
+export const List: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
+  argTypes: { ...commonArgs },
+  render: (props) => <ListFormStory {...props} />,
 };
-List.argTypes = {
-  ...commonArgs,
-};
-export { List };
 
-Group.parameters = {
-  layout: "fullscreen",
+export const NestedList: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
+  argTypes: { ...commonArgs },
+  render: (props) => <NestedListFormStory {...props} />,
 };
-Group.argTypes = {
-  ...commonArgs,
+
+export const Group: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
+  argTypes: { ...commonArgs },
+  render: (props) => <GroupFormStory {...props} />,
 };
-export { Group };
