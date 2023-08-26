@@ -82,22 +82,10 @@ export const GroupFormStory = bindTemplate<FC<FormControls<GroupForm>>>(
       setExperienceCount(new Set(experienceCount));
     }
 
-    function handleFinish(...rest: Parameters<FinishEvent<GroupForm>>): void {
-      console.log(...rest);
-      onFinish(...rest);
-    }
-
-    function handleFinishFailed(
-      ...rest: Parameters<FinishFailedEvent<GroupForm>>
-    ): void {
-      console.log(...rest);
-      onFinishFailed(...rest);
-    }
-
     return (
       <main className="mt-4 md:mx-8">
         <h1 className="text-2xl">Enter your experience below</h1>
-        <Form onFinish={handleFinish} onFinishFailed={handleFinishFailed}>
+        <Form onFinish={onFinish} onFinishFailed={onFinishFailed}>
           <Form.Item name="experience">
             <Form.Group>
               <Form.Item

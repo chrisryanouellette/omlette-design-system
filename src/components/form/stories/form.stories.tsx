@@ -4,7 +4,6 @@ import { Form } from "../form";
 import { BasicFormStory } from "./story/basic";
 import { GroupFormStory } from "./story/group";
 import { ListFormStory } from "./story/list";
-import { NestedListFormStory } from "./story/nested-list";
 
 export type FormControls<Fields extends GenericFields> = {
   onFinish?: FinishEvent<Fields>;
@@ -36,14 +35,6 @@ export const List: Story = {
   },
   argTypes: { ...commonArgs },
   render: (props) => <ListFormStory {...props} />,
-};
-
-export const NestedList: Story = {
-  parameters: {
-    layout: "fullscreen",
-  },
-  argTypes: { ...commonArgs },
-  render: (props) => <NestedListFormStory {...props} />,
 };
 
 export const Group: Story = {

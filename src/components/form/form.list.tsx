@@ -1,37 +1,19 @@
 import { ReactNode, useCallback, useEffect, useMemo } from "react";
-import { useStore } from "@Utilities/store";
 import { Form } from "./form";
 import { FormProvider, useFormContext } from "./context";
 import {
   FormEvents,
   FormField,
-  FormFields,
+  FormList as FormListType,
   GenericFields,
   UseForm,
   Validation,
 } from "./useForm";
 
-function buildFormListValue<T>(
-  form: FormFields<{ [key: string]: T }>,
-  defaultValue?: T[]
-): FormField<T>[] {
-  return Object.values(form).map((item, index) => {
-    return item;
-  });
-}
-
-const fallbackDefaultValue: unknown[] = [];
-
 type FormListProps<T> = {
   name: string;
-  defaultValue?: T[];
-  children?: (arg: {
-    field: FormField<T>;
-    id: string;
-    index: number;
-    fields: FormFields<{ [index: string]: T }>;
-  }) => ReactNode;
-  validation?: Validation<T>;
+  children?: ReactNode;
+  validation?: Validation<FormListType<T>>;
 };
 
 /**
@@ -53,7 +35,6 @@ type FormListProps<T> = {
  */
 export function FormList<T>({
   children,
-  defaultValue: controlledDefaultValue,
   name,
   validation: formListValidation,
 }: FormListProps<T>): JSX.Element {
@@ -61,50 +42,25 @@ export function FormList<T>({
 
   const context = useFormContext<{ [field: string]: FormField<T>[] }>();
   const wrapped = Form.useForm<Fields>();
-  const fields = context.fields.get()[name]?.value ?? [];
-  console.log(fields);
-
-  const defaultValue =
-    controlledDefaultValue ??
-    context.fields.get()[name]?.defaultValue ??
-    fallbackDefaultValue;
-
-  /*
-  Triggers a state update if the input has gone from no default value
-  to having a default value.
-  This occurs when some asynchronous action updates the form's state,
-  or when the first change is made.
-   */
-  useStore(context.fields, function (state) {
-    const defaultValue = state[name]?.defaultValue ?? null;
-    return defaultValue !== null;
-  });
 
   const register = useCallback<UseForm<Fields>["register"]>(
     function (id, childDefaultValue) {
-      const unsub = wrapped.register(id, childDefaultValue ?? undefined);
-      const index = Object.keys(wrapped.fields.get()).findIndex(
-        (key) => key === id
-      );
-      if (defaultValue?.[index] !== undefined) {
-        wrapped.setDefault(id, defaultValue[index]);
-      }
-      return unsub;
+      return wrapped.register(id, childDefaultValue);
     },
-    [defaultValue, wrapped]
+    [wrapped]
   );
 
   const validation = useCallback<UseForm<Fields>["validation"]>(
-    function (id, cb) {
+    function (id, ...cbs) {
       const field = wrapped.fields.get()[id];
       const subscriptions: (() => void)[] = [
         context.validation(
           name,
           function formGroupWrappedValidation(parentField, addError) {
-            cb(field, addError, wrapped.fields.get());
+            cbs.forEach((cb) => cb(field, addError, wrapped.fields.get()));
           }
         ),
-        wrapped.validation(id, cb),
+        wrapped.validation(id, ...cbs),
       ];
 
       return function unsubscribeValidation() {
@@ -128,19 +84,36 @@ export function FormList<T>({
 
   useEffect(
     function registerFormList() {
-      return context.register(name);
+      const unsub = context.register(name);
+      context.set(name, Object.values(wrapped.fields.get()));
+      return unsub;
     },
     [context, name, wrapped]
   );
 
-  // useEffect(
-  //   function setDefaultFormItemItem() {
-  //     if (defaultValue?.length) {
-  //       context.setDefault(name, defaultValue);
-  //     }
-  //   },
-  //   [context, defaultValue, name, wrapped]
-  // );
+  useEffect(
+    function syncFieldsToParent() {
+      return wrapped.subscribe(
+        FormEvents.register,
+        function handleSyncFormToParent(): void {
+          context.set(name, Object.values(wrapped.fields.get()));
+        }
+      );
+    },
+    [context, name, wrapped]
+  );
+
+  useEffect(
+    function syncFieldsToParent() {
+      return wrapped.subscribe(
+        FormEvents.unregister,
+        function handleSyncFormToParent(): void {
+          context.set(name, Object.values(wrapped.fields.get()));
+        }
+      );
+    },
+    [context, name, wrapped]
+  );
 
   useEffect(
     function subscribeFormItemValidation() {
@@ -150,12 +123,11 @@ export function FormList<T>({
         }),
       ];
       if (formListValidation) {
-        subscriptions.push(
-          context.validation(
-            name,
-            formListValidation as Validation<unknown, GenericFields>
-          )
+        const subscription = context.validation(
+          name,
+          formListValidation as Validation<unknown, GenericFields>
         );
+        subscriptions.push(subscription);
       }
       return function formItemValidationCleanup() {
         subscriptions.forEach((cb) => cb());
@@ -165,7 +137,7 @@ export function FormList<T>({
   );
 
   useEffect(
-    function initSyncFormToParent() {
+    function initSyncToParent() {
       return wrapped.subscribe(
         FormEvents.update,
         function handleSyncFormToParent(fieldName, field, state): void {
@@ -176,18 +148,25 @@ export function FormList<T>({
     [context, name, wrapped]
   );
 
-  return (
-    <FormProvider value={wrappedFormProvider}>
-      {Object.entries(fields).map(([id, field], index) =>
-        children?.({
-          field,
-          id,
-          index,
-          fields: wrapped.fields.get(),
-        })
-      )}
-    </FormProvider>
+  useEffect(
+    function initSyncParentDefaultValue() {
+      return context.subscribe(
+        FormEvents.updateDefault,
+        function handleSyncParentDefaultValue(fieldName, field) {
+          if (fieldName === name) {
+            const update: Fields = {};
+            Object.keys(wrapped.fields.get()).forEach((key, index) => {
+              update[key] = field[index] as any;
+            });
+            wrapped.setManyDefault(update);
+          }
+        }
+      );
+    },
+    [context, name, wrapped]
   );
+
+  return <FormProvider value={wrappedFormProvider}>{children}</FormProvider>;
 }
 
 FormList.displayName = "FormList";

@@ -17,18 +17,26 @@ const validationMock = jest.fn(
     }
   }
 );
+const validationMockTwo = jest.fn(
+  (field: FormField<string>, addError: ValidationAddError) => {
+    if (field.value === "ERROR") {
+      addError("Second failure message");
+    }
+  }
+);
 
 beforeEach(() => {
   finishMock.mockClear();
   finishFailedMock.mockClear();
   validationMock.mockClear();
+  validationMockTwo.mockClear();
 });
 
 describe("Form component", () => {
   test("can have a defaultValue", async () => {
     render(
       <Form onFinish={finishMock}>
-        <Form.Item name="test" defaultValue="Name">
+        <Form.Item defaultValue="Name" name="test">
           <TextInput label="Test" />
         </Form.Item>
         <Button>Submit</Button>
@@ -88,6 +96,23 @@ describe("Form component", () => {
     await userEvent.click(screen.getByRole("button"));
     await screen.findByText("Error Message");
     expect(screen.getByText("Error Message")).toBeInTheDocument();
+  });
+
+  test("can fail with multiple validation function", async () => {
+    render(
+      <Form onFinish={finishMock} onFinishFailed={finishFailedMock}>
+        <Form.Item name="test" validation={[validationMock, validationMockTwo]}>
+          <TextInput label="Test" />
+        </Form.Item>
+        <Button>Submit</Button>
+      </Form>
+    );
+
+    await userEvent.type(screen.getByLabelText(/test/i), "ERROR");
+    await userEvent.click(screen.getByRole("button"));
+    await screen.findByText("Error Message");
+    expect(screen.getByText("Error Message")).toBeInTheDocument();
+    expect(screen.getByText("Second failure message")).toBeInTheDocument();
   });
 
   test("can fail to submit then succeed to submit", async () => {

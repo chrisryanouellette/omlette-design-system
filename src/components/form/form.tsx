@@ -14,7 +14,6 @@ import { FormGroup } from "./form.group";
 import { FormListItem } from "./form.list.item";
 import { FormList } from "./form.list";
 import { useFormErrors } from "./useFormErrors";
-import { useFormList } from "./useFormList";
 
 export type FormProps<Fields extends GenericFields> =
   HTMLAttributes<HTMLFormElement> & {
@@ -70,6 +69,5 @@ Form.ListItem = FormListItem;
 Form.useForm = useForm;
 Form.useFormContext = useFormContext;
 Form.useFormErrors = useFormErrors;
-Form.useFormList = useFormList;
 
 export { Form };
