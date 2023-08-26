@@ -65,6 +65,20 @@ describe("Form input components", () => {
         },
       }
     `);
+
+    await userEvent.clear(screen.getByLabelText(/test/i));
+    await userEvent.click(screen.getByRole("button"));
+    expect(finishMock.mock.calls.length).toBe(2);
+    expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "test": {
+          "defaultValue": null,
+          "errors": Set {},
+          "touched": true,
+          "value": null,
+        },
+      }
+    `);
   });
 
   test("date input", async () => {

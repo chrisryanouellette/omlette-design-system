@@ -5,10 +5,28 @@ import { fieldsReducer, FormFieldsActions, ReducerActions } from "./reducers";
 export type GenericFields = { [field: string]: unknown };
 
 export enum FormEvents {
+  register = "register",
+  unregister = "unregister",
+  updateDefault = "updateDefault",
   update = "update",
   finish = "finish",
   finishFailed = "finishFailed",
 }
+
+export type RegisterEvent<Fields extends GenericFields> = (
+  name: keyof Fields,
+  value: Fields[typeof name] | undefined
+) => void;
+
+export type UnregisterEvent<Fields extends GenericFields> = (
+  name: keyof Fields
+) => void;
+
+export type UpdateDefaultEvent<Fields extends GenericFields> = (
+  name: keyof Fields,
+  value: Fields[typeof name],
+  form: FormFields<Fields>
+) => void;
 
 export type UpdateEvent<Fields extends GenericFields> = (
   name: keyof Fields,
@@ -28,6 +46,9 @@ export type FinishFailedEvent<Fields extends GenericFields> = (
 ) => void;
 
 type Subscriptions<Fields extends GenericFields> = {
+  [FormEvents.register]: RegisterEvent<Fields>;
+  [FormEvents.unregister]: UnregisterEvent<Fields>;
+  [FormEvents.updateDefault]: UpdateDefaultEvent<Fields>;
   [FormEvents.update]: UpdateEvent<Fields>;
   [FormEvents.finish]: FinishEvent<Fields>;
   [FormEvents.finishFailed]: FinishFailedEvent<Fields>;
@@ -47,6 +68,8 @@ export type FormFields<Values extends GenericFields> = {
 export type FormGroup<Values extends GenericFields> = {
   [id: string]: FormFields<Values>;
 };
+
+export type FormList<Value> = FormField<Value>[];
 
 export type ValidationAddError = (error: string) => void;
 
@@ -89,7 +112,7 @@ export type UseForm<Fields extends GenericFields> = {
    */
   setDefault: <K extends keyof Fields>(
     name: Extract<K, string>,
-    value: Fields[K]
+    value: Fields[K] | null
   ) => void;
   /**
    * Sets the values for multiple fields. Each field will trigger a call to the form
@@ -111,7 +134,7 @@ export type UseForm<Fields extends GenericFields> = {
    */
   validation: <K extends keyof Fields>(
     name: Extract<K, string>,
-    fns: Validation<unknown, Fields>
+    ...fns: Validation<unknown, Fields>[]
   ) => () => void;
   /**
    * Validates a form field, throws an error of errors if there where any.
@@ -134,12 +157,15 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
   );
   const validations = useRef<
     Partial<{
-      [K in keyof Fields]: Set<Parameters<UseForm<Fields>["validation"]>[1]>;
+      [K in keyof Fields]: Set<Validation<unknown, Fields>>;
     }>
   >({});
   const subscriptions = useRef<{
     [K in FormEvents]: Set<Subscriptions<Fields>[K]>;
   }>({
+    register: new Set(),
+    unregister: new Set(),
+    updateDefault: new Set(),
     update: new Set(),
     finish: new Set(),
     finishFailed: new Set(),
@@ -151,11 +177,13 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
         action: ReducerActions.register,
         value: { name, value: defaultValue, defaultValue },
       });
+      subscriptions.current.register.forEach((cb) => cb(name, defaultValue));
       return () => {
         fields.set({
           action: ReducerActions.unregister,
           value: { name },
         });
+        subscriptions.current.unregister.forEach((cb) => cb(name));
       };
     },
     [fields]
@@ -186,6 +214,9 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
           default: value,
         },
       });
+      subscriptions.current.updateDefault.forEach((sub) =>
+        sub(name, value as any, fields.get())
+      );
     },
     [fields]
   );
@@ -212,22 +243,29 @@ const useForm = <Fields extends GenericFields>(): UseForm<Fields> => {
           action: ReducerActions.setDefault,
           value: { name, default: value },
         });
+        subscriptions.current.updateDefault.forEach((sub) =>
+          sub(name, value, fields.get())
+        );
       });
     },
     [fields]
   );
 
-  const validation = useCallback<UseForm<Fields>["validation"]>((name, fns) => {
-    const set = validations.current[name] ?? new Set();
-    if (!validations.current[name]) {
-      validations.current[name] = set;
-    }
-    set.add(fns);
-    /** Remove validation functions as cleanup */
-    return () => {
-      set.delete(fns);
-    };
-  }, []);
+  const validation = useCallback<UseForm<Fields>["validation"]>(
+    (name, ...fns) => {
+      const set = validations.current[name] ?? new Set();
+      if (!validations.current[name]) {
+        validations.current[name] = set;
+      }
+
+      fns.forEach((fn) => set.add(fn));
+      /** Remove validation functions as cleanup */
+      return () => {
+        fns.forEach((fn) => set.delete(fn));
+      };
+    },
+    []
+  );
 
   const validate = useCallback<UseForm<Fields>["validate"]>(
     async (name) => {

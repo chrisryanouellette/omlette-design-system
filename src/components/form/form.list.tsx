@@ -1,24 +1,19 @@
 import { ReactNode, useCallback, useEffect, useMemo } from "react";
 import { Form } from "./form";
 import { FormProvider, useFormContext } from "./context";
-import { FormFields, GenericFields, UseForm, Validation } from "./useForm";
-
-function buildFormListValue(
-  form: FormFields<GenericFields>,
-  defaultValue?: unknown[]
-): unknown[] {
-  return Object.values(form).map((item, index) => {
-    return item.value ?? defaultValue?.[index] ?? null;
-  });
-}
-
-const fallbackDefaultValue: unknown[] = [];
+import {
+  FormEvents,
+  FormField,
+  FormList as FormListType,
+  GenericFields,
+  UseForm,
+  Validation,
+} from "./useForm";
 
 type FormListProps<T> = {
   name: string;
-  defaultValue?: unknown[];
   children?: ReactNode;
-  validation?: Validation<T>;
+  validation?: Validation<FormListType<T>>;
 };
 
 /**
@@ -40,47 +35,32 @@ type FormListProps<T> = {
  */
 export function FormList<T>({
   children,
-  defaultValue: controlledDefaultValue,
   name,
   validation: formListValidation,
 }: FormListProps<T>): JSX.Element {
-  const context = useFormContext<{ [field: string]: unknown[] }>();
-  const wrapped = Form.useForm();
+  type Fields = { [index: string]: T };
 
-  const defaultValue =
-    controlledDefaultValue ??
-    context.fields.get()[name]?.defaultValue ??
-    fallbackDefaultValue;
+  const context = useFormContext<{ [field: string]: FormField<T>[] }>();
+  const wrapped = Form.useForm<Fields>();
 
-  const register = useCallback<UseForm<GenericFields>["register"]>(
+  const register = useCallback<UseForm<Fields>["register"]>(
     function (id, childDefaultValue) {
-      const unsubscribe = wrapped.register(id, childDefaultValue ?? null);
-      if (context.fields.get()[name]) {
-        const update = buildFormListValue(wrapped.fields.get(), defaultValue);
-        context.set(name, update);
-      }
-      return function formGroupItemUnregister(): void {
-        unsubscribe();
-        if (context.fields.get()[name]) {
-          const update = buildFormListValue(wrapped.fields.get(), defaultValue);
-          context.set(name, update);
-        }
-      };
+      return wrapped.register(id, childDefaultValue);
     },
-    [context, defaultValue, name, wrapped]
+    [wrapped]
   );
 
-  const validation = useCallback<UseForm<GenericFields>["validation"]>(
-    function (id, cb) {
+  const validation = useCallback<UseForm<Fields>["validation"]>(
+    function (id, ...cbs) {
       const field = wrapped.fields.get()[id];
       const subscriptions: (() => void)[] = [
         context.validation(
           name,
           function formGroupWrappedValidation(parentField, addError) {
-            cb(field, addError, wrapped.fields.get());
+            cbs.forEach((cb) => cb(field, addError, wrapped.fields.get()));
           }
         ),
-        wrapped.validation(id, cb),
+        wrapped.validation(id, ...cbs),
       ];
 
       return function unsubscribeValidation() {
@@ -90,13 +70,11 @@ export function FormList<T>({
     [context, name, wrapped]
   );
 
-  const set = useCallback<UseForm<GenericFields>["set"]>(
+  const set = useCallback<UseForm<Fields>["set"]>(
     function (itemName, value) {
       wrapped.set(itemName, value);
-      const update = buildFormListValue(wrapped.fields.get(), defaultValue);
-      context.set(name, update);
     },
-    [context, defaultValue, name, wrapped]
+    [wrapped]
   );
 
   const wrappedFormProvider = useMemo(
@@ -106,24 +84,35 @@ export function FormList<T>({
 
   useEffect(
     function registerFormList() {
-      return context.register(name);
+      const unsub = context.register(name);
+      context.set(name, Object.values(wrapped.fields.get()));
+      return unsub;
     },
     [context, name, wrapped]
   );
 
   useEffect(
-    function setDefaultFormItemItem() {
-      if (defaultValue) {
-        context.setDefault(name, defaultValue);
-        const fields = Object.keys(wrapped.fields.get());
-        defaultValue.forEach((value, index) => {
-          if (fields[index]) {
-            wrapped.setDefault(fields[index], value);
-          }
-        });
-      }
+    function syncFieldsToParent() {
+      return wrapped.subscribe(
+        FormEvents.register,
+        function handleSyncFormToParent(): void {
+          context.set(name, Object.values(wrapped.fields.get()));
+        }
+      );
     },
-    [context, defaultValue, name, wrapped]
+    [context, name, wrapped]
+  );
+
+  useEffect(
+    function syncFieldsToParent() {
+      return wrapped.subscribe(
+        FormEvents.unregister,
+        function handleSyncFormToParent(): void {
+          context.set(name, Object.values(wrapped.fields.get()));
+        }
+      );
+    },
+    [context, name, wrapped]
   );
 
   useEffect(
@@ -134,12 +123,11 @@ export function FormList<T>({
         }),
       ];
       if (formListValidation) {
-        subscriptions.push(
-          context.validation(
-            name,
-            formListValidation as Validation<unknown, GenericFields>
-          )
+        const subscription = context.validation(
+          name,
+          formListValidation as Validation<unknown, GenericFields>
         );
+        subscriptions.push(subscription);
       }
       return function formItemValidationCleanup() {
         subscriptions.forEach((cb) => cb());
@@ -148,21 +136,32 @@ export function FormList<T>({
     [context, formListValidation, name, wrapped]
   );
 
-  /* Handles setting the default when the parent form has a default */
   useEffect(
-    function setDefaultValueFromParent() {
-      return context.fields.subscribe(function (state) {
-        const defaultValue = state[name]?.defaultValue;
-        if (defaultValue && Array.isArray(defaultValue)) {
-          const keys = Object.keys(wrapped.fields.get());
-          defaultValue.forEach((value, index) => {
-            const key = keys[index];
-            if (key !== undefined) {
-              wrapped.setDefault(key, value);
-            }
-          });
+    function initSyncToParent() {
+      return wrapped.subscribe(
+        FormEvents.update,
+        function handleSyncFormToParent(fieldName, field, state): void {
+          context.set(name, Object.values(state));
         }
-      });
+      );
+    },
+    [context, name, wrapped]
+  );
+
+  useEffect(
+    function initSyncParentDefaultValue() {
+      return context.subscribe(
+        FormEvents.updateDefault,
+        function handleSyncParentDefaultValue(fieldName, field) {
+          if (fieldName === name) {
+            const update: Fields = {};
+            Object.keys(wrapped.fields.get()).forEach((key, index) => {
+              update[key] = field[index] as any;
+            });
+            wrapped.setManyDefault(update);
+          }
+        }
+      );
     },
     [context, name, wrapped]
   );

@@ -1,11 +1,8 @@
-import { FC, MouseEvent } from "react";
+import { FC, MouseEvent, useState } from "react";
 import { bindTemplate } from "@Storybook/types";
 import {
   Button,
-  ChildOrNull,
   Container,
-  FinishEvent,
-  FinishFailedEvent,
   Form,
   FormField,
   IconButton,
@@ -19,7 +16,7 @@ type ListForm = {
 };
 
 function validation(
-  field: FormField<boolean>,
+  field: FormField<string | null>,
   addError: ValidationAddError
 ): void {
   if (!field.value) {
@@ -27,59 +24,70 @@ function validation(
   }
 }
 
-const initial = ["wow", "cool"];
-
 export const ListFormStory = bindTemplate<FC<FormControls<ListForm>>>(
   ({ onFinish, onFinishFailed }): JSX.Element => {
     const form = Form.useForm<ListForm>();
-    const list = Form.useFormList(form, "items");
+    const [defaultState, setDefaultState] = useState<(string | null)[]>([
+      "A",
+      "B",
+      "C",
+    ]);
+
+    function handleAdd(): void {
+      setDefaultState([...defaultState, null]);
+    }
 
     function handleRemove(e: MouseEvent<HTMLButtonElement>): void {
-      list.remove(e.currentTarget.id);
-    }
-
-    function handleFinish(...rest: Parameters<FinishEvent<ListForm>>): void {
-      console.log(...rest);
-      onFinish(...rest);
-    }
-
-    function handleFinishFailed(
-      ...rest: Parameters<FinishFailedEvent<ListForm>>
-    ): void {
-      console.log(...rest);
-      onFinishFailed(...rest);
+      const index = Number(e.currentTarget.dataset.index);
+      if (isNaN(index)) {
+        throw new Error(`Cannot remove list item at index "${index}"`);
+      }
+      defaultState.splice(index, 1);
+      setDefaultState([...defaultState]);
     }
 
     return (
       <Container className="mt-4 md:mx-auto">
         <h1 className="text-2xl">Checklist</h1>
         <Form
-          form={form}
           className="flex flex-col gap-y-2"
-          onFinish={handleFinish}
-          onFinishFailed={handleFinishFailed}
+          form={form}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
         >
-          <Form.List name="items" defaultValue={initial}>
-            {list.map((item: string) => (
-              <div key={item} className="flex w-full items gap-x-4 items-start">
-                <Form.ListItem validation={validation}>
-                  <TextInput label="Item" />
+          <Form.List name="a">
+            <Form.List name="b">
+              <Form.List name="c-1">
+                {defaultState.map((i, index) => (
+                  <div className="flex gap-4" key={i}>
+                    <Form.ListItem
+                      defaultValue={i}
+                      validation={validation}
+                      wrapperProps={{ className: "flex-1" }}
+                    >
+                      <TextInput label={`Nested ${i}`} />
+                    </Form.ListItem>
+                    <IconButton
+                      className="mt-6 h-9 w-9"
+                      data-index={index}
+                      name="ri-close-circle-line"
+                      size="sm"
+                      type="button"
+                      onClick={handleRemove}
+                    />
+                  </div>
+                ))}
+                <Button type="button" onClick={handleAdd}>
+                  Add
+                </Button>
+              </Form.List>
+              <Form.List name="c-2">
+                <Form.ListItem>
+                  <TextInput label="Nested" />
                 </Form.ListItem>
-                <ChildOrNull condition={list.items.size > 1}>
-                  <IconButton
-                    id={item}
-                    name="ri-close-circle-line"
-                    size="sm"
-                    className="mt-6"
-                    onClick={handleRemove}
-                  />
-                </ChildOrNull>
-              </div>
-            ))}
+              </Form.List>
+            </Form.List>
           </Form.List>
-          <Button size="lg" type="button" onClick={list.add}>
-            Add Item
-          </Button>
           <Button size="lg">Submit</Button>
         </Form>
       </Container>

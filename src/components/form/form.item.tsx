@@ -31,7 +31,7 @@ export type FormItemProps<T> = {
   required?: boolean;
   inline?: boolean;
   wrapperProps?: HTMLAttributes<HTMLDivElement>;
-  validation?: Validation<T>;
+  validation?: Validation<any> | Validation<any>[];
   onChange?: (e: ChangeEvent<HTMLElement>) => void;
 };
 
@@ -128,7 +128,11 @@ const FormItem = <T,>({
           );
           formContext.set(name, e.target.multiple ? selected : selected[0]);
         } else if (e.target.getAttribute("type") === "number") {
-          formContext.set(name, Number(e.target.value));
+          if (e.target.value?.toString().length) {
+            formContext.set(name, Number(e.target.value));
+          } else {
+            formContext.set(name, null);
+          }
         } else {
           formContext.set(name, e.target.value);
         }
@@ -150,7 +154,9 @@ const FormItem = <T,>({
 
   useEffect(() => {
     if (validationFn) {
-      return formContext.validation(name, validationFn as Validation<unknown>);
+      return Array.isArray(validationFn)
+        ? formContext.validation(name, ...validationFn)
+        : formContext.validation(name, validationFn);
     }
   }, [formContext, name, validationFn]);
 

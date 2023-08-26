@@ -1,9 +1,10 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   Button,
   Form,
   FormField,
+  FormList,
   TextInput,
   ValidationAddError,
 } from "@Components/index";
@@ -11,8 +12,22 @@ import {
 const finishMock = jest.fn();
 const finishFailedMock = jest.fn();
 const validationMock = jest.fn(
-  (field: FormField<any>, addError: ValidationAddError) => {
+  (field: FormField<string>, addError: ValidationAddError) => {
     if (field.value === "ERROR") {
+      addError("Error Message");
+    }
+  }
+);
+const validationMockTwo = jest.fn(
+  (field: FormField<string>, addError: ValidationAddError) => {
+    if (field.value === "ERROR") {
+      addError("Second error message");
+    }
+  }
+);
+const listValidationMock = jest.fn(
+  (field: FormField<FormList<string>>, addError: ValidationAddError) => {
+    if (field.value[0].value === "ERROR") {
       addError("Error Message");
     }
   }
@@ -44,11 +59,16 @@ describe("Form list component", () => {
     expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
       {
         "test": {
-          "defaultValue": [],
+          "defaultValue": null,
           "errors": Set {},
           "touched": true,
           "value": [
-            "Name",
+            {
+              "defaultValue": null,
+              "errors": Set {},
+              "touched": true,
+              "value": "Name",
+            },
           ],
         },
       }
@@ -74,18 +94,30 @@ describe("Form list component", () => {
     expect(screen.getByText("Error Message")).toBeInTheDocument();
   });
 
-  test("list can fail to submit when validating list", async () => {
-    validationMock.mockImplementationOnce(
-      (field: FormField<string[]>, addError: ValidationAddError) => {
-        if (field.value[0] === "ERROR") {
-          addError("Error Message");
-        }
-      }
+  test("list item can have multiple validate functions", async () => {
+    const validationMocks = [validationMock, validationMockTwo];
+    render(
+      <Form>
+        <Form.List name="test">
+          <Form.ListItem validation={validationMocks}>
+            <TextInput label="Test" />
+          </Form.ListItem>
+        </Form.List>
+        <Button>Submit</Button>
+      </Form>
     );
 
+    await userEvent.type(screen.getByLabelText(/test/i), "ERROR");
+    await userEvent.click(screen.getByRole("button"));
+    await screen.findByText("Error Message");
+    expect(screen.getByText("Error Message")).toBeInTheDocument();
+    expect(screen.getByText("Second error message")).toBeInTheDocument();
+  });
+
+  test("list can fail to submit when validating list", async () => {
     render(
       <Form onFinishFailed={finishFailedMock}>
-        <Form.List name="test" validation={validationMock}>
+        <Form.List name="test" validation={listValidationMock}>
           <Form.ListItem>
             <TextInput label="Test" />
           </Form.ListItem>
@@ -97,7 +129,7 @@ describe("Form list component", () => {
     await userEvent.type(screen.getByLabelText(/test/i), "ERROR");
     await userEvent.click(screen.getByRole("button"));
 
-    expect(validationMock.mock.calls.length).toBe(1);
+    expect(listValidationMock.mock.calls.length).toBe(1);
     expect(finishFailedMock.mock.calls.length).toBe(1);
     expect(finishFailedMock.mock.calls[0][0]).toMatchInlineSnapshot(`
       [
@@ -107,13 +139,18 @@ describe("Form list component", () => {
     expect(finishFailedMock.mock.calls[0][1]).toMatchInlineSnapshot(`
       {
         "test": {
-          "defaultValue": [],
+          "defaultValue": null,
           "errors": Set {
             "Error Message",
           },
           "touched": true,
           "value": [
-            "ERROR",
+            {
+              "defaultValue": null,
+              "errors": Set {},
+              "touched": true,
+              "value": "ERROR",
+            },
           ],
         },
       }
@@ -141,19 +178,165 @@ describe("Form list component", () => {
     expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
       {
         "outer": {
-          "defaultValue": [],
+          "defaultValue": null,
           "errors": Set {},
           "touched": true,
           "value": [
-            [
-              "Name",
-            ],
+            {
+              "defaultValue": null,
+              "errors": Set {},
+              "touched": true,
+              "value": [
+                {
+                  "defaultValue": null,
+                  "errors": Set {},
+                  "touched": true,
+                  "value": "Name",
+                },
+              ],
+            },
           ],
         },
       }
     `);
   });
 
-  //   test("can have default value", () => {});
-  //   test("can have nested default value", () => {});
+  test("can have default value", async () => {
+    render(
+      <Form onFinish={finishMock}>
+        <Form.List name="outer">
+          <Form.ListItem defaultValue="DEFAULT">
+            <TextInput label="Test" />
+          </Form.ListItem>
+        </Form.List>
+        <Button>Submit</Button>
+      </Form>
+    );
+
+    await userEvent.click(screen.getByRole("button"));
+    expect(screen.getByLabelText("Test")).toHaveValue("DEFAULT");
+    expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "outer": {
+          "defaultValue": null,
+          "errors": Set {},
+          "touched": true,
+          "value": [
+            {
+              "defaultValue": "DEFAULT",
+              "errors": Set {},
+              "touched": false,
+              "value": "DEFAULT",
+            },
+          ],
+        },
+      }
+    `);
+  });
+
+  test("can have default value set via the form hook", async () => {
+    const { result } = renderHook(() => Form.useForm());
+    render(
+      <Form form={result.current} onFinish={finishMock}>
+        <Form.List name="outer">
+          <Form.ListItem>
+            <TextInput label="Test" />
+          </Form.ListItem>
+          <Form.ListItem>
+            <TextInput label="Test Two" />
+          </Form.ListItem>
+        </Form.List>
+        <Button>Submit</Button>
+      </Form>
+    );
+
+    act(() => result.current.setDefault("outer", ["a", "b"]));
+    await userEvent.click(screen.getByRole("button"));
+    expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "outer": {
+          "defaultValue": [
+            "a",
+            "b",
+          ],
+          "errors": Set {},
+          "touched": true,
+          "value": [
+            {
+              "defaultValue": "a",
+              "errors": Set {},
+              "touched": false,
+              "value": "a",
+            },
+            {
+              "defaultValue": "b",
+              "errors": Set {},
+              "touched": false,
+              "value": "b",
+            },
+          ],
+        },
+      }
+    `);
+  });
+
+  it("can have default value set via the form hook with nested lists", async () => {
+    const { result } = renderHook(() => Form.useForm());
+    render(
+      <Form form={result.current} onFinish={finishMock}>
+        <Form.List name="outer">
+          <Form.List name="inner">
+            <Form.ListItem>
+              <TextInput label="Test" />
+            </Form.ListItem>
+            <Form.ListItem>
+              <TextInput label="Test Two" />
+            </Form.ListItem>
+          </Form.List>
+        </Form.List>
+        <Button>Submit</Button>
+      </Form>
+    );
+
+    act(() => result.current.setDefault("outer", [["a", "b"]]));
+    await userEvent.click(screen.getByRole("button"));
+    expect(finishMock.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "outer": {
+          "defaultValue": [
+            [
+              "a",
+              "b",
+            ],
+          ],
+          "errors": Set {},
+          "touched": true,
+          "value": [
+            {
+              "defaultValue": [
+                "a",
+                "b",
+              ],
+              "errors": Set {},
+              "touched": true,
+              "value": [
+                {
+                  "defaultValue": "a",
+                  "errors": Set {},
+                  "touched": false,
+                  "value": "a",
+                },
+                {
+                  "defaultValue": "b",
+                  "errors": Set {},
+                  "touched": false,
+                  "value": "b",
+                },
+              ],
+            },
+          ],
+        },
+      }
+    `);
+  });
 });
