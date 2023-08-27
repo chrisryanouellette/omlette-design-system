@@ -22,7 +22,9 @@ const Errors = ({
     <div
       {...wrapperProps}
       className={concat(
-        "omlette-input-errors-wrapper",
+        "fill-[var(--omlette-input-errors-fill)]",
+        "text-[var(--omlette-input-errors-text-color)]",
+        "text-[length:var(--omlette-input-errors-text-size)]",
         wrapperProps?.className
       )}
     >
@@ -30,8 +32,8 @@ const Errors = ({
         <List {...rest}>
           {errors.map((error) => (
             <List.Item
-              listStyle="icon"
               iconProps={{ name: "ri-error-warning-line" }}
+              listStyle="icon"
               {...listItemProps}
               key={error}
             >

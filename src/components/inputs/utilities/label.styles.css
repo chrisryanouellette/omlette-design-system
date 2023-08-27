@@ -1,19 +1,8 @@
 :root {
   --omlette-label-text-color: var(--tw-color-neutral-900);
+  --omlette-label-text-size: 1rem;
   --omlette-label-helper-text-color: var(--tw-color-neutral-700);
   --omlette-label-helper-text-size: 0.875rem;
 
-  --omlette-label-padding-button: 0.25rem;
-}
-
-:where(.omlette-input-label label) {
-  @apply flex flex-col;
-  color: var(--omlette-label-text-color);
-  padding-bottom: var(--omlette-label-padding-button);
-}
-
-:where(.omlette-input-label span) {
-  @apply flex flex-col;
-  color: var(--omlette-label-helper-text-color);
-  font-size: var(--omlette-label-helper-text-size);
+  --omlette-label-padding-button: 0.35rem;
 }

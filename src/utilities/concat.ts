@@ -1,5 +1,7 @@
+import { twMerge } from "tailwind-merge";
+
 function concat(...strings: (string | string[] | false | undefined)[]): string {
-  return strings.flat().filter(Boolean).join(" ");
+  return twMerge(strings.flat().filter(Boolean));
 }
 
 export { concat };
