@@ -1,0 +1,25 @@
+{
+    "branchPrefix": "deps-update/",
+    "username": "renovate-release",
+    "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
+    "onboarding": true,
+    "platform": "github",
+    "repositories": [
+      "chrisryanouellette/omlette-design-system"
+    ],
+    "packageRules": [
+      {
+        "description": "lockFileMaintenance",
+        "matchUpdateTypes": [
+          "pin",
+          "digest",
+          "patch",
+          "minor",
+          "major",
+          "lockFileMaintenance"
+        ],
+        "dependencyDashboardApproval": false,
+        "stabilityDays": 0
+      }
+    ]
+  }
