@@ -13,7 +13,7 @@ export type IconProps = SVGAttributes<SVGElement> & {
 
 const Icon: FC<IconProps> = ({
   className,
-  href = "remixicon.symbol.svg",
+  href = "/remixicon.symbol.svg",
   name,
   role,
   size,
